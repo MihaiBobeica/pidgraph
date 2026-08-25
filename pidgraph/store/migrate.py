@@ -18,8 +18,16 @@ from pathlib import Path
 MIGRATIONS = Path("supabase/migrations")
 
 EXPECTED_TABLES = (
-    "dexpi_class", "isa_edition", "documents", "extraction_runs", "nodes", "edges",
-    "node_attributes", "sop_requirements", "findings", "review_actions",
+    "dexpi_class",
+    "isa_edition",
+    "documents",
+    "extraction_runs",
+    "nodes",
+    "edges",
+    "node_attributes",
+    "sop_requirements",
+    "findings",
+    "review_actions",
 )
 EXPECTED_FUNCTIONS = ("trace_downstream", "graph_snapshot")
 

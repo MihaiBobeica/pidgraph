@@ -131,7 +131,7 @@ _TESSERACT_CANDIDATES = (
 # Engineering annotation uses a small character set. Constraining the engine is worth several
 # points on this content: unconstrained, it offers lower-case prose and punctuation that no tag
 # contains, and that output then fails every downstream match while looking like a successful read.
-_WHITELIST = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-/."\'()&*#'
+_WHITELIST = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-/.\"'()&*#"
 
 
 def find_tesseract() -> str | None:
@@ -155,9 +155,42 @@ class TesseractBackend:
 
     name = "tesseract"
 
-    def __init__(self, psm: str = "7", upscale: int = 2) -> None:
-        self.psm = psm
-        self.upscale = upscale
+    def __init__(self, psm: str | None = None, upscale: int | None = None) -> None:
+        import os
+
+        # Environment overrides exist for the benchmark's configuration sweep. Defaults are the
+        # measured winners; the sweep re-derives them when anything upstream changes. A knob
+        # that fails to parse falls back to its default with a warning rather than raising:
+        # construction happens inside a degrade-not-abort boundary, and an exception here would
+        # silently disable the whole raster leg over a typo.
+        self.warnings: list[str] = []
+
+        def _int_env(name: str, default: int) -> int:
+            raw = os.environ.get(name)
+            if raw is None:
+                return default
+            try:
+                return int(raw)
+            except ValueError:
+                self.warnings.append(f"{name}={raw!r} is not an integer; using {default}")
+                return default
+
+        self.psm = psm if psm is not None else os.environ.get("PIDGRAPH_OCR_PSM", "7")
+        self.upscale = upscale if upscale is not None else _int_env("PIDGRAPH_OCR_UPSCALE", 2)
+        raw_threshold = os.environ.get("PIDGRAPH_OCR_THRESHOLD", "160").lower()
+        if raw_threshold in ("otsu", "none"):
+            self.threshold: str | int = raw_threshold
+        else:
+            try:
+                self.threshold = int(raw_threshold)
+            except ValueError:
+                self.warnings.append(
+                    f"PIDGRAPH_OCR_THRESHOLD={raw_threshold!r} is not an integer, 'otsu' or "
+                    "'none'; using 160"
+                )
+                self.threshold = 160
+        self.dilate = _int_env("PIDGRAPH_OCR_DILATE", 0)
+        self.dpi_hint = os.environ.get("PIDGRAPH_OCR_DPI_HINT", "")
         self.binary = find_tesseract()
 
     def available(self) -> bool:
@@ -179,7 +212,36 @@ class TesseractBackend:
             image = image.resize(
                 (image.width * self.upscale, image.height * self.upscale), Image.LANCZOS
             )
-        image = image.point(lambda v: 0 if v < 160 else 255, mode="1")
+        if self.dilate:
+            from PIL import ImageFilter
+
+            # MinFilter on a white-background grayscale thickens dark strokes. A hairline CAD
+            # stroke at recognition scale is thinner than the engine's models expect; one round
+            # of dilation moves it toward printed-text weight without joining characters.
+            for _ in range(self.dilate):
+                image = image.filter(ImageFilter.MinFilter(3))
+        if self.threshold == "otsu":
+            import numpy as np
+
+            values = np.asarray(image)
+            hist, _ = np.histogram(values, bins=256, range=(0, 255))
+            total = values.size
+            best_t, best_var, w0, sum0 = 128, -1.0, 0, 0.0
+            total_sum = float((hist * np.arange(256)).sum())
+            for t in range(256):
+                w0 += hist[t]
+                if w0 == 0 or w0 == total:
+                    continue
+                sum0 += t * hist[t]
+                m0 = sum0 / w0
+                m1 = (total_sum - sum0) / (total - w0)
+                var = w0 * (total - w0) * (m0 - m1) ** 2
+                if var > best_var:
+                    best_var, best_t = var, t
+            image = image.point(lambda v, t=best_t: 0 if v <= t else 255, mode="1")
+        elif self.threshold != "none":
+            cut = self.threshold
+            image = image.point(lambda v: 0 if v < cut else 255, mode="1")
         buffer = io.BytesIO()
         image.save(buffer, format="PNG")
         return buffer.getvalue()
@@ -200,11 +262,19 @@ class TesseractBackend:
                 # An argument list, never a shell string: these paths are not ours to trust.
                 result = subprocess.run(
                     [
-                        self.binary, temp, "stdout",
-                        "--psm", self.psm,
-                        "-c", f"tessedit_char_whitelist={_WHITELIST}",
+                        self.binary,
+                        temp,
+                        "stdout",
+                        "--psm",
+                        self.psm,
+                        "-c",
+                        f"tessedit_char_whitelist={_WHITELIST}",
+                        *(["--dpi", self.dpi_hint] if self.dpi_hint else []),
                     ],
-                    capture_output=True, text=True, timeout=30, check=False,
+                    capture_output=True,
+                    text=True,
+                    timeout=30,
+                    check=False,
                 )
                 # A non-zero exit with text on stdout is a failure, not a read. Trusting stdout
                 # unconditionally lets a crashed engine's partial output enter the cache as a
@@ -245,7 +315,7 @@ class VisionModelBackend:
         prompt = (
             f"This image contains {count} numbered cells, each holding one label cut from an "
             "engineering piping and instrumentation drawing. Transcribe the text in each cell "
-            "exactly as printed. Labels are things like PI-715A, MV-745-01, 6\"-PL-2000-D, "
+            'exactly as printed. Labels are things like PI-715A, MV-745-01, 6"-PL-2000-D, '
             "or short words. Use upper case. If a cell is unreadable or empty, output nothing "
             "after its number.\n"
             "Reply with one line per cell, formatted exactly as: <number>: <text>"
@@ -305,7 +375,7 @@ class Recogniser:
         depends on.
         """
         local_only = {"tesseract"}
-        return next(
+        chosen = next(
             (
                 b
                 for b in self.backends
@@ -313,6 +383,13 @@ class Recogniser:
             ),
             None,
         )
+        # Configuration warnings ride the errors channel so they reach the run's notes: a knob
+        # that fell back to its default must be visible in the same place a backend failure is.
+        if chosen is not None:
+            for warning in getattr(chosen, "warnings", []):
+                if warning not in self.errors:
+                    self.errors.append(warning)
+        return chosen
 
     def recognise(self, crops: list) -> dict[str, Recognition]:
         """Recognise crops, using the cache first.

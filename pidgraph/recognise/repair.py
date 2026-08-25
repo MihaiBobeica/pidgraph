@@ -141,7 +141,10 @@ def repair(text: str, budget: int = MAX_SUBSTITUTIONS) -> Repair | None:
     candidate, parsed = accepted[0]
     changes = sum(1 for a, b in zip(despaced, candidate, strict=False) if a != b)
     return Repair(
-        raw, candidate, parsed, changes,
+        raw,
+        candidate,
+        parsed,
+        changes,
         f"{changes} character substitution{'s' if changes != 1 else ''} to reach a valid tag",
     )
 

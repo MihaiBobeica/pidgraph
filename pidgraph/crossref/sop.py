@@ -230,9 +230,7 @@ def load(path: str | Path) -> SopDocument:
     # their tables in content controls, and a direct-children walk reports "no requirements" on a
     # document whose limits table is right there.
     for table in body.iter(f"{W}tbl"):
-        doc.requirements.extend(
-            _requirements_from_table(table, len(doc.requirements), doc.notes)
-        )
+        doc.requirements.extend(_requirements_from_table(table, len(doc.requirements), doc.notes))
 
     if not doc.requirements:
         doc.notes.append("no checkable requirements found; the document may be prose-only")

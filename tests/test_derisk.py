@@ -63,10 +63,18 @@ class TestCapabilityContract:
     def test_text_layer_predicate_thresholds_on_volume(self):
         """A handful of characters is not a text layer."""
         base = dict(
-            page_index=0, width_pt=100.0, height_pt=100.0, rotation=0,
-            vector_path_count=0, line_segment_count=0, bezier_count=0,
-            raster_area_ratio=0.0, raster_max_dpi=None, text_region_count=0,
-            has_ocg_layers=False, dash_arrays_present=False,
+            page_index=0,
+            width_pt=100.0,
+            height_pt=100.0,
+            rotation=0,
+            vector_path_count=0,
+            line_segment_count=0,
+            bezier_count=0,
+            raster_area_ratio=0.0,
+            raster_max_dpi=None,
+            text_region_count=0,
+            has_ocg_layers=False,
+            dash_arrays_present=False,
         )
         assert not PageCapabilities(**base, text_layer_chars=69).has_text_layer
         assert PageCapabilities(**base, text_layer_chars=5000).has_text_layer
@@ -74,10 +82,18 @@ class TestCapabilityContract:
     def test_empty_dash_array_is_not_a_dash_signal(self):
         """Producers that simulate dashes with short strokes still emit an empty dash array."""
         base = dict(
-            page_index=0, width_pt=1.0, height_pt=1.0, rotation=0,
-            vector_path_count=0, line_segment_count=0, bezier_count=0,
-            raster_area_ratio=0.0, raster_max_dpi=None, text_layer_chars=0,
-            text_region_count=0, has_ocg_layers=False,
+            page_index=0,
+            width_pt=1.0,
+            height_pt=1.0,
+            rotation=0,
+            vector_path_count=0,
+            line_segment_count=0,
+            bezier_count=0,
+            raster_area_ratio=0.0,
+            raster_max_dpi=None,
+            text_layer_chars=0,
+            text_region_count=0,
+            has_ocg_layers=False,
         )
         assert not PageCapabilities(**base, dash_arrays_present=False).dash_arrays_present
 
@@ -162,6 +178,6 @@ class TestSuppliedCorpus:
                         continue
                     diameters[round(w / span, 5)] += 1
         assert diameters, "no circular symbol candidates found"
-        (_, top_count), = diameters.most_common(1)
+        ((_, top_count),) = diameters.most_common(1)
         assert top_count >= 20, f"dominant mode has only {top_count} members"
         assert top_count / sum(diameters.values()) > 0.9, "symbol sizes are not concentrated"

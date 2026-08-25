@@ -176,11 +176,11 @@ So the quantity to recover is `U`, the drawing's module. Everything else is a pu
 
 ```python
 class Scale(BaseModel):
-    unit_system: str        # 'ISA' | 'ISO'  — from sheet-size series
-    U: float                # the module (ISA m.u. or ISO M), in drawing units
-    cap_height: float       # modal ink cap height  (≈ 2·U ISA, 1·U ISO)
-    stroke_narrow: float    # narrowest populated stroke cluster (≈ 0.2·U ISA, 0.1·U ISO)
-    bubble: float|None      # measured circle-radius mode (expect ≈ 7·U, or 8·U)
+    unit_system: str  # 'ISA' | 'ISO'  — from sheet-size series
+    U: float  # the module (ISA m.u. or ISO M), in drawing units
+    cap_height: float  # modal ink cap height  (≈ 2·U ISA, 1·U ISO)
+    stroke_narrow: float  # narrowest populated stroke cluster (≈ 0.2·U ISA, 0.1·U ISO)
+    bubble: float | None  # measured circle-radius mode (expect ≈ 7·U, or 8·U)
     confidence: float
 ```
 
@@ -422,7 +422,7 @@ Three problems, each with strategies ranked by the capability descriptor:
 | Problem | Preferred | Fallback | Last resort |
 |---|---|---|---|
 | Text regions | structural hints from the source | geometric clustering of glyph marks | connected components + text/graphics separation |
-| Text content | embedded text layer | crop + OCR/VLM at the derived DPI | crop + OCR/VLM |
+| Text content | vector glyph matching on the strokes themselves | embedded text layer | crop + raster OCR at the derived DPI |
 | Line type | dash arrays | collinear gap statistics | stroke thickness |
 | Symbols | normalised shape matching | raster template match | learned detector |
 | Connectivity | endpoints + port binding | endpoints + port binding | morphology + line-segment detection |

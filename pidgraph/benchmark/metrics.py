@@ -44,10 +44,7 @@ class Score:
             return f"{self.label}: no instances"
         if self.value is None:
             return f"{self.label}: {self.hits}/{self.total} (n<{MIN_REPORTABLE}, rate not reported)"
-        return (
-            f"{self.label}: {self.value:.1%} [{self.low:.1%}-{self.high:.1%}] "
-            f"n={self.total}"
-        )
+        return f"{self.label}: {self.value:.1%} [{self.low:.1%}-{self.high:.1%}] n={self.total}"
 
     def to_dict(self) -> dict:
         return {
@@ -165,4 +162,58 @@ def edge_scores(
     return (
         score(hits, len(predicted), "edge precision"),
         score(hits, len(translated), "edge recall"),
+    )
+
+
+def text_scores(
+    truth_labels: list,  # TruthLabel
+    reads: list[tuple[tuple[float, float, float, float], str]],
+    module: float,
+) -> tuple[Score, Score]:
+    """Recognition precision and recall, position-matched and exact-string.
+
+    A read is a hit only when it sits on a truth label *and* the string is exactly right after
+    space normalisation -- spaces are stripped from both sides because the truth never contains
+    them and a read differing only by inserted spaces resolves identically downstream. A read with
+    no truth label under it is a false positive; a read on the right label with one wrong
+    character is *also* a false positive, because a confidently wrong tag is the expensive
+    failure, not a soft miss.
+
+    Matching is greedy nearest-centre with a gate of three modules, one-to-one, so one read
+    cannot satisfy two labels.
+    """
+
+    def centre(box):
+        return ((box[0] + box[2]) / 2, (box[1] + box[3]) / 2)
+
+    def norm(text: str) -> str:
+        return (text or "").upper().replace(" ", "").strip()
+
+    gate = 3.0 * module
+    pairs: list[tuple[float, int, int]] = []
+    for t_index, label in enumerate(truth_labels):
+        tc = centre(label.bbox)
+        for r_index, (bbox, _) in enumerate(reads):
+            rc = centre(bbox)
+            dist = ((tc[0] - rc[0]) ** 2 + (tc[1] - rc[1]) ** 2) ** 0.5
+            if dist <= gate:
+                pairs.append((dist, t_index, r_index))
+
+    pairs.sort()
+    matched_truth: dict[int, int] = {}
+    matched_read: set[int] = set()
+    for _, t_index, r_index in pairs:
+        if t_index in matched_truth or r_index in matched_read:
+            continue
+        matched_truth[t_index] = r_index
+        matched_read.add(r_index)
+
+    correct = sum(
+        1
+        for t_index, r_index in matched_truth.items()
+        if norm(truth_labels[t_index].text) == norm(reads[r_index][1])
+    )
+    return (
+        score(correct, len(reads), "text precision"),
+        score(correct, len(truth_labels), "text recall"),
     )

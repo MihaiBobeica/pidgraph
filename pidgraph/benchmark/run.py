@@ -28,6 +28,8 @@ class SampleResult:
     symbol_sweep: dict[float, tuple[Score, Score]] = field(default_factory=dict)
     edge_precision: Score | None = None
     edge_recall: Score | None = None
+    text_precision: Score | None = None
+    text_recall: Score | None = None
     error: str | None = None
 
     @property
@@ -50,6 +52,7 @@ class BenchmarkReport:
         """
         p_hits = p_total = r_hits = r_total = 0
         e_p_hits = e_p_total = e_r_hits = e_r_total = 0
+        t_p_hits = t_p_total = t_r_hits = t_r_total = 0
         for sample in self.samples:
             if sample.error or threshold not in sample.symbol_sweep:
                 continue
@@ -63,11 +66,18 @@ class BenchmarkReport:
                 e_p_total += sample.edge_precision.total
                 e_r_hits += sample.edge_recall.hits
                 e_r_total += sample.edge_recall.total
+            if sample.text_precision and sample.text_recall:
+                t_p_hits += sample.text_precision.hits
+                t_p_total += sample.text_precision.total
+                t_r_hits += sample.text_recall.hits
+                t_r_total += sample.text_recall.total
         return {
             "symbol_precision": metrics.score(p_hits, p_total, f"symbol precision@{threshold}"),
             "symbol_recall": metrics.score(r_hits, r_total, f"symbol recall@{threshold}"),
             "edge_precision": metrics.score(e_p_hits, e_p_total, "edge precision"),
             "edge_recall": metrics.score(e_r_hits, e_r_total, "edge recall"),
+            "text_precision": metrics.score(t_p_hits, t_p_total, "text precision"),
+            "text_recall": metrics.score(t_r_hits, t_r_total, "text recall"),
         }
 
     def calibration_accuracy(self) -> dict[str, float | int]:
@@ -105,7 +115,7 @@ class BenchmarkReport:
         }
 
 
-def score_sample(path: Path, truth: generate.TruthGraph) -> SampleResult:
+def score_sample(path: Path, truth: generate.TruthGraph, recogniser=None) -> SampleResult:
     """Run the pipeline over one generated drawing and score it."""
     from pidgraph.pipeline import ExtractionError, run
 
@@ -117,7 +127,7 @@ def score_sample(path: Path, truth: generate.TruthGraph) -> SampleResult:
         sheet_found=None,
     )
     try:
-        extraction = run(path)
+        extraction = run(path, recogniser=recogniser)
     except ExtractionError as exc:
         result.error = str(exc)
         return result
@@ -138,18 +148,55 @@ def score_sample(path: Path, truth: generate.TruthGraph) -> SampleResult:
         [(e.source, e.target) for e in page.graph.edges],
         mapping,
     )
+
+    if truth.labels:
+        reads = [
+            ((r.bbox.x0, r.bbox.y0, r.bbox.x1, r.bbox.y1), r.text)
+            for r in page.regions
+            if getattr(r, "text", None)
+        ]
+        result.text_precision, result.text_recall = metrics.text_scores(
+            truth.labels, reads, truth.module
+        )
     return result
 
 
-def run_benchmark(count: int = 12, directory: str | Path = "outputs/synthetic") -> BenchmarkReport:
+def run_benchmark(
+    count: int = 12, directory: str | Path = "outputs/synthetic", *, seed0: int = 0
+) -> BenchmarkReport:
     report = BenchmarkReport()
-    samples = generate.corpus(count, directory, defects=True)
-    for path, truth in samples:
-        report.samples.append(score_sample(path, truth))
+    samples = generate.corpus(count, directory, seed0=seed0, defects=True)
+    # The benchmark carries its own recognition cache, kept apart from the committed codebook:
+    # synthetic crops are not evidence about the real drawing, and the codebook must stay a
+    # faithful record of what the real input contains.
+    recogniser = None
+    try:
+        from pidgraph.recognise.ocr import Cache, Recogniser
 
+        recogniser = Recogniser(
+            cache=Cache.load(Path(directory) / "text_cache.json"), allow_network=False
+        )
+    except Exception:
+        pass
+    for path, truth in samples:
+        report.samples.append(score_sample(path, truth, recogniser=recogniser))
+    if recogniser is not None:
+        recogniser.cache.save()
+
+    report.notes.append(
+        f"Corpus seeds {seed0}..{seed0 + count - 1}. Development tuned against seeds 0..9; a "
+        "run from seed 500 is held-out data no change was fitted to."
+    )
     report.notes.append(
         "Truth is authored before the drawing is rendered, so no part of the pipeline "
         "contributed to it."
+    )
+    report.notes.append(
+        "Text figures measure the vector glyph matcher plus raster fallback. The generator "
+        "renders the matcher's own stroke alphabet (one definition, stated in code), so these "
+        "figures cover segmentation and matching under randomised size, weight, tracking, "
+        "shear and jitter -- not transfer to a foreign shape font, which only the real "
+        "drawing measures."
     )
     report.notes.append(
         "Module and sheet size are varied across samples, so any hardcoded absolute dimension "

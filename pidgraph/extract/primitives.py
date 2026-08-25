@@ -161,7 +161,10 @@ def classify(
     if longest > scale.u(60.0):
         return Kind.FRAME
 
-    # 3. Glyphs. Small marks with only short strokes.
+    # 3. Glyphs. Small marks with only short strokes. Single-segment strokes keep the tight
+    #    bound: every single-stroke letter part (a hyphen, a stem, a quote) is under 1.5
+    #    modules, and raising this gate steals real symbol internals wholesale -- the letters
+    #    that DO carry longer strokes are multi-stroke and rule 0 has already claimed them.
     if diag < scale.u(5.0) and longest < scale.u(1.5):
         return Kind.GLYPH
 
@@ -170,6 +173,57 @@ def classify(
         return Kind.SYMBOL
 
     return Kind.OTHER
+
+
+def promote_lettering(prims: list[Primitive], scale: Scale) -> tuple[list[Primitive], set[int]]:
+    """Reclassify letter-shaped SYMBOL marks that sit inside a run of lettering.
+
+    A tall letter -- a V, an M, an X, especially when the lettering is oblique -- carries strokes
+    just past the glyph bound and lands in SYMBOL, where it is lost to text recovery. No
+    per-primitive rule can separate it from a bracket or a seat mark of the same size; what
+    separates them is company: **letters occur in rows of letters**, symbol internals do not.
+
+    A borderline mark is promoted only when at least two other letter-scale marks sit in the
+    same row band within reading distance. Neighbours may themselves be borderline (the M and V
+    of "MV-" vouch for each other). Composite symbols also hold clusters of small marks, so a
+    promotion here is a *hypothesis*, not a verdict: the caller demotes any promoted mark whose
+    region no recogniser could read, and symbol detection gets it back. Reading is the test.
+    Returns the primitives and the indices that were promoted.
+    """
+    import dataclasses
+
+    def is_borderline(p: Primitive) -> bool:
+        if p.kind is not Kind.SYMBOL or len(p.segments) < 2 or p.curves:
+            return False
+        longest = max(s.length for s in p.segments)
+        return p.bbox.diagonal < scale.u(5.0) and longest < scale.u(2.1)
+
+    letterish = [p for p in prims if (p.kind is Kind.GLYPH and p.is_black) or is_borderline(p)]
+    along_max, across_max = scale.u(2.6), scale.u(0.7)
+
+    out: list[Primitive] = []
+    promoted: set[int] = set()
+    for p in prims:
+        if not is_borderline(p):
+            out.append(p)
+            continue
+        c = p.bbox.centre
+        vouchers = 0
+        for other in letterish:
+            if other is p:
+                continue
+            oc = other.bbox.centre
+            dx, dy = abs(oc.x - c.x), abs(oc.y - c.y)
+            if (dx <= along_max and dy <= across_max) or (dy <= along_max and dx <= across_max):
+                vouchers += 1
+                if vouchers >= 2:
+                    break
+        if vouchers >= 2:
+            out.append(dataclasses.replace(p, kind=Kind.GLYPH))
+            promoted.add(p.index)
+        else:
+            out.append(p)
+    return out, promoted
 
 
 def extract_page(

@@ -204,3 +204,76 @@ New assumptions introduced by the fix batch:
 |---|---|---|
 | ENG-03 | mupdf's pixmap ceiling is in **bytes with row padding**, so a pixel-count guard alone still hits `FzErrorLimit: Overly large image` | Observed on synthetic thin-stroke sheets whose derived DPI passed a 400 M-pixel guard and still failed; cap lowered to 120 M pixels (real case: ~67 M) with a fit-to-budget fallback |
 | ENG-04 | Recognition is an enrichment: any render or engine failure degrades that page to unread labels and records the error, never aborts extraction | `pipeline.run_page` wraps the render/recognise step; the degraded state is identical to running without a recogniser, which the rest of the pipeline already treats as a gap |
+
+---
+
+## Vector recognition and the 99 % target (2026-08-26)
+
+The OCR requirement was restated as a hard target: 99 % precision and recall on the synthetic
+benchmark. Parameter sweeps over the raster engine plateaued at 72 % held-out (16 configurations,
+best: Otsu threshold + 2x render resolution), because the residual errors were character
+confusions inherent to raster OCR on hairline stroke fonts. The target was reached by changing
+representation, not parameters: the pipeline already holds every glyph's pen strokes, and reading
+those directly removes rasterisation from the problem.
+
+**Result (held-out seeds 500-529, 30 drawings, n=717 labels, all 30 scored): text precision
+99.0 % [98.0-99.5], recall 99.0 % [98.0-99.5].** Development tuned on seeds 0-9 only. This is
+the post-review figure on the *harder* corpus -- density decoupled from module, truth tracking
+rendered as authored, and the position gate at its documented 3 modules -- and with no sheet
+refused or withheld. Earlier intermediate runs measured 100.0 % on corpora that the second
+adversarial review showed were easier than claimed (density coupled to module, tracking
+mismatch, double-width metric gate). The figures above postdate those fixes; reporting the
+older, higher numbers would be optimising the metric instead of the product.
+
+| ID | Assumption / decision | Source and verification |
+|---|---|---|
+| OCR-01 | The synthetic generator renders the recogniser's own stroke alphabet (`recognise/glyphs.py` is the single source; `benchmark/strokefont.py` imports it) | Stated in code at both ends. The benchmark therefore measures segmentation + matching under randomised size, weight, tracking, shear (±0.08) and per-point jitter (0.02 h) -- **not** transfer to a foreign shape font. Transfer is only measured on the real drawing, where the vector matcher reads ~100 regions and the confidence gate hands the rest to raster OCR |
+| OCR-02 | Confusable families {0 O D Q C G 6}, {1 I}, {8 B}, {5 S}, {2 Z}, {4 A} are not separable by shape at single-stroke weight | Measured: chamfer 0.022 vs 0.023 for a drawn 0 against 0/D templates. Resolution is by tag grammar plus a digit-context prior, applied only within a ±0.010 tie band so priors can never overrule clear geometry |
+| OCR-03 | Train and suffix letters exclude I, O, Q | Identification conventions avoid them in exactly this position because they read as 1/0; encoded in `standards/tags.py` (`_TRAIN`), which is also what lets grammar resolve a trailing O into a 0 |
+| OCR-04 | Stroke count is shape evidence: B is three pen strokes, 8 is two; 0 is one, D is two | Unique to the vector domain; a 0.025 penalty per stroke-count difference separates what point distance cannot |
+| OCR-05 | Printed text is periodic and chains like dashes | Measured: the base bars of "MV-101-15A" chained at character pitch into a fake dashed run (4 pieces, 8.7 modules, duty 22 %). Pure glyph-derived chains therefore need >= 15 modules and duty >= 0.35; text can fake neither |
+| OCR-06 | Text rows are found by interval single-link banding, orientation chosen per row | Fixed-width bucketing orphaned marks by phase; page-level orientation votes fragmented the lone vertical label on a horizontal page (both observed). Row-level competition: the row explaining more marks claims them |
+| OCR-07 | A letter-sized multi-stroke SYMBOL mark near lettering is *hypothetically* a letter; reading is the test | Promotion to GLYPH is reverted for any region no recogniser could read (vector read, or raster read that parses). Without the demotion the real drawing lost 157 symbol nodes to letter-shaped brackets; with it the real graph is 384 nodes / 570 edges |
+| OCR-08 | The remaining real-graph delta vs the pre-vector baseline (384 vs 425 nodes) is partly de-phantoming | The old pipeline classified large lettering as symbol geometry and manufactured nodes from it. The truth-bearing benchmark scores the current classifier at symbol precision 100 % [99.4-100]; the real delta cannot be attributed without real ground truth and is recorded rather than hidden |
+| OCR-09 | One of 30 held-out samples still refuses at the pipeline's calibration-confidence gate; four others recover the module at 0.85x truth (a two-estimator median with a low-biased symbol estimate) and lose one tall letter each | Calibration precision, not recognition, is now the binding constraint on the text figure; recorded as the next thing to improve rather than hidden inside an aggregate |
+
+## Interface (2026-08-26)
+
+| ID | Decision | Rationale |
+|---|---|---|
+| UI-01 | Direct manipulation over words: wheel-zoom, drag-pan, click-inspect, search-jump, findings that fly to their evidence | The reviewer's first 30 seconds decide whether the work is understood; a paragraph of instructions is a tax on exactly that window. The only instructional text is one dismissable hint line |
+| UI-02 | Findings come from the same `graph_snapshot` RPC as the graph | One consistency boundary: the panel can never show findings from a different run than the drawing on screen |
+
+---
+
+## Second adversarial review — the vector-OCR and interface batch (2026-08-26)
+
+A second multi-agent pass (5 dimensions, every finding independently attacked before acceptance)
+reviewed the day's diff: **24 raised, 20 confirmed, 4 refuted. All 20 confirmed findings were
+fixed the same day** -- none ledgered as accepted risk this round, because every one had a
+concrete failure scenario worth closing. The instructive ones:
+
+- **The slant estimator sheared upright text.** The legs of A, V, W and 7 pass any workable stem
+  gate, and a row they dominate estimated a large slant for perfectly upright lettering ('A' read
+  as 'X', 'W' as 'V', clean '7' refused). No gate can fix this -- real oblique stems overlap the
+  leg-ratio range -- so the slant is now treated the way promotion already is: as a hypothesis.
+  Both the upright and desheared interpretations are read, and the better one stands (OCR-10).
+- **Printed-text truth was rendered with different tracking than it was authored with**, so the
+  recorded bbox described a string never drawn; and the metric's gate was twice as permissive as
+  its own docstring. Both now match their documentation (the gate is 3 modules, as stated).
+- **Corpus density was a deterministic function of the module** (both drawn from the same seeded
+  stream), so the hardest regime -- finest lettering at highest density -- was never generated.
+  Density now has its own stream; the published figures were re-measured on regenerated corpora.
+- **A dissolved dash chain deleted its real line pieces**; they are now re-emitted as the
+  conductors they were.
+- **The row competition could drop a mark from every region**; losing rows now re-enter as their
+  unclaimed remainder, so every mark finds its best remaining home or is gated explicitly.
+- Interface: the zoom/pan camera now accounts for SVG letterboxing, touch pan works
+  (`touch-action: none` + pointercancel), a failed snapshot fetch shows a retry instead of an
+  eternal "Loading", findings toggle closed, the flash highlight clears, sheets are looked up by
+  index rather than array position, and malformed OCR environment knobs degrade with a recorded
+  warning instead of silently disabling the raster leg.
+
+| ID | Assumption / decision | Source and verification |
+|---|---|---|
+| OCR-10 | The lettering slant estimate is a hypothesis, not a measurement: both the upright and desheared readings are attempted and the lower mean character distance wins | Verified against the reviewer's reproduction set: A, AA, W, WW, 7, 77, 747, 7A7, V, AV, VA and full tags all read exactly, upright and at 0.08 shear, horizontal and vertical |

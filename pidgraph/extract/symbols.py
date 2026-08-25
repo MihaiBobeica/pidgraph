@@ -187,9 +187,7 @@ def group_composites(
     candidates = [
         p
         for p in prims
-        if p.kind is Kind.SYMBOL
-        and p.is_black
-        and 1.0 <= p.bbox.diagonal / scale.module <= 40.0
+        if p.kind is Kind.SYMBOL and p.is_black and 1.0 <= p.bbox.diagonal / scale.module <= 40.0
     ]
     if not candidates:
         return []
@@ -237,8 +235,10 @@ def group_composites(
     for _, members in sorted(groups.items()):
         parts = [candidates[i] for i in members]
         bbox = BBox(
-            min(p.bbox.x0 for p in parts), min(p.bbox.y0 for p in parts),
-            max(p.bbox.x1 for p in parts), max(p.bbox.y1 for p in parts),
+            min(p.bbox.x0 for p in parts),
+            min(p.bbox.y0 for p in parts),
+            max(p.bbox.x1 for p in parts),
+            max(p.bbox.y1 for p in parts),
         )
         diag_modules = bbox.diagonal / scale.module
         # A composite spanning far more than any symbol is a merge failure, not a symbol.
@@ -339,8 +339,7 @@ def dedupe(symbols: list[Symbol], scale: Scale, tol: float = 0.5) -> list[Symbol
     kept: list[Symbol] = []
     for sym in sorted(symbols, key=lambda s: (-s.confidence, s.id)):
         if any(
-            sym.centre.dist(k.centre) <= radius
-            and abs(sym.bbox.width - k.bbox.width) <= radius
+            sym.centre.dist(k.centre) <= radius and abs(sym.bbox.width - k.bbox.width) <= radius
             for k in kept
         ):
             continue

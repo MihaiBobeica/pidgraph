@@ -34,7 +34,7 @@ export async function GET() {
         return Response.json({
           nodes,
           edges: data.edges ?? [],
-          findings: [],
+          findings: data.findings ?? [],
           pages: derivePages(nodes),
           source: "database",
         });
@@ -47,14 +47,24 @@ export async function GET() {
   // Dev runs with cwd at web/, the standalone build with cwd at the bundle root; both are tried
   // rather than assuming one layout and returning "unavailable" in the other.
   const candidates = [
-    path.join(process.cwd(), "..", "outputs", "graph.json"),
-    path.join(process.cwd(), "outputs", "graph.json"),
+    path.join(process.cwd(), "..", "outputs"),
+    path.join(process.cwd(), "outputs"),
   ];
   try {
     let raw: any = null;
-    for (const file of candidates) {
+    let findings: any[] = [];
+    for (const dir of candidates) {
       try {
-        raw = JSON.parse(await fs.readFile(file, "utf-8"));
+        raw = JSON.parse(await fs.readFile(path.join(dir, "graph.json"), "utf-8"));
+        try {
+          const jsonl = await fs.readFile(path.join(dir, "findings.jsonl"), "utf-8");
+          findings = jsonl
+            .split(/\r?\n/)
+            .filter(Boolean)
+            .map((line) => JSON.parse(line));
+        } catch {
+          /* a graph without findings still renders */
+        }
         break;
       } catch {
         /* try the next location */
@@ -78,7 +88,7 @@ export async function GET() {
     return Response.json({
       nodes,
       edges,
-      findings: [],
+      findings,
       pages: derivePages(nodes),
       source: "committed export",
     });

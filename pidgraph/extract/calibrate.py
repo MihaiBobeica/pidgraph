@@ -62,14 +62,23 @@ MM_PER_PT = 25.4 / 72.0
 # system's ratio table applies -- never to infer plot scale, which the page box cannot give us
 # ("B-size drawn small" and "D-size plotted at half" are indistinguishable from the box alone).
 ANSI_SHEETS_IN = {
-    "ANSI_A": (8.5, 11.0), "ANSI_B": (11.0, 17.0), "ANSI_C": (17.0, 22.0),
-    "ANSI_D": (22.0, 34.0), "ANSI_E": (34.0, 44.0),
-    "ARCH_A": (9.0, 12.0), "ARCH_B": (12.0, 18.0), "ARCH_C": (18.0, 24.0),
-    "ARCH_D": (24.0, 36.0), "ARCH_E": (36.0, 48.0),
+    "ANSI_A": (8.5, 11.0),
+    "ANSI_B": (11.0, 17.0),
+    "ANSI_C": (17.0, 22.0),
+    "ANSI_D": (22.0, 34.0),
+    "ANSI_E": (34.0, 44.0),
+    "ARCH_A": (9.0, 12.0),
+    "ARCH_B": (12.0, 18.0),
+    "ARCH_C": (18.0, 24.0),
+    "ARCH_D": (24.0, 36.0),
+    "ARCH_E": (36.0, 48.0),
 }
 ISO_SHEETS_MM = {
-    "ISO_A4": (210.0, 297.0), "ISO_A3": (297.0, 420.0), "ISO_A2": (420.0, 594.0),
-    "ISO_A1": (594.0, 841.0), "ISO_A0": (841.0, 1189.0),
+    "ISO_A4": (210.0, 297.0),
+    "ISO_A3": (297.0, 420.0),
+    "ISO_A2": (420.0, 594.0),
+    "ISO_A1": (594.0, 841.0),
+    "ISO_A0": (841.0, 1189.0),
 }
 
 
@@ -275,9 +284,7 @@ def _looks_like_fixed_plot_style(stroke_pt: float) -> bool:
 # ---- the recipe --------------------------------------------------------------------------------
 
 
-def calibrate_page(
-    page: Any, min_confidence: float = 0.35, drawings: list | None = None
-) -> Scale:
+def calibrate_page(page: Any, min_confidence: float = 0.35, drawings: list | None = None) -> Scale:
     """Recover the module for one page.
 
     Raises :class:`CalibrationError` rather than returning a low-confidence result, because every
@@ -326,9 +333,21 @@ def calibrate_page(
         )
 
     trusted = [e for e in estimators if e.trusted]
+    suspect_floor = False
+    if not trusted and estimators:
+        # Every estimator is under suspicion (typically: the stroke width coincidentally lands
+        # on the ISO 128 plot-style series). Suspicion is not proof, and refusing the page
+        # throws away a whole drawing over a heuristic -- so the suspect estimator is used at
+        # floor confidence, with the suspicion carried on the result for downstream capping.
+        trusted = estimators
+        suspect_floor = True
+        warnings.append(
+            "all scale estimators are suspect; proceeding at floor confidence rather than "
+            "refusing the page"
+        )
     if not trusted:
         raise CalibrationError(
-            f"no trusted scale estimator on page {getattr(page, 'number', '?')}; "
+            f"no scale estimator on page {getattr(page, 'number', '?')}; "
             f"observables: stroke={stroke} text={text_h} symbol={symbol}"
         )
 
@@ -337,7 +356,7 @@ def calibrate_page(
     # Confidence is agreement between independent estimators. One estimator alone can be right,
     # but it cannot be corroborated, so it is capped well below a cross-checked result.
     if len(trusted) == 1:
-        confidence = 0.45
+        confidence = 0.25 if suspect_floor else 0.45
         warnings.append(f"single estimator ({trusted[0].name}); no cross-check available")
     else:
         spread = max(abs(e.module - module) / module for e in trusted)

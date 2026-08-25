@@ -104,7 +104,10 @@ class Config:
             # must not be exposed to shell interpretation.
             result = subprocess.run(
                 [self.cli, "read", reference],
-                capture_output=True, text=True, timeout=60, check=False,
+                capture_output=True,
+                text=True,
+                timeout=60,
+                check=False,
             )
         except Exception as exc:
             raise SecretUnavailable(f"failed to invoke the 1Password CLI for {key}: {exc}") from exc

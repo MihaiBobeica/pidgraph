@@ -143,9 +143,7 @@ def _index_from(
                 tags.setdefault(parsed.canonical, parsed)
 
     text_regions = sum(p.counts.get("text_regions", 0) for p in result.pages)
-    unresolved = sum(
-        1 for p in result.pages for n in p.graph.nodes if n.dexpi_class == "unknown"
-    )
+    unresolved = sum(1 for p in result.pages for n in p.graph.nodes if n.dexpi_class == "unknown")
     index = ck.PlantIndex(
         tags=tags,
         node_count=result.graph_nodes,
@@ -181,9 +179,7 @@ def cmd_check(args: argparse.Namespace) -> int:
         "pages": len(result.pages),
         "nodes": result.graph_nodes,
         "edges": result.graph_edges,
-        "instrument symbols": sum(
-            p.counts.get("instrument_circles", 0) for p in result.pages
-        ),
+        "instrument symbols": sum(p.counts.get("instrument_circles", 0) for p in result.pages),
         "text regions": index.text_regions,
         "elapsed": f"{result.elapsed_s:.1f}s",
     }
@@ -200,14 +196,13 @@ def cmd_check(args: argparse.Namespace) -> int:
     _write_graphs(result)
     stored = _persist(result, report, pid_path, sop)
 
-    print(
-        f"verified={len(report.verified)}  findings={len(report.issues)}  "
-        f"{report.by_severity()}"
-    )
+    print(f"verified={len(report.verified)}  findings={len(report.issues)}  {report.by_severity()}")
     for finding in report.issues:
         print(f"  [{finding.severity}] {finding.title}")
-    print(f"\nwrote {OUTPUTS / 'report.md'}, {OUTPUTS / 'findings.jsonl'}, "
-          f"{OUTPUTS / 'graph.json'}, {OUTPUTS / 'graph.graphml'}")
+    print(
+        f"\nwrote {OUTPUTS / 'report.md'}, {OUTPUTS / 'findings.jsonl'}, "
+        f"{OUTPUTS / 'graph.json'}, {OUTPUTS / 'graph.graphml'}"
+    )
     print(f"persisted to {stored}")
     return 0
 
@@ -254,8 +249,10 @@ def _persist(result, report, pid_path: Path, sop) -> str:
                 "subject_raw": r.subject_raw,
                 "subject_tags": list(r.subject_tags),
                 "subject_part": r.subject_part,
-                "quantities": {k: {"min": v.minimum, "max": v.maximum, "unit": v.unit}
-                               for k, v in r.quantities.items()},
+                "quantities": {
+                    k: {"min": v.minimum, "max": v.maximum, "unit": v.unit}
+                    for k, v in r.quantities.items()
+                },
                 "evidence": r.evidence,
             }
             for r in sop.requirements
@@ -351,8 +348,10 @@ def cmd_recognise(args: argparse.Namespace) -> int:
     kinds: Counter[str] = Counter(str(r.parsed.kind) for r in repairs)
     print()
     print(f"cache: {len(cache.entries)} entries")
-    print(f"reads: {stats['input']}  usable tags: {len(repairs)} "
-          f"({len(repairs) / max(stats['input'], 1):.0%})")
+    print(
+        f"reads: {stats['input']}  usable tags: {len(repairs)} "
+        f"({len(repairs) / max(stats['input'], 1):.0%})"
+    )
     print(f"by kind: {dict(kinds)}")
     for message in recogniser.errors:
         print(f"  ! {message}")
@@ -378,7 +377,8 @@ def build_parser() -> argparse.ArgumentParser:
             p.add_argument("--sop", help="path to the procedure document")
         if name == "migrate":
             p.add_argument(
-                "--apply", action="store_true",
+                "--apply",
+                action="store_true",
                 help="make changes; without this the command only inspects and reports",
             )
         p.set_defaults(handler=handler)

@@ -59,9 +59,12 @@ class Crop:
 
 def render_page(page: Any, scale: Scale, dpi: float | None = None) -> tuple[Any, float]:
     """Render a whole page once. Returns the pixmap and the pixels-per-point factor."""
+    import os
+
     import pymupdf
 
     resolution = dpi or scale.render_dpi()
+    resolution *= float(os.environ.get("PIDGRAPH_RENDER_DPI_MULT", "1.0"))
     factor = resolution / 72.0
     rect = page.rect
     if rect.width * factor * rect.height * factor > MAX_RENDER_PIXELS:
@@ -76,7 +79,7 @@ def cut(
     factor: float,
     regions: list[TextRegion],
     scale: Scale,
-    pad: float = 0.5,
+    pad: float | None = None,
 ) -> list[Crop]:
     """Cut crops out of a rendered page.
 
@@ -84,8 +87,12 @@ def cut(
     upright, because a recogniser reading sideways text performs far worse than one reading a
     rotated copy.
     """
+    import os
+
     from PIL import Image
 
+    if pad is None:
+        pad = float(os.environ.get("PIDGRAPH_CROP_PAD", "0.5"))
     image = Image.frombytes("RGB", (pixmap.width, pixmap.height), pixmap.samples)
     margin = scale.u(pad) * factor
     out: list[Crop] = []
@@ -153,9 +160,7 @@ def montage(crops: list[Crop], columns: int = 4, gap: int = 8, label: bool = Tru
         if label:
             draw.text((x + 4, y + max(0, (cell_h - 10) // 2)), f"{index + 1:02d}", fill=(200, 0, 0))
         sheet.paste(tile, (x + pad_left, y))
-        draw.rectangle(
-            [x, y, x + cell_w, y + cell_h], outline=(220, 220, 220), width=1
-        )
+        draw.rectangle([x, y, x + cell_w, y + cell_h], outline=(220, 220, 220), width=1)
 
     buffer = io.BytesIO()
     sheet.save(buffer, format="PNG", optimize=True)

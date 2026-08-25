@@ -16,8 +16,9 @@ module answers only "where is text, and which way does it run".
 
 from __future__ import annotations
 
+import heapq
+import itertools
 import math
-from collections import defaultdict
 from dataclasses import dataclass
 from typing import Any, Literal
 
@@ -41,12 +42,20 @@ class TextRegion:
     """The recognised string, once recognition has run. None means unread, which downstream code
     must treat differently from empty: an unread label is an extraction gap, not evidence."""
     text_confidence: float = 0.0
+    marks: tuple = ()
+    """The vector marks the region was built from. Empty for structural regions until the
+    containing marks are collected; the vector matcher reads from these."""
 
     def with_text(self, text: str, confidence: float) -> TextRegion:
         return TextRegion(
-            bbox=self.bbox, orientation=self.orientation, source=self.source,
-            mark_count=self.mark_count, page_index=self.page_index,
-            text=text, text_confidence=confidence,
+            bbox=self.bbox,
+            orientation=self.orientation,
+            source=self.source,
+            mark_count=self.mark_count,
+            page_index=self.page_index,
+            text=text,
+            text_confidence=confidence,
+            marks=self.marks,
         )
 
     @property
@@ -93,8 +102,10 @@ def structural_regions(page: Any, page_index: int) -> list[TextRegion]:
             continue
         rect = annot.rect * matrix
         bbox = BBox(
-            min(rect.x0, rect.x1), min(rect.y0, rect.y1),
-            max(rect.x0, rect.x1), max(rect.y0, rect.y1),
+            min(rect.x0, rect.x1),
+            min(rect.y0, rect.y1),
+            max(rect.x0, rect.x1),
+            max(rect.y0, rect.y1),
         )
         if bbox.width <= 0 or bbox.height <= 0:
             continue
@@ -124,53 +135,66 @@ def cluster_regions(
     scale: Scale,
     page_index: int,
     along: float = 1.6,
-    across: float = 0.5,
+    band_gap: float = 0.15,
 ) -> list[TextRegion]:
     """Group glyph marks into runs with an anisotropic tolerance.
 
-    ``along`` and ``across`` are in modules. The asymmetry is the whole point: characters in a
-    string are close along the baseline and separated across it, so a single isotropic radius
-    either fragments strings or merges adjacent lines. Both orientations are grown independently
-    and the better-supported grouping wins, because a drawing carries text at 0 and 90 degrees.
+    ``along`` is the maximum centre gap between neighbouring characters and ``band_gap`` the
+    across-axis gap that separates two rows; both are in modules. The asymmetry is the whole
+    point: characters in a string are close along the baseline and separated across it, so a
+    single isotropic radius either fragments strings or merges adjacent lines.
+
+    Both orientations are grown independently and the winner is chosen **per row, not per page**.
+    A drawing carries text at 0 and 90 degrees *simultaneously* -- one vertical label on a page
+    of horizontal tags is normal, and a page-level vote fragments it into unreadable single-mark
+    rows. Rows from both orientations compete mark by mark: the better-supported row claims its
+    marks. A row that lost marks to a stronger row is not dropped whole -- its unclaimed
+    remainder re-enters the competition at its new size, so no mark can fall out of every
+    region just because two rows each lost a different neighbour.
     """
     if not marks:
         return []
 
-    best: list[TextRegion] = []
+    candidates: list[tuple[list[Primitive], str]] = []
     for orientation in ("horizontal", "vertical"):
-        eps_x = scale.u(along if orientation == "horizontal" else across)
-        eps_y = scale.u(across if orientation == "horizontal" else along)
+        eps_along = scale.u(along)
+        eps_across = scale.u(band_gap)
 
-        # Bucket by the across-axis first so only plausible neighbours are ever compared.
-        buckets: dict[int, list[Primitive]] = defaultdict(list)
-        for mark in marks:
-            c = mark.bbox.centre
-            key = int((c.y if orientation == "horizontal" else c.x) // max(eps_y, 1e-6))
-            buckets[key].append(mark)
+        # Band the page along the across-axis by interval single-link: a mark joins the current
+        # band while its across-extent overlaps the band's (within a small gap). Glyph strokes of
+        # one string always overlap transitively -- a dot at the baseline and a quote at the cap
+        # line both overlap the full-height strokes between them -- so a band holds whole rows.
+        # Fixed-width bucketing cannot do this: a row spans two to three buckets depending on
+        # phase, and the marks that fall outside become orphan fragments that read as junk.
+        def across_interval(
+            m: Primitive, horizontal: bool = orientation == "horizontal"
+        ) -> tuple[float, float]:
+            box = m.bbox
+            return (box.y0, box.y1) if horizontal else (box.x0, box.x1)
+
+        ordered = sorted(marks, key=lambda m: across_interval(m)[0])
+        bands: list[list[Primitive]] = []
+        band_hi = None
+        for mark in ordered:
+            lo, hi = across_interval(mark)
+            if band_hi is None or lo > band_hi + eps_across:
+                bands.append([])
+                band_hi = hi
+            else:
+                band_hi = max(band_hi, hi)
+            bands[-1].append(mark)
 
         groups: list[list[Primitive]] = []
-        consumed: set[int] = set()
-        for key in sorted(buckets):
-            # The +1 bucket catches marks straddling a boundary, but each mark may join only one
-            # row: without the consumed set every straddler is emitted twice, producing
-            # overlapping regions that are recognised twice and can label two different nodes
-            # with the same tag.
-            row = sorted(
-                (
-                    m
-                    for m in buckets[key] + buckets.get(key + 1, [])
-                    if id(m) not in consumed
-                ),
-                key=lambda m: m.bbox.centre.x if orientation == "horizontal" else m.bbox.centre.y,
+        for band in bands:
+            band.sort(
+                key=lambda m: m.bbox.centre.x if orientation == "horizontal" else m.bbox.centre.y
             )
-            for m in row:
-                consumed.add(id(m))
             current: list[Primitive] = []
             previous: float | None = None
-            for mark in row:
+            for mark in band:
                 c = mark.bbox.centre
                 pos = c.x if orientation == "horizontal" else c.y
-                if previous is not None and pos - previous > eps_x:
+                if previous is not None and pos - previous > eps_along:
                     if current:
                         groups.append(current)
                     current = []
@@ -179,33 +203,69 @@ def cluster_regions(
             if current:
                 groups.append(current)
 
-        regions = []
-        for group in groups:
-            if not group:
-                continue
-            bbox = BBox(
-                min(m.bbox.x0 for m in group), min(m.bbox.y0 for m in group),
-                max(m.bbox.x1 for m in group), max(m.bbox.y1 for m in group),
-            )
-            regions.append(
-                TextRegion(
-                    bbox=bbox,
-                    orientation=_dominant_axis(group),
-                    source="clustered",
-                    mark_count=len(group),
-                    page_index=page_index,
-                )
-            )
-        # Prefer the grouping that produces longer runs: fragmentation is the failure mode.
-        if not best or _mean_marks(regions) > _mean_marks(best):
-            best = regions
-    return best
+        candidates.extend((group, orientation) for group in groups if group)
 
-
-def _mean_marks(regions: list[TextRegion]) -> float:
-    if not regions:
-        return 0.0
-    return sum(r.mark_count for r in regions) / len(regions)
+    # Row-level competition. Larger rows first -- fragmentation is the failure mode, so the row
+    # explaining more marks wins them. Ties go to horizontal, the dominant convention. A queue
+    # rather than one pass: a row that lost marks re-enters as its unclaimed remainder, which is
+    # strictly smaller, so the loop terminates and every mark gets its best remaining home.
+    # The running counter is a heap tiebreaker: primitives are not orderable, so ties on size
+    # and orientation must be broken before the comparison ever reaches the group itself.
+    tiebreak = itertools.count()
+    queue: list[tuple[int, int, int, list[Primitive], str]] = [
+        (-len(group), 0 if orientation == "horizontal" else 1, next(tiebreak), group, orientation)
+        for group, orientation in candidates
+    ]
+    heapq.heapify(queue)
+    claimed: set[int] = set()
+    regions = []
+    while queue:
+        _, _, _, group, orientation = heapq.heappop(queue)
+        remainder = [m for m in group if id(m) not in claimed]
+        if not remainder:
+            continue
+        if len(remainder) != len(group):
+            heapq.heappush(
+                queue,
+                (
+                    -len(remainder),
+                    0 if orientation == "horizontal" else 1,
+                    next(tiebreak),
+                    remainder,
+                    orientation,
+                ),
+            )
+            continue
+        bbox = BBox(
+            min(m.bbox.x0 for m in group),
+            min(m.bbox.y0 for m in group),
+            max(m.bbox.x1 for m in group),
+            max(m.bbox.y1 for m in group),
+        )
+        # Lettering is never shorter than about half a module -- the module is *defined* by
+        # lettering height. A "row" whose across-axis extent is a stroke width is a run of
+        # line dashes, and recognising it manufactures text where there is none. A single mark
+        # is gated on its smaller dimension outright: a lone stroke-thin mark is a dash in any
+        # orientation, and gating it by the reading axis lets each dash of a rejected row
+        # sneak back in as an opposite-orientation "letter" the height of its own length.
+        if len(group) == 1:
+            minor = min(bbox.width, bbox.height)
+        else:
+            minor = bbox.height if orientation == "horizontal" else bbox.width
+        if minor < scale.u(0.4):
+            continue
+        claimed.update(id(m) for m in group)
+        regions.append(
+            TextRegion(
+                bbox=bbox,
+                orientation=_dominant_axis(group),
+                source="clustered",
+                mark_count=len(group),
+                page_index=page_index,
+                marks=tuple(group),
+            )
+        )
+    return regions
 
 
 def recover(
@@ -228,6 +288,9 @@ def recover(
     structural = structural_regions(page, page_index)
     if content is not None:
         structural = [r for r in structural if content.contains(r.centre)]
+    # Attach the glyph marks each hint contains: the hint locates the text, the marks *are* the
+    # text, and the vector matcher reads from them.
+    structural = [_with_contained_marks(region, marks) for region in structural]
     if len(structural) >= 10:
         covered = _coverage(structural, marks)
         if covered >= 0.6:
@@ -242,12 +305,24 @@ def recover(
     return cluster_regions(marks, scale, page_index), "clustered"
 
 
+def _with_contained_marks(region: TextRegion, marks: list[Primitive]) -> TextRegion:
+    inside = tuple(m for m in marks if region.bbox.contains(m.bbox.centre))
+    if not inside:
+        return region
+    return TextRegion(
+        bbox=region.bbox,
+        orientation=region.orientation,
+        source=region.source,
+        mark_count=len(inside),
+        page_index=region.page_index,
+        marks=inside,
+    )
+
+
 def _coverage(regions: list[TextRegion], marks: list[Primitive]) -> float:
     if not marks:
         return 1.0
-    inside = sum(
-        1 for m in marks if any(r.bbox.contains(m.bbox.centre) for r in regions)
-    )
+    inside = sum(1 for m in marks if any(r.bbox.contains(m.bbox.centre) for r in regions))
     return inside / len(marks)
 
 

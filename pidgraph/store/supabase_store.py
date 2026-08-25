@@ -134,9 +134,7 @@ class SupabaseStore:
 
                 # Edges reference nodes by their content-addressed key, so the mapping to surrogate
                 # ids is resolved here rather than being carried through the pipeline.
-                cursor.execute(
-                    "select stable_key, id from nodes where run_id = %s", (run_id,)
-                )
+                cursor.execute("select stable_key, id from nodes where run_id = %s", (run_id,))
                 ids = dict(cursor.fetchall())
 
                 rows = [

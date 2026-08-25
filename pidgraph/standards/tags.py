@@ -101,12 +101,18 @@ _LINE_NUMBER = re.compile(
         (?P<body>[A-Z0-9][A-Z0-9\-]*)$""",
     re.VERBOSE,
 )
+# Train and suffix letters exclude I, O and Q: identification standards avoid them in exactly
+# this position because they read as 1 and 0 -- which also means a trailing O here is evidence
+# of a misread digit, not a train.
+_TRAIN = "[A-HJ-NPR-Z]"
 _EQUIPMENT = re.compile(
-    r"^(?P<cls>[A-Z]{1,3})-(?P<num>\d{2,4})\s*(?P<train>[A-Z](?:\s*/\s*[A-Z])*)?$"
+    rf"^(?P<cls>[A-Z]{{1,3}})-(?P<num>\d{{2,4}})\s*(?P<train>{_TRAIN}(?:\s*/\s*{_TRAIN})*)?$"
 )
-_VALVE = re.compile(r"^(?P<fn>[A-Z]{2,4})-(?P<unit>\d{2,4})-(?P<seq>\d{1,3})(?P<sfx>[A-Z]{0,2})$")
+_VALVE = re.compile(
+    rf"^(?P<fn>[A-Z]{{2,4}})-(?P<unit>\d{{2,4}})-(?P<seq>\d{{1,3}})(?P<sfx>{_TRAIN}{{0,2}})$"
+)
 _INSTRUMENT = re.compile(
-    r"^(?P<fn>[A-Z]{1,6})-(?P<unit>\d{2,4})(?:-(?P<seq>\d{1,3}))?(?P<sfx>[A-Z]{0,2})$"
+    rf"^(?P<fn>[A-Z]{{1,6}})-(?P<unit>\d{{2,4}})(?:-(?P<seq>\d{{1,3}}))?(?P<sfx>{_TRAIN}{{0,2}})$"
 )
 _CONNECTOR = re.compile(r"^\[?(?P<ref>\d{3,4}[A-Z]{0,2}|[A-Z]\d{2}[A-Z])\]?$")
 
@@ -175,10 +181,13 @@ def parse(raw: str, vocab: ProjectVocabulary | None = None) -> ParsedTag:
         for name, value in zip(names, parts, strict=False):
             fields[name] = value
         if len(parts) > len(names):
-            fields["unparsed_fields"] = "-".join(parts[len(names):])
+            fields["unparsed_fields"] = "-".join(parts[len(names) :])
         return ParsedTag(
-            raw=raw, kind=TagKind.LINE_NUMBER, conformance=Conformance.GRAMMAR_VALID,
-            canonical=text, fields=fields,
+            raw=raw,
+            kind=TagKind.LINE_NUMBER,
+            conformance=Conformance.GRAMMAR_VALID,
+            canonical=text,
+            fields=fields,
             notes=(*notes, "line-number fields are company convention, not ISA-normative"),
         )
 
@@ -193,12 +202,17 @@ def parse(raw: str, vocab: ProjectVocabulary | None = None) -> ParsedTag:
                 # it is as likely a zone numeral or a quantity, and claiming it as a connector
                 # gives OCR digit-noise a canonical identity.
                 return ParsedTag(
-                    raw=raw, kind=TagKind.UNKNOWN, conformance=Conformance.UNPARSED,
+                    raw=raw,
+                    kind=TagKind.UNKNOWN,
+                    conformance=Conformance.UNPARSED,
                     notes=(*notes, "bare number; connector reading requires brackets"),
                 )
             return ParsedTag(
-                raw=raw, kind=TagKind.OFF_PAGE_CONNECTOR, conformance=Conformance.GRAMMAR_VALID,
-                canonical=reference, notes=tuple(notes),
+                raw=raw,
+                kind=TagKind.OFF_PAGE_CONNECTOR,
+                conformance=Conformance.GRAMMAR_VALID,
+                canonical=reference,
+                notes=tuple(notes),
             )
 
     # R3 equipment -- MUST precede the instrument rule. "P-745" is a pump, not a pressure loop,
@@ -208,17 +222,22 @@ def parse(raw: str, vocab: ProjectVocabulary | None = None) -> ParsedTag:
         train = (match.group("train") or "").replace(" ", "")
         extra = ["equipment class letters are company convention"] if vocab.inferred else []
         return ParsedTag(
-            raw=raw, kind=TagKind.EQUIPMENT, conformance=Conformance.GRAMMAR_VALID,
+            raw=raw,
+            kind=TagKind.EQUIPMENT,
+            conformance=Conformance.GRAMMAR_VALID,
             canonical=f"{match.group('cls')}-{match.group('num')}{train}",
-            prefix=match.group("cls"), sequence=match.group("num"), suffix=train or None,
+            prefix=match.group("cls"),
+            sequence=match.group("num"),
+            suffix=train or None,
             notes=(*notes, *extra),
         )
 
     # R4 valve and R5 instrument share a shape; both run through the same decomposition.
     match = _VALVE.match(text) or _INSTRUMENT.match(text)
     if not match:
-        return ParsedTag(raw=raw, kind=TagKind.UNKNOWN, conformance=Conformance.UNPARSED,
-                         notes=tuple(notes))
+        return ParsedTag(
+            raw=raw, kind=TagKind.UNKNOWN, conformance=Conformance.UNPARSED, notes=tuple(notes)
+        )
 
     function = match.group("fn")
     canonical_fn = function

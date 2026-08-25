@@ -52,6 +52,8 @@ class Polyline:
     total_ink: float
     bridged_gaps: tuple[float, ...]
     """Gaps that were closed to form this run. Retained so a wrong bridge is auditable."""
+    member_ids: tuple[int, ...] = ()
+    """Ids of the pieces a chained run absorbed, so a rejected chain can give them back."""
 
     @property
     def length(self) -> float:
@@ -64,8 +66,10 @@ class Polyline:
     @property
     def bbox(self) -> BBox:
         return BBox(
-            min(self.start.x, self.end.x), min(self.start.y, self.end.y),
-            max(self.start.x, self.end.x), max(self.start.y, self.end.y),
+            min(self.start.x, self.end.x),
+            min(self.start.y, self.end.y),
+            max(self.start.x, self.end.x),
+            max(self.start.y, self.end.y),
         )
 
     def endpoints(self) -> tuple[Point, Point]:
@@ -269,6 +273,55 @@ def chain_dashes(
     return out
 
 
+GLYPH_CANDIDATE_BASE = 1_000_000
+"""Id offset for glyph-derived dash candidates, so they are distinguishable in chain output."""
+
+
+def glyph_dash_candidates(
+    prims: list, scale: Scale, page_index: int
+) -> tuple[list[Polyline], dict[int, int]]:
+    """Single-stroke glyph marks recast as dash-chain candidates.
+
+    A simulated dash shorter than two modules classifies as a glyph -- it *is* a small black
+    mark -- and from a single mark the two are genuinely indistinguishable. The distinction is
+    structural: four or more of them, collinear at regular pitch, are a dashed conductor, and no
+    string of lettering has that signature. These candidates go through the same chaining and
+    regularity tests as any other dash; a candidate that fails to chain is dropped from the
+    conductor set entirely, because a lone letter stroke must not become a line.
+
+    Returns the candidates and a map of candidate id to primitive index, so the marks a chain
+    consumed can be removed from the text pool.
+    """
+    from pidgraph.extract.primitives import Kind
+
+    out: list[Polyline] = []
+    mapping: dict[int, int] = {}
+    lo, hi = scale.u(0.2), scale.u(2.0)
+    for prim in prims:
+        if prim.kind is not Kind.GLYPH or not prim.is_black or prim.filled or prim.curves:
+            continue
+        if len(prim.segments) != 1:
+            continue
+        seg = prim.segments[0]
+        if not (lo <= seg.length <= hi):
+            continue
+        candidate_id = GLYPH_CANDIDATE_BASE + len(out)
+        out.append(
+            Polyline(
+                id=candidate_id,
+                page_index=page_index,
+                start=seg.a,
+                end=seg.b,
+                style=LineStyle.SOLID,
+                piece_count=1,
+                total_ink=seg.length,
+                bridged_gaps=(),
+            )
+        )
+        mapping[candidate_id] = prim.index
+    return out, mapping
+
+
 def _flush_chain(
     chain: list[Polyline],
     gaps: list[float],
@@ -297,6 +350,7 @@ def _flush_chain(
             piece_count=len(chain),
             total_ink=ink,
             bridged_gaps=tuple(round(g, 3) for g in gaps),
+            member_ids=tuple(line.id for line in chain),
         )
     ]
 

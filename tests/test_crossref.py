@@ -97,15 +97,17 @@ class TestQuantityParsing:
 class TestHappyPath:
     def test_full_agreement_produces_verified_results_not_an_empty_report(self):
         """Conforming documents may legitimately agree. A blank report would read as broken."""
-        report = ck.run(SopDocument(path="x", requirements=GOOD_REQUIREMENTS), make_index(),
-                        GOOD_LIMITS)
+        report = ck.run(
+            SopDocument(path="x", requirements=GOOD_REQUIREMENTS), make_index(), GOOD_LIMITS
+        )
         assert len(report.verified) >= 10
         assert not [f for f in report.issues if f.severity is ck.Severity.CRITICAL]
 
     def test_sub_components_are_compared_separately(self):
         """Shell and tube are two limits on one item and must not be merged."""
-        report = ck.run(SopDocument(path="x", requirements=GOOD_REQUIREMENTS), make_index(),
-                        GOOD_LIMITS)
+        report = ck.run(
+            SopDocument(path="x", requirements=GOOD_REQUIREMENTS), make_index(), GOOD_LIMITS
+        )
         titles = " ".join(f.title for f in report.verified)
         assert "E-742 shell" in titles and "E-742 tube" in titles
 
@@ -158,9 +160,7 @@ class TestFaultInjection:
             "V-745": {"pressure": q(300, "barg"), "temperature": q(375, "degF")},
         }
         report = self._run(limits=limits)
-        assert any(
-            f.severity is ck.Severity.CRITICAL and "V-745" in f.title for f in report.issues
-        )
+        assert any(f.severity is ck.Severity.CRITICAL and "V-745" in f.title for f in report.issues)
 
     def test_low_recall_lowers_severity_of_absence_findings(self):
         """The system under-claims when it knows its own extraction was poor."""
@@ -186,8 +186,10 @@ class TestIntraDocumentChecks:
     def test_facility_mismatch_is_flagged(self):
         sop = SopDocument(path="x", title="Ashford Terminal Purge")
         report = ck.run(sop, make_index(), {}, drawing_titles=["MAJORSVILLE CGP"])
-        assert any(f.check == "facility_scope" and f.status is ck.Status.NEEDS_REVIEW
-                   for f in report.findings)
+        assert any(
+            f.check == "facility_scope" and f.status is ck.Status.NEEDS_REVIEW
+            for f in report.findings
+        )
 
     def test_verdicts_are_deterministic(self):
         a = ck.run(SopDocument(path="x", requirements=GOOD_REQUIREMENTS), make_index(), GOOD_LIMITS)

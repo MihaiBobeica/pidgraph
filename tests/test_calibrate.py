@@ -71,10 +71,7 @@ class TestObservables:
         pt = pymupdf.Point
         paths = [
             {"width": 0.05, "items": [("l", pt(0, 0), pt(0.1, 0))]},
-            *[
-                {"width": 0.5, "items": [("l", pt(0, 0), pt(100, 0))]}
-                for _ in range(50)
-            ],
+            *[{"width": 0.5, "items": [("l", pt(0, 0), pt(100, 0))]} for _ in range(50)],
         ]
         narrow, hist = narrow_stroke_width(paths)
         assert narrow == 0.5
@@ -155,8 +152,11 @@ class TestFailsLoudly:
 
     def test_scale_u_is_the_only_route_to_an_absolute_size(self):
         scale = Scale(
-            unit_system="ISA", module=2.5, sheet="ANSI_B",
-            page_width_pt=1.0, page_height_pt=1.0,
+            unit_system="ISA",
+            module=2.5,
+            sheet="ANSI_B",
+            page_width_pt=1.0,
+            page_height_pt=1.0,
         )
         assert scale.u(7.0) == 17.5
         assert scale.u(0.2) == 0.5

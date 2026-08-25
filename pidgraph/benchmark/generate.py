@@ -43,8 +43,10 @@ class TruthSymbol:
     @property
     def bbox(self) -> tuple[float, float, float, float]:
         return (
-            self.x - self.radius, self.y - self.radius,
-            self.x + self.radius, self.y + self.radius,
+            self.x - self.radius,
+            self.y - self.radius,
+            self.x + self.radius,
+            self.y + self.radius,
         )
 
 
@@ -53,6 +55,24 @@ class TruthEdge:
     source: str
     target: str
     style: str
+
+
+@dataclass(frozen=True)
+class TruthLabel:
+    """One rendered text string and where it was drawn.
+
+    Every character on the sheet is recorded here -- symbol tags and line labels alike -- because
+    OCR precision is only meaningful when the truth covers *all* text: a read with no truth
+    counterpart is a false positive, not an unknown.
+    """
+
+    text: str
+    bbox: tuple[float, float, float, float]
+    symbol_id: str | None
+    vertical: bool = False
+    tracking: float = 1.35
+    """Letter advance used at authoring time; the renderer must use the same value, or the
+    recorded bbox describes a string that was never drawn."""
 
 
 @dataclass
@@ -65,6 +85,7 @@ class TruthGraph:
     sheet: str = "ANSI_B"
     width: float = 0.0
     height: float = 0.0
+    labels: list[TruthLabel] = field(default_factory=list)
     defects: list[str] = field(default_factory=list)
     """Deliberate malformations, so a scorer can tell a generator quirk from a pipeline error."""
 
@@ -85,15 +106,47 @@ class TruthGraph:
             "edges": [
                 {"source": e.source, "target": e.target, "style": e.style} for e in self.edges
             ],
+            "labels": [
+                {
+                    "text": lab.text,
+                    "bbox": list(lab.bbox),
+                    "symbol_id": lab.symbol_id,
+                    "vertical": lab.vertical,
+                }
+                for lab in self.labels
+            ],
         }
 
 
-def _tag(kind: str, index: int) -> str:
+_INSTRUMENT_LETTERS = [
+    "PI",
+    "TI",
+    "FI",
+    "LI",
+    "PT",
+    "FT",
+    "LT",
+    "TT",
+    "PIC",
+    "FIC",
+    "LIC",
+    "PSV",
+    "LSH",
+    "TSL",
+]
+_EQUIPMENT_LETTERS = ["V", "P", "E", "T", "F", "C"]
+
+
+def _tag(kind: str, index: int, rng: random.Random | None = None) -> str:
+    """A grammatically valid tag. Letter sets deliberately include the optically confusable
+    characters (O/0, B/8, S/5, I/1) so recognition is measured where engines actually fail."""
+    pick = rng.choice if rng else (lambda seq: seq[index % len(seq)])
     if kind == "instrument":
-        return f"PI-{100 + index}"
+        return f"{pick(_INSTRUMENT_LETTERS)}-{100 + index}"
     if kind == "valve":
-        return f"MV-{100 + index}-01"
-    return f"V-{100 + index}"
+        suffix = pick(["01", "02", "10", "15A", "12B"]) if rng else "01"
+        return f"MV-{100 + index}-{suffix}"
+    return f"{pick(_EQUIPMENT_LETTERS)}-{100 + index}"
 
 
 def author(
@@ -135,7 +188,11 @@ def author(
             symbol_id = f"s{counter}"
             graph.symbols.append(
                 TruthSymbol(
-                    symbol_id, kind, _tag(kind, counter), x, y,
+                    symbol_id,
+                    kind,
+                    _tag(kind, counter, rng),
+                    x,
+                    y,
                     radius * (1.6 if kind == "equipment" else 1.0),
                 )
             )
@@ -148,19 +205,33 @@ def author(
             if rng.random() < 0.6 * density:
                 inst_id = f"s{counter}"
                 graph.symbols.append(
-                    TruthSymbol(inst_id, "instrument", _tag("instrument", counter),
-                                x, y - height * 0.07, radius)
+                    TruthSymbol(
+                        inst_id,
+                        "instrument",
+                        _tag("instrument", counter, rng),
+                        x,
+                        y - height * 0.07,
+                        radius,
+                    )
                 )
                 graph.edges.append(TruthEdge(symbol_id, inst_id, "dashed"))
                 counter += 1
+
+    _author_labels(graph, rng)
 
     if include_defects:
         # Malformed productions. A grammar that only emits valid drawings teaches the grammar.
         if len(graph.symbols) > 3:
             duplicate = graph.symbols[1]
             graph.symbols.append(
-                TruthSymbol(f"s{counter}", duplicate.kind, duplicate.tag,
-                            duplicate.x, duplicate.y + height * 0.25, duplicate.radius)
+                TruthSymbol(
+                    f"s{counter}",
+                    duplicate.kind,
+                    duplicate.tag,
+                    duplicate.x,
+                    duplicate.y + height * 0.25,
+                    duplicate.radius,
+                )
             )
             graph.defects.append("duplicate_tag")
             counter += 1
@@ -191,7 +262,8 @@ def draw(graph: TruthGraph, path: str | Path) -> Path:
     inset = module * 6
     page.draw_rect(
         pymupdf.Rect(inset, inset, graph.width - inset, graph.height - inset),
-        color=(0, 0, 0), width=process_w,
+        color=(0, 0, 0),
+        width=process_w,
     )
 
     for edge in graph.edges:
@@ -234,20 +306,102 @@ def draw(graph: TruthGraph, path: str | Path) -> Path:
                     pymupdf.Point(symbol.x - r, symbol.y + r),
                     pymupdf.Point(symbol.x - r, symbol.y - r),
                 ],
-                color=(0, 0, 0), width=signal_w,
+                color=(0, 0, 0),
+                width=signal_w,
             )
         else:
             r = symbol.radius
             page.draw_rect(
                 pymupdf.Rect(symbol.x - r, symbol.y - r * 1.4, symbol.x + r, symbol.y + r * 1.4),
-                color=(0, 0, 0), width=process_w,
+                color=(0, 0, 0),
+                width=process_w,
             )
+
+    from pidgraph.benchmark import strokefont
+
+    text_w = narrow * module * 0.85
+    render_rng = random.Random(int(graph.module * 1000) + len(graph.labels))
+    for label in graph.labels:
+        x0, y0, x1, y1 = label.bbox
+        height = (x1 - x0) if label.vertical else (y1 - y0)
+        strokefont.draw_text(
+            page,
+            label.text,
+            x0,
+            y0,
+            height,
+            text_w,
+            tracking=label.tracking,
+            vertical=label.vertical,
+            shear=render_rng.uniform(-0.08, 0.08),
+            jitter=0.02,
+            rng=render_rng,
+        )
 
     out = Path(path)
     out.parent.mkdir(parents=True, exist_ok=True)
     doc.save(str(out))
     doc.close()
     return out
+
+
+def _author_labels(graph: TruthGraph, rng: random.Random) -> None:
+    """Plan every text string on the sheet, before rendering.
+
+    Text height is drawn near one module -- the standard's own proportion, since the module *is*
+    derived from lettering height -- and randomised within it. Placement varies by symbol kind
+    the way drafting convention places it: valve tags above, equipment tags below, instrument
+    tags beside the bubble. A minority of line labels are vertical, exercising the rotated-crop
+    recognition path.
+    """
+    from pidgraph.benchmark import strokefont
+
+    module = graph.module
+    for symbol in graph.symbols:
+        height = module * rng.uniform(0.95, 1.3)
+        tracking = rng.uniform(1.25, 1.45)
+        width = strokefont.text_width(symbol.tag, height, tracking=tracking)
+        jitter = module * rng.uniform(-0.3, 0.3)
+        if symbol.kind == "valve":
+            # Left of the symbol centre: an instrument signal riser leaves the valve straight up,
+            # and a tag centred on it is systematically struck through.
+            x = symbol.x - width - module * 0.8 + jitter
+            y = symbol.y - symbol.radius - height - module * 1.2
+        elif symbol.kind == "equipment":
+            x = symbol.x - width / 2 + jitter
+            y = symbol.y + symbol.radius * 1.4 + module * 1.2
+        else:
+            x = symbol.x + symbol.radius + module * 1.0
+            y = symbol.y - height / 2 + jitter
+        graph.labels.append(
+            TruthLabel(symbol.tag, (x, y, x + width, y + height), symbol.id, tracking=tracking)
+        )
+
+    # Line labels on a minority of process edges; occasionally vertical, as on a riser.
+    for edge in graph.edges:
+        if edge.style != "solid" or rng.random() > 0.35:
+            continue
+        a, b = graph.symbol(edge.source), graph.symbol(edge.target)
+        if a is None or b is None:
+            continue
+        size = rng.choice(['1"', '2"', '3"', '4"'])
+        service = rng.choice(["D2S", "P101", "CS150", "5B", "80S"])
+        text = f"{size}-{service}"
+        height = module * rng.uniform(0.95, 1.25)
+        vertical = rng.random() < 0.15
+        mid_x, mid_y = (a.x + b.x) / 2, (a.y + b.y) / 2
+        if vertical:
+            width = strokefont.text_width(text, height)
+            bbox = (mid_x + module, mid_y - width / 2, mid_x + module + height, mid_y + width / 2)
+        else:
+            width = strokefont.text_width(text, height)
+            bbox = (
+                mid_x - width / 2,
+                mid_y - height - module * 0.9,
+                mid_x + width / 2,
+                mid_y - module * 0.9,
+            )
+        graph.labels.append(TruthLabel(text, bbox, None, vertical=vertical))
 
 
 def corpus(
@@ -257,10 +411,13 @@ def corpus(
     out: list[tuple[Path, TruthGraph]] = []
     base = Path(directory)
     for index in range(count):
-        rng = random.Random(seed0 + index)
+        # Density comes from its own stream: author() re-seeds the same seed, so drawing both
+        # values from one stream makes density a deterministic function of module and the
+        # hardest combination (finest module, highest density) is never generated.
+        density_rng = random.Random((seed0 + index) * 1_000_003 + 17)
         graph = author(
             seed0 + index,
-            density=rng.choice([0.6, 1.0, 1.4]),
+            density=density_rng.choice([0.6, 1.0, 1.4]),
             include_defects=defects and index % 3 == 0,
         )
         path = draw(graph, base / f"synthetic_{index:03d}.pdf")

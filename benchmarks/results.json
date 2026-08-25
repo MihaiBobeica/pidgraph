@@ -1,51 +1,71 @@
 {
   "aggregate": {
     "edge_precision": {
-      "ci_high": 0.539730818358747,
-      "ci_low": 0.38702770939000536,
-      "hits": 74,
+      "ci_high": 0.44170246190311274,
+      "ci_low": 0.3872338177362626,
+      "hits": 519,
       "label": "edge precision",
       "reportable": true,
-      "total": 160,
-      "value": 0.4625
+      "total": 1253,
+      "value": 0.4142059058260176
     },
     "edge_recall": {
-      "ci_high": 0.6254633670317638,
-      "ci_low": 0.46034800812412696,
-      "hits": 74,
+      "ci_high": 1.0,
+      "ci_low": 0.9926524591769287,
+      "hits": 519,
       "label": "edge recall",
       "reportable": true,
-      "total": 136,
-      "value": 0.5441176470588235
-    },
-    "symbol_precision": {
-      "ci_high": 0.9999999999999999,
-      "ci_low": 0.9773812776139649,
-      "hits": 166,
-      "label": "symbol precision@0.3",
-      "reportable": true,
-      "total": 166,
+      "total": 519,
       "value": 1.0
     },
+    "symbol_precision": {
+      "ci_high": 0.9991206161590552,
+      "ci_low": 0.988389609350054,
+      "hits": 622,
+      "label": "symbol precision@0.3",
+      "reportable": true,
+      "total": 624,
+      "value": 0.9967948717948718
+    },
     "symbol_recall": {
-      "ci_high": 0.9989422107450134,
-      "ci_low": 0.9668647121590099,
-      "hits": 166,
+      "ci_high": 0.9975124576551052,
+      "ci_low": 0.9836866247808597,
+      "hits": 622,
       "label": "symbol recall@0.3",
       "reportable": true,
-      "total": 167,
-      "value": 0.9940119760479041
+      "total": 626,
+      "value": 0.9936102236421726
+    },
+    "text_precision": {
+      "ci_high": 0.9952630241438929,
+      "ci_low": 0.979985907105358,
+      "hits": 710,
+      "label": "text precision",
+      "reportable": true,
+      "total": 717,
+      "value": 0.9902370990237099
+    },
+    "text_recall": {
+      "ci_high": 0.9952630241438929,
+      "ci_low": 0.979985907105358,
+      "hits": 710,
+      "label": "text recall",
+      "reportable": true,
+      "total": 717,
+      "value": 0.9902370990237099
     }
   },
   "calibration": {
-    "max_module_error": 0.00014124672246262457,
-    "median_module_error": 5.32639304040906e-05,
-    "module_recovered": 10,
-    "samples": 10,
-    "sheet_correct": 10
+    "max_module_error": 0.1501418269362234,
+    "median_module_error": 0.07502397077254595,
+    "module_recovered": 30,
+    "samples": 30,
+    "sheet_correct": 30
   },
   "notes": [
+    "Corpus seeds 500..529. Development tuned against seeds 0..9; a run from seed 500 is held-out data no change was fitted to.",
     "Truth is authored before the drawing is rendered, so no part of the pipeline contributed to it.",
+    "Text figures measure the vector glyph matcher plus raster fallback. The generator renders the matcher's own stroke alphabet (one definition, stated in code), so these figures cover segmentation and matching under randomised size, weight, tracking, shear and jitter -- not transfer to a foreign shape font, which only the real drawing measures.",
     "Module and sheet size are varied across samples, so any hardcoded absolute dimension would fail on most of them.",
     "Synthetic drawings are cleaner and more regular than real ones. These are an upper bound, not a prediction of field performance.",
     "Rates below n=5 are withheld; every reported rate carries its denominator and a Wilson interval."
@@ -53,93 +73,273 @@
   "samples": [
     {
       "error": null,
-      "module_error": 0.0001,
-      "module_found": 3.6268,
-      "module_truth": 3.6266,
+      "module_error": 0.0748,
+      "module_found": 3.2506,
+      "module_truth": 3.5136,
       "name": "synthetic_000",
-      "sheet_found": "ANSI_D",
-      "sheet_truth": "ANSI_D"
+      "sheet_found": "ISO_A1",
+      "sheet_truth": "ISO_A1"
     },
     {
       "error": null,
-      "module_error": 0.0,
-      "module_found": 1.9225,
-      "module_truth": 1.9225,
+      "module_error": 0.0751,
+      "module_found": 2.8991,
+      "module_truth": 3.1346,
       "name": "synthetic_001",
-      "sheet_found": "ANSI_B",
-      "sheet_truth": "ANSI_B"
+      "sheet_found": "ISO_A1",
+      "sheet_truth": "ISO_A1"
     },
     {
       "error": null,
-      "module_error": 0.0,
-      "module_found": 3.8945,
-      "module_truth": 3.8945,
+      "module_error": 0.0751,
+      "module_found": 2.6019,
+      "module_truth": 2.8132,
       "name": "synthetic_002",
       "sheet_found": "ANSI_B",
       "sheet_truth": "ANSI_B"
     },
     {
       "error": null,
-      "module_error": 0.0001,
-      "module_found": 2.171,
-      "module_truth": 2.1711,
+      "module_error": 0.075,
+      "module_found": 1.8595,
+      "module_truth": 2.0103,
       "name": "synthetic_003",
-      "sheet_found": "ISO_A1",
-      "sheet_truth": "ISO_A1"
-    },
-    {
-      "error": null,
-      "module_error": 0.0001,
-      "module_found": 2.1668,
-      "module_truth": 2.1665,
-      "name": "synthetic_004",
-      "sheet_found": "ANSI_B",
-      "sheet_truth": "ANSI_B"
-    },
-    {
-      "error": null,
-      "module_error": 0.0001,
-      "module_found": 3.0946,
-      "module_truth": 3.095,
-      "name": "synthetic_005",
-      "sheet_found": "ISO_A1",
-      "sheet_truth": "ISO_A1"
-    },
-    {
-      "error": null,
-      "module_error": 0.0001,
-      "module_found": 3.5043,
-      "module_truth": 3.504,
-      "name": "synthetic_006",
-      "sheet_found": "ANSI_B",
-      "sheet_truth": "ANSI_B"
-    },
-    {
-      "error": null,
-      "module_error": 0.0001,
-      "module_found": 2.3771,
-      "module_truth": 2.3772,
-      "name": "synthetic_007",
-      "sheet_found": "ANSI_B",
-      "sheet_truth": "ANSI_B"
-    },
-    {
-      "error": null,
-      "module_error": 0.0,
-      "module_found": 2.144,
-      "module_truth": 2.1441,
-      "name": "synthetic_008",
       "sheet_found": "ANSI_D",
       "sheet_truth": "ANSI_D"
     },
     {
       "error": null,
-      "module_error": 0.0,
-      "module_found": 2.7112,
-      "module_truth": 2.7112,
+      "module_error": 0.1501,
+      "module_found": 2.304,
+      "module_truth": 2.711,
+      "name": "synthetic_004",
+      "sheet_found": "ISO_A1",
+      "sheet_truth": "ISO_A1"
+    },
+    {
+      "error": null,
+      "module_error": 0.0752,
+      "module_found": 1.8118,
+      "module_truth": 1.9591,
+      "name": "synthetic_005",
+      "sheet_found": "ANSI_D",
+      "sheet_truth": "ANSI_D"
+    },
+    {
+      "error": null,
+      "module_error": 0.0751,
+      "module_found": 3.1611,
+      "module_truth": 3.4177,
+      "name": "synthetic_006",
+      "sheet_found": "ANSI_D",
+      "sheet_truth": "ANSI_D"
+    },
+    {
+      "error": null,
+      "module_error": 0.0749,
+      "module_found": 2.5506,
+      "module_truth": 2.7572,
+      "name": "synthetic_007",
+      "sheet_found": "ISO_A1",
+      "sheet_truth": "ISO_A1"
+    },
+    {
+      "error": null,
+      "module_error": 0.0751,
+      "module_found": 2.6825,
+      "module_truth": 2.9004,
+      "name": "synthetic_008",
+      "sheet_found": "ISO_A1",
+      "sheet_truth": "ISO_A1"
+    },
+    {
+      "error": null,
+      "module_error": 0.075,
+      "module_found": 3.0445,
+      "module_truth": 3.2914,
       "name": "synthetic_009",
       "sheet_found": "ANSI_D",
       "sheet_truth": "ANSI_D"
+    },
+    {
+      "error": null,
+      "module_error": 0.0749,
+      "module_found": 2.9999,
+      "module_truth": 3.243,
+      "name": "synthetic_010",
+      "sheet_found": "ISO_A1",
+      "sheet_truth": "ISO_A1"
+    },
+    {
+      "error": null,
+      "module_error": 0.075,
+      "module_found": 1.7208,
+      "module_truth": 1.8603,
+      "name": "synthetic_011",
+      "sheet_found": "ANSI_B",
+      "sheet_truth": "ANSI_B"
+    },
+    {
+      "error": null,
+      "module_error": 0.1501,
+      "module_found": 1.3985,
+      "module_truth": 1.6456,
+      "name": "synthetic_012",
+      "sheet_found": "ANSI_D",
+      "sheet_truth": "ANSI_D"
+    },
+    {
+      "error": null,
+      "module_error": 0.0749,
+      "module_found": 1.5168,
+      "module_truth": 1.6395,
+      "name": "synthetic_013",
+      "sheet_found": "ANSI_B",
+      "sheet_truth": "ANSI_B"
+    },
+    {
+      "error": null,
+      "module_error": 0.0748,
+      "module_found": 2.2755,
+      "module_truth": 2.4596,
+      "name": "synthetic_014",
+      "sheet_found": "ISO_A1",
+      "sheet_truth": "ISO_A1"
+    },
+    {
+      "error": null,
+      "module_error": 0.15,
+      "module_found": 1.696,
+      "module_truth": 1.9952,
+      "name": "synthetic_015",
+      "sheet_found": "ANSI_D",
+      "sheet_truth": "ANSI_D"
+    },
+    {
+      "error": null,
+      "module_error": 0.075,
+      "module_found": 3.2891,
+      "module_truth": 3.5558,
+      "name": "synthetic_016",
+      "sheet_found": "ANSI_B",
+      "sheet_truth": "ANSI_B"
+    },
+    {
+      "error": null,
+      "module_error": 0.075,
+      "module_found": 3.2828,
+      "module_truth": 3.5491,
+      "name": "synthetic_017",
+      "sheet_found": "ISO_A1",
+      "sheet_truth": "ISO_A1"
+    },
+    {
+      "error": null,
+      "module_error": 0.0749,
+      "module_found": 3.5651,
+      "module_truth": 3.8538,
+      "name": "synthetic_018",
+      "sheet_found": "ANSI_D",
+      "sheet_truth": "ANSI_D"
+    },
+    {
+      "error": null,
+      "module_error": 0.0001,
+      "module_found": 3.0486,
+      "module_truth": 3.0483,
+      "name": "synthetic_019",
+      "sheet_found": "ANSI_B",
+      "sheet_truth": "ANSI_B"
+    },
+    {
+      "error": null,
+      "module_error": 0.15,
+      "module_found": 3.364,
+      "module_truth": 3.9577,
+      "name": "synthetic_020",
+      "sheet_found": "ANSI_B",
+      "sheet_truth": "ANSI_B"
+    },
+    {
+      "error": null,
+      "module_error": 0.0749,
+      "module_found": 1.7018,
+      "module_truth": 1.8396,
+      "name": "synthetic_021",
+      "sheet_found": "ANSI_D",
+      "sheet_truth": "ANSI_D"
+    },
+    {
+      "error": null,
+      "module_error": 0.1499,
+      "module_found": 1.5165,
+      "module_truth": 1.7839,
+      "name": "synthetic_022",
+      "sheet_found": "ANSI_D",
+      "sheet_truth": "ANSI_D"
+    },
+    {
+      "error": null,
+      "module_error": 0.0749,
+      "module_found": 3.6486,
+      "module_truth": 3.9442,
+      "name": "synthetic_023",
+      "sheet_found": "ISO_A1",
+      "sheet_truth": "ISO_A1"
+    },
+    {
+      "error": null,
+      "module_error": 0.0003,
+      "module_found": 2.1414,
+      "module_truth": 2.1407,
+      "name": "synthetic_024",
+      "sheet_found": "ANSI_B",
+      "sheet_truth": "ANSI_B"
+    },
+    {
+      "error": null,
+      "module_error": 0.075,
+      "module_found": 3.3154,
+      "module_truth": 3.5841,
+      "name": "synthetic_025",
+      "sheet_found": "ANSI_B",
+      "sheet_truth": "ANSI_B"
+    },
+    {
+      "error": null,
+      "module_error": 0.15,
+      "module_found": 3.3965,
+      "module_truth": 3.9957,
+      "name": "synthetic_026",
+      "sheet_found": "ANSI_B",
+      "sheet_truth": "ANSI_B"
+    },
+    {
+      "error": null,
+      "module_error": 0.15,
+      "module_found": 3.3545,
+      "module_truth": 3.9464,
+      "name": "synthetic_027",
+      "sheet_found": "ANSI_D",
+      "sheet_truth": "ANSI_D"
+    },
+    {
+      "error": null,
+      "module_error": 0.075,
+      "module_found": 3.219,
+      "module_truth": 3.4799,
+      "name": "synthetic_028",
+      "sheet_found": "ISO_A1",
+      "sheet_truth": "ISO_A1"
+    },
+    {
+      "error": null,
+      "module_error": 0.1501,
+      "module_found": 2.686,
+      "module_truth": 3.1603,
+      "name": "synthetic_029",
+      "sheet_found": "ANSI_B",
+      "sheet_truth": "ANSI_B"
     }
   ]
 }

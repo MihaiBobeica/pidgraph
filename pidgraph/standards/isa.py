@@ -86,7 +86,10 @@ VARIABLE_MODIFIERS: tuple[LetterMeaning, ...] = (
     LetterMeaning("J", Column.VARIABLE_MODIFIER, "Scan", Edition.GUIDE),
     LetterMeaning("K", Column.VARIABLE_MODIFIER, "Time Rate of Change", Edition.GUIDE),
     LetterMeaning(
-        "M", Column.VARIABLE_MODIFIER, "Momentary", Edition.ISA_1984,
+        "M",
+        Column.VARIABLE_MODIFIER,
+        "Momentary",
+        Edition.ISA_1984,
         note="deleted in the 2009 edition; retained because the reference guide lists it",
     ),
     LetterMeaning("Q", Column.VARIABLE_MODIFIER, "Integrate, Totalize", Edition.GUIDE),
@@ -94,9 +97,12 @@ VARIABLE_MODIFIERS: tuple[LetterMeaning, ...] = (
     LetterMeaning("X", Column.VARIABLE_MODIFIER, "X Axis", Edition.GUIDE),
     LetterMeaning("Y", Column.VARIABLE_MODIFIER, "Y Axis", Edition.GUIDE),
     LetterMeaning(
-        "Z", Column.VARIABLE_MODIFIER, "Safety Instrumented System", Edition.ISA_2009,
+        "Z",
+        Column.VARIABLE_MODIFIER,
+        "Safety Instrumented System",
+        Edition.ISA_2009,
         note="ADDED from the 2009 edition. The reference guide's table predates it, so without "
-             "this overlay a safety-instrumented loop is classified as an ordinary position loop",
+        "this overlay a safety-instrumented loop is classified as an ordinary position loop",
     ),
 )
 
@@ -104,11 +110,20 @@ VARIABLE_MODIFIERS: tuple[LetterMeaning, ...] = (
 READOUTS: tuple[LetterMeaning, ...] = tuple(
     LetterMeaning(letter, Column.READOUT, meaning, Edition.GUIDE)
     for letter, meaning in [
-        ("A", "Alarm"), ("B", "User's Choice"), ("E", "Sensor (Primary Element)"),
-        ("G", "Glass, Viewing Device"), ("I", "Indicate"), ("L", "Light"),
-        ("N", "User's Choice"), ("O", "Orifice, Restriction"), ("P", "Point (Test) Connection"),
-        ("Q", "Integrate, Totalize"), ("R", "Record"), ("U", "Multifunction"),
-        ("W", "Well"), ("X", "Unclassified"),
+        ("A", "Alarm"),
+        ("B", "User's Choice"),
+        ("E", "Sensor (Primary Element)"),
+        ("G", "Glass, Viewing Device"),
+        ("I", "Indicate"),
+        ("L", "Light"),
+        ("N", "User's Choice"),
+        ("O", "Orifice, Restriction"),
+        ("P", "Point (Test) Connection"),
+        ("Q", "Integrate, Totalize"),
+        ("R", "Record"),
+        ("U", "Multifunction"),
+        ("W", "Well"),
+        ("X", "Unclassified"),
     ]
 )
 
@@ -116,9 +131,15 @@ READOUTS: tuple[LetterMeaning, ...] = tuple(
 OUTPUTS: tuple[LetterMeaning, ...] = tuple(
     LetterMeaning(letter, Column.OUTPUT, meaning, Edition.GUIDE)
     for letter, meaning in [
-        ("B", "User's Choice"), ("C", "Control"), ("K", "Control Station"),
-        ("N", "User's Choice"), ("S", "Switch"), ("T", "Transmit"),
-        ("U", "Multifunction"), ("V", "Valve, Damper, Louver"), ("X", "Unclassified"),
+        ("B", "User's Choice"),
+        ("C", "Control"),
+        ("K", "Control Station"),
+        ("N", "User's Choice"),
+        ("S", "Switch"),
+        ("T", "Transmit"),
+        ("U", "Multifunction"),
+        ("V", "Valve, Damper, Louver"),
+        ("X", "Unclassified"),
         ("Y", "Relay, Compute, Convert"),
         ("Z", "Driver, Actuator, Unclassified Final Control Element"),
     ]
@@ -128,8 +149,13 @@ OUTPUTS: tuple[LetterMeaning, ...] = tuple(
 FUNCTION_MODIFIERS: tuple[LetterMeaning, ...] = tuple(
     LetterMeaning(code, Column.FUNCTION_MODIFIER, meaning, Edition.GUIDE)
     for code, meaning in [
-        ("HH", "High-High"), ("LL", "Low-Low"), ("H", "High"), ("L", "Low"),
-        ("M", "Middle, Intermediate"), ("U", "Multifunction"), ("X", "Unclassified"),
+        ("HH", "High-High"),
+        ("LL", "Low-Low"),
+        ("H", "High"),
+        ("L", "Low"),
+        ("M", "Middle, Intermediate"),
+        ("U", "Multifunction"),
+        ("X", "Unclassified"),
     ]
 )
 

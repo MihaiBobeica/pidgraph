@@ -272,7 +272,15 @@ as $$
             from edges e
             join nodes s on s.id = e.source_id
             join nodes t on t.id = e.target_id
-            where e.run_id = (select run_id from chosen)), '[]'::jsonb)
+            where e.run_id = (select run_id from chosen)), '[]'::jsonb),
+        'findings', coalesce((
+            select jsonb_agg(jsonb_build_object(
+                'check', f.check_name, 'status', f.status, 'severity', f.severity,
+                'title', f.title, 'detail', f.detail, 'subject', f.subject,
+                'confidence', f.confidence, 'graph_incomplete', f.graph_incomplete
+            ) order by array_position(
+                array['critical','high','medium','low','info'], f.severity))
+            from findings f where f.run_id = (select run_id from chosen)), '[]'::jsonb)
     );
 $$;
 

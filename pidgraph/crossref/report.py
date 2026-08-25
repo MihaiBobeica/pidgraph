@@ -28,9 +28,7 @@ def write_jsonl(report: CrossReferenceReport, path: str | Path) -> Path:
     """One finding per line, ordered by severity. Stable across runs."""
     p = Path(path)
     p.parent.mkdir(parents=True, exist_ok=True)
-    ordered = sorted(
-        report.findings, key=lambda f: (_SEVERITY_ORDER[f.severity], f.check, f.title)
-    )
+    ordered = sorted(report.findings, key=lambda f: (_SEVERITY_ORDER[f.severity], f.check, f.title))
     with p.open("w", encoding="utf-8") as handle:
         for finding in ordered:
             handle.write(json.dumps(finding.to_dict(), sort_keys=True) + "\n")

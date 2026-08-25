@@ -120,8 +120,10 @@ class Graph:
                 confidence=float(node.confidence),
                 x=float(node.centre.x),
                 y=float(node.centre.y),
-                x0=float(node.bbox.x0), y0=float(node.bbox.y0),
-                x1=float(node.bbox.x1), y1=float(node.bbox.y1),
+                x0=float(node.bbox.x0),
+                y0=float(node.bbox.y0),
+                x1=float(node.bbox.x1),
+                y1=float(node.bbox.y1),
             )
         for edge in self.edges:
             graph.add_edge(
@@ -376,9 +378,7 @@ def build(
         # One edge per pair reachable through this conductor component.
         for i, src in enumerate(attached):
             for dst in attached[i + 1 :]:
-                if any(
-                    {e.source, e.target} == {src, dst} for e in graph.edges
-                ):
+                if any({e.source, e.target} == {src, dst} for e in graph.edges):
                     continue
                 graph.edges.append(
                     Edge(

@@ -134,10 +134,7 @@ def check_tag_conformance(index: PlantIndex) -> list[Finding]:
                     status=Status.FINDING,
                     severity=Severity.LOW,
                     title=f"{tag.raw} does not follow the conformant letter order",
-                    detail=(
-                        f"Read as {tag.canonical}. "
-                        + (tag.notes[0] if tag.notes else "")
-                    ),
+                    detail=(f"Read as {tag.canonical}. " + (tag.notes[0] if tag.notes else "")),
                     confidence=0.9,
                     subject=tag.canonical,
                     pid_evidence=tag.raw,
@@ -326,8 +323,7 @@ def check_design_limits(
                         status=Status.VERIFIED if agree else Status.FINDING,
                         severity=Severity.INFO if agree else Severity.CRITICAL,
                         title=(
-                            f"{tag}"
-                            f"{' ' + req.subject_part if req.subject_part else ''}: {message}"
+                            f"{tag}{' ' + req.subject_part if req.subject_part else ''}: {message}"
                         ),
                         detail=(
                             "Operating outside a design limit is a deviation with safety "

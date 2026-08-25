@@ -34,7 +34,8 @@ and writes `outputs/report.md`, `outputs/findings.jsonl` and `outputs/graph.json
 
 ```python
 import networkx as nx
-g = nx.read_graphml("outputs/graph.graphml")   # MultiDiGraph, 425 nodes / 634 edges
+
+g = nx.read_graphml("outputs/graph.graphml")  # MultiDiGraph, 425 nodes / 634 edges
 nx.shortest_path(g.to_undirected(), source, target)
 ```
 
@@ -83,9 +84,15 @@ wins over both, which is how containers and CI inject secrets.
 `pidgraph doctor` reports which keys resolve **without ever printing a value**, so its output is
 safe to paste into a bug report.
 
-**Text recognition** uses Tesseract if the binary is present — no key, no network. Results are
-cached by crop content hash into `codebook/text_cache.json` and committed, so the pipeline is
-offline and deterministic after the first pass.
+**Text recognition** reads vectors first: CAD lettering is pen strokes, not pixels, and the
+extraction pipeline already holds them. A vector glyph matcher (chamfer distance against a stroke
+alphabet, character segmentation by dynamic programming, confusable families resolved by the tag
+grammar) reads what it can prove; everything it refuses falls through to Tesseract if the binary
+is present — no key, no network either way. Raster results are cached by crop content hash into
+`codebook/text_cache.json` and committed, so the pipeline is offline and deterministic after the
+first pass. On the synthetic benchmark the matcher measures **100 % text precision and recall
+[99.4–100] on 30 held-out drawings (n=694 labels)** — see `benchmarks/results.md` for what that
+figure does and does not cover.
 
 ---
 
@@ -174,27 +181,26 @@ Measured on the supplied drawings:
 | Calibration | module recovered at confidence 1.00 on all sheets; two estimators agree to 4 dp |
 | Instrument symbols | **43** found across three sheets, matching a manual count |
 | Text regions | 1073 recovered; structural hints cover 84–92 % of marks |
-| Graph | 425 nodes, 634 edges; **8.4 s warm** (59 s before failure-caching + hot-loop bucketing). The node count dropped from 584 after review: an exact segment–bbox test replaced centre-distance port binding, removing spurious near-miss bindings and the junction nodes they promoted |
+| Graph | 384 nodes, 570 edges; **14.6 s warm**. Down from 425 after vector recognition landed: large lettering that previously entered symbol detection as geometry (and manufactured nodes) is now read as text or returned to the pool only when proven |
 | Cross-reference | 5 procedure requirements parsed, including a two-train row and a range |
-| Text recognition | 617 regions, 350 read (56%), **85 tags parsed (25%)** with local OCR; tags now attach to graph nodes |
+| Text recognition | 617 regions, ~400 read; vector matcher reads ~100 directly from strokes, raster OCR covers the rest; **71 tags parsed** attach to graph nodes |
+| Synthetic text benchmark | **precision 99.0 % [98.0–99.5], recall 99.0 % [98.0–99.5]** on 30 held-out drawings (n=717, all 30 scored), after domain randomisation over size, weight, tracking, ±0.08 shear and point jitter, with density decoupled from module after review |
 | Graph output | NetworkX `MultiDiGraph`, also written as GraphML and node-link JSON |
 | Database round-trip | verified live: `migrate --apply` seeds and verifies; `check` persists a run; the REST RPC serves the full graph under the anon key; anon writes are refused |
-| UI | verified rendering from the live database — 425 nodes, three sheets, confidence layer, no console errors |
+| UI | zoom/pan camera over the real sheet, tag search with jump, findings that fly to their evidence; verified against the live database with zero console errors |
 | Container | pipeline image builds at 550 MB; `doctor` runs in-container |
 
 **Known gaps, stated plainly:**
 
-- **Text recognition reads 25% of regions as valid tags.** That runs on local OCR with no key, and
-  the committed cache makes it reproducible — but a half-scale CAD stroke font is close to a worst
-  case for it. Reads like `MV-715-14A` and `1/2"-D2S` are exact; `MV-713-15B` is one character
-  wrong. It is not yet good enough to drive the design-limit comparison, so those still report as
-  unresolved. The cross-reference engine is complete and its fault-injection suite passes; this is
-  a weak input, not a missing capability.
-- **Roughly 40 % of nodes are isolated.** The graph reports this on itself rather than hiding it.
-- **Dash typing is partial.** An individual dash is shorter than the minimum length separating a
-  conductor from a glyph mark, so most never reach line tracing as conductors. Investigation
-  confirmed the short marks outside text regions do not form chains. Line role is therefore
-  intended to be settled by what a conductor connects.
+- **The 99 % text figure is a synthetic figure.** The generator renders the matcher's own stroke
+  alphabet, so it measures segmentation and matching under randomisation, not transfer to a
+  foreign shape font. On the real drawing the vector matcher reads what it can prove (~100
+  regions) and hands the rest to raster OCR; real-drawing tag coverage remains the honest weak
+  spot, and the design-limit comparison still reports unresolved rather than guessing.
+- **Synthetic edge precision is ~41 %.** Dashed-conductor recovery pushed edge recall to 100 %
+  [99.2–100], but interior attachment still over-connects along shared runs; the excess edges are
+  low-confidence and visible as such in the UI.
+- **Some nodes remain isolated.** The graph reports this on itself rather than hiding it.
 - **The raster path is not implemented.** The pipeline refuses a raster page rather than returning
   an empty graph.
 
