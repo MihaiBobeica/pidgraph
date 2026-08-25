@@ -68,7 +68,7 @@ in code.
 | STD-21 | ISO 5457 zone fields are 50 mm **measured from the centring marks**, with the remainder added to the corner fields; zone mapping must use the *drawing space*, not the trimmed sheet | ISO 5457:1999 Cl. 4.4, Table 1 | **V** |
 | STD-22 | ASME Y14.1 sheet series: A 8.5x11, B 11x17, C 17x22, D 22x34, E 34x44 in | secondary sources only — paywalled | **L** |
 | STD-23 | PIP PIC001 4.2.1.2 requires drawing size 22 x 34 in | only an unauthorised copy of a superseded revision was reachable | **L** |
-| STD-24 | **No published bubble-diameter-to-text-height ratio exists.** ISA dimensions the bubble but not relative to text; PIP dimensions text but not the bubble | searched; none found | **U** |
+| STD-24 | **No published bubble-diameter-to-text-height ratio exists.** ISA dimensions the bubble but not relative to text; PIP dimensions text but not the bubble | searched; none found | **U** — consequence realised in code: see STD-25 |
 
 ---
 
@@ -129,6 +129,7 @@ The most important section. Each of these was believed, then found wrong.
 | DEXPI-03 | `ComponentClassURI` points at POSC Caesar, anchoring DEXPI to ISO 15926 | Two namespaces are in use, and instrumentation uses `sandbox.dexpi.org`. A POSC-only validation rule rejects every instrument in a valid file. DEXPI 1.4 does not normatively cite ISO 15926 |
 | PLAT-02 | "Supabase tables default to RLS off, so remember to enable it" | Wrong for Dashboard tables, and — more dangerously — **enabling RLS is not sufficient**. Default GRANTs persist; `REVOKE` is required |
 | PLAT-04 | 750 build minutes per month on the free tier | 750 instance-hours **and 500** pipeline minutes |
+| STD-25 | Text cap height is a module estimator at a ratio of 2 m.u. (ISA) | **Dropped during implementation.** Measured on the sample, the stroke and symbol estimators agreed exactly (module 2.4000 from both) while the text estimator was 60 % adrift. In a stroke font the individual marks include partial glyphs and several text sizes, so the observable is a *mixture*, not a cap height — and per STD-24 no published ratio exists to anchor it. Text height is now measured, reported, and used only as a sanity gate. Render resolution is derived from the **narrow stroke** instead, which is a single well-defined observable |
 
 ---
 
