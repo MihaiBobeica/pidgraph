@@ -34,7 +34,7 @@ and writes `outputs/report.md`, `outputs/findings.jsonl` and `outputs/graph.json
 
 ```python
 import networkx as nx
-g = nx.read_graphml("outputs/graph.graphml")   # MultiDiGraph, 584 nodes / 1262 edges
+g = nx.read_graphml("outputs/graph.graphml")   # MultiDiGraph, 425 nodes / 634 edges
 nx.shortest_path(g.to_undirected(), source, target)
 ```
 
@@ -174,10 +174,13 @@ Measured on the supplied drawings:
 | Calibration | module recovered at confidence 1.00 on all sheets; two estimators agree to 4 dp |
 | Instrument symbols | **43** found across three sheets, matching a manual count |
 | Text regions | 1073 recovered; structural hints cover 84–92 % of marks |
-| Graph | 480 nodes, 299 edges, ~16 s |
+| Graph | 425 nodes, 634 edges; **8.4 s warm** (59 s before failure-caching + hot-loop bucketing). The node count dropped from 584 after review: an exact segment–bbox test replaced centre-distance port binding, removing spurious near-miss bindings and the junction nodes they promoted |
 | Cross-reference | 5 procedure requirements parsed, including a two-train row and a range |
-| Text recognition | 617 regions, 349 read (56%), **89 parsing as valid tags (25%)** with local OCR |
+| Text recognition | 617 regions, 350 read (56%), **85 tags parsed (25%)** with local OCR; tags now attach to graph nodes |
 | Graph output | NetworkX `MultiDiGraph`, also written as GraphML and node-link JSON |
+| Database round-trip | verified live: `migrate --apply` seeds and verifies; `check` persists a run; the REST RPC serves the full graph under the anon key; anon writes are refused |
+| UI | verified rendering from the live database — 425 nodes, three sheets, confidence layer, no console errors |
+| Container | pipeline image builds at 550 MB; `doctor` runs in-container |
 
 **Known gaps, stated plainly:**
 

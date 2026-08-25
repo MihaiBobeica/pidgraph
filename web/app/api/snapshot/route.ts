@@ -1,6 +1,18 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
 
+// Sheet dimensions are derived from node extents, never hardcoded: an absolute drawing
+// dimension in the interface is the same mistake the extraction pipeline forbids in itself.
+function derivePages(nodes: any[]): { index: number; width: number; height: number }[] {
+  const indices = [...new Set(nodes.map((n) => n.page))].sort((a, b) => a - b);
+  return indices.map((index) => {
+    const on = nodes.filter((n) => n.page === index && Array.isArray(n.bbox));
+    const w = Math.max(...on.map((n) => n.bbox[2] ?? 0), 100);
+    const h = Math.max(...on.map((n) => n.bbox[3] ?? 0), 100);
+    return { index, width: Math.ceil(w * 1.04), height: Math.ceil(h * 1.04) };
+  });
+}
+
 // Serves the graph. Prefers the database when configured; otherwise falls back to the committed
 // export, so the interface is viewable without provisioning anything.
 export const dynamic = "force-dynamic";
@@ -17,32 +29,45 @@ export async function GET() {
       // results, and a truncated graph would be silently wrong rather than visibly broken.
       const { data, error } = await client.rpc("graph_snapshot", {});
       if (!error && data && (data.nodes ?? []).length) {
-        // The RPC returns nodes and edges only. The page list is derived here, because the UI
-        // iterates it for the sheet buttons -- an absent array is a blank screen, not a fallback.
-        const nodes = data.nodes ?? [];
-        const indices = [...new Set(nodes.map((n: any) => n.page))].sort((a: any, b: any) => a - b);
-        const pages = indices.map((index) => {
-          const on = nodes.filter((n: any) => n.page === index);
-          const w = Math.max(...on.map((n: any) => n.bbox?.[2] ?? 0), 1224);
-          const h = Math.max(...on.map((n: any) => n.bbox?.[3] ?? 0), 792);
-          return { index, width: Math.ceil(w * 1.02), height: Math.ceil(h * 1.02) };
+        // The RPC returns nodes and edges only; the page list the UI iterates is derived here.
+        const nodes = (data.nodes ?? []).filter((n: any) => Array.isArray(n.bbox));
+        return Response.json({
+          nodes,
+          edges: data.edges ?? [],
+          findings: [],
+          pages: derivePages(nodes),
+          source: "database",
         });
-        return Response.json({ ...data, findings: [], pages, source: "database" });
       }
     } catch {
       // Fall through to the committed export.
     }
   }
 
-  const file = path.join(process.cwd(), "..", "outputs", "graph.json");
+  // Dev runs with cwd at web/, the standalone build with cwd at the bundle root; both are tried
+  // rather than assuming one layout and returning "unavailable" in the other.
+  const candidates = [
+    path.join(process.cwd(), "..", "outputs", "graph.json"),
+    path.join(process.cwd(), "outputs", "graph.json"),
+  ];
   try {
-    const raw = JSON.parse(await fs.readFile(file, "utf-8"));
+    let raw: any = null;
+    for (const file of candidates) {
+      try {
+        raw = JSON.parse(await fs.readFile(file, "utf-8"));
+        break;
+      } catch {
+        /* try the next location */
+      }
+    }
+    if (!raw) throw new Error("no committed export found");
     const nodes = raw.pages.flatMap((p: any) =>
       p.graph.nodes.map((n: any) => ({
         stable_key: n.stable_key,
         kind: n.kind,
         dexpi_class: n.dexpi_class,
-        tag: n.tag_name ?? null,
+        // The export nests the parsed tag under attributes; a bare tag_name key never existed.
+        tag: n.attributes?.tag_canonical ?? null,
         label: n.label,
         bbox: n.bbox,
         page: n.page_index,
@@ -50,8 +75,13 @@ export async function GET() {
       })),
     );
     const edges = raw.pages.flatMap((p: any) => p.graph.edges);
-    const pages = raw.pages.map((p: any) => ({ index: p.page_index, width: 1224, height: 792 }));
-    return Response.json({ nodes, edges, findings: [], pages, source: "committed export" });
+    return Response.json({
+      nodes,
+      edges,
+      findings: [],
+      pages: derivePages(nodes),
+      source: "committed export",
+    });
   } catch {
     return Response.json({ nodes: [], edges: [], findings: [], pages: [], source: "unavailable" });
   }

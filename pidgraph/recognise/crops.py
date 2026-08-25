@@ -24,8 +24,15 @@ from typing import Any
 from pidgraph.extract.calibrate import Scale
 from pidgraph.extract.text import TextRegion
 
-MAX_RENDER_PIXELS = 400_000_000
-"""Guard against a pathological page. Set explicitly rather than disabled: these are user files."""
+MAX_RENDER_PIXELS = 120_000_000
+"""Guard against a pathological page.
+
+The ceiling is measured, not theoretical: mupdf refuses pixmaps well below the point where pixel
+arithmetic alone says they should fit, because its own limit is in bytes with per-row padding. A
+derived DPI meeting a thin-stroked sheet can ask for more than either limit allows; the fallback
+renders at whatever resolution fits instead. 120M pixels keeps the real 600 dpi case (about 67M)
+untouched with margin to spare.
+"""
 
 
 @dataclass(frozen=True)

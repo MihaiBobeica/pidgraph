@@ -194,12 +194,17 @@ def group_composites(
     if not candidates:
         return []
 
-    # Bucket by a coarse grid so only plausible neighbours are ever compared.
+    # Bucket by a coarse grid so only plausible neighbours are ever compared. A candidate is
+    # inserted into EVERY cell its expanded box covers, not just the one under its centre: parts
+    # are up to forty modules across, and centre-only bucketing means two touching parts whose
+    # centres sit a few cells apart are never compared -- which defeats the whole grouping.
     cell = max(gap, 1e-6)
     buckets: dict[tuple[int, int], list[int]] = defaultdict(list)
     for i, prim in enumerate(candidates):
-        c = prim.bbox.centre
-        buckets[(int(c.x // cell), int(c.y // cell))].append(i)
+        box = prim.bbox.expanded(gap / 2)
+        for cx in range(int(box.x0 // cell), int(box.x1 // cell) + 1):
+            for cy in range(int(box.y0 // cell), int(box.y1 // cell) + 1):
+                buckets[(cx, cy)].append(i)
 
     parent = list(range(len(candidates)))
 
@@ -214,18 +219,12 @@ def group_composites(
         if ra != rb:
             parent[max(ra, rb)] = min(ra, rb)
 
-    for (cx, cy), members in buckets.items():
-        neighbourhood = [
-            j
-            for dx in (-1, 0, 1)
-            for dy in (-1, 0, 1)
-            for j in buckets.get((cx + dx, cy + dy), ())
-        ]
-        for i in members:
+    for members in buckets.values():
+        # Coverage-bucketing makes each cell self-sufficient: any two boxes that touch share at
+        # least one cell, so no neighbourhood walk is needed.
+        for a_pos, i in enumerate(members):
             bi = candidates[i].bbox.expanded(gap / 2)
-            for j in neighbourhood:
-                if j <= i:
-                    continue
+            for j in members[a_pos + 1 :]:
                 if bi.intersects(candidates[j].bbox.expanded(gap / 2)):
                     union(i, j)
 

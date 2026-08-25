@@ -149,11 +149,22 @@ def cluster_regions(
             buckets[key].append(mark)
 
         groups: list[list[Primitive]] = []
+        consumed: set[int] = set()
         for key in sorted(buckets):
+            # The +1 bucket catches marks straddling a boundary, but each mark may join only one
+            # row: without the consumed set every straddler is emitted twice, producing
+            # overlapping regions that are recognised twice and can label two different nodes
+            # with the same tag.
             row = sorted(
-                buckets[key] + buckets.get(key + 1, []),
+                (
+                    m
+                    for m in buckets[key] + buckets.get(key + 1, [])
+                    if id(m) not in consumed
+                ),
                 key=lambda m: m.bbox.centre.x if orientation == "horizontal" else m.bbox.centre.y,
             )
+            for m in row:
+                consumed.add(id(m))
             current: list[Primitive] = []
             previous: float | None = None
             for mark in row:

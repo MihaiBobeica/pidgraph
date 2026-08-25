@@ -1,48 +1,48 @@
 {
   "aggregate": {
     "edge_precision": {
-      "ci_high": 0.5245992562365418,
-      "ci_low": 0.3904315970047479,
-      "hits": 95,
+      "ci_high": 0.539730818358747,
+      "ci_low": 0.38702770939000536,
+      "hits": 74,
       "label": "edge precision",
       "reportable": true,
-      "total": 208,
-      "value": 0.4567307692307692
+      "total": 160,
+      "value": 0.4625
     },
     "edge_recall": {
-      "ci_high": 0.6117735799841477,
-      "ci_low": 0.4660727025222357,
-      "hits": 95,
+      "ci_high": 0.6254633670317638,
+      "ci_low": 0.46034800812412696,
+      "hits": 74,
       "label": "edge recall",
       "reportable": true,
-      "total": 176,
-      "value": 0.5397727272727273
+      "total": 136,
+      "value": 0.5441176470588235
     },
     "symbol_precision": {
-      "ci_high": 1.0,
-      "ci_low": 0.9822017627741826,
-      "hits": 212,
+      "ci_high": 0.9999999999999999,
+      "ci_low": 0.9773812776139649,
+      "hits": 166,
       "label": "symbol precision@0.3",
       "reportable": true,
-      "total": 212,
+      "total": 166,
       "value": 1.0
     },
     "symbol_recall": {
-      "ci_high": 0.9991707862618927,
-      "ci_low": 0.9738897334907749,
-      "hits": 212,
+      "ci_high": 0.9989422107450134,
+      "ci_low": 0.9668647121590099,
+      "hits": 166,
       "label": "symbol recall@0.3",
       "reportable": true,
-      "total": 213,
-      "value": 0.9953051643192489
+      "total": 167,
+      "value": 0.9940119760479041
     }
   },
   "calibration": {
     "max_module_error": 0.00014124672246262457,
     "median_module_error": 5.32639304040906e-05,
-    "module_recovered": 12,
-    "samples": 12,
-    "sheet_correct": 12
+    "module_recovered": 10,
+    "samples": 10,
+    "sheet_correct": 10
   },
   "notes": [
     "Truth is authored before the drawing is rendered, so no part of the pipeline contributed to it.",
@@ -140,24 +140,6 @@
       "name": "synthetic_009",
       "sheet_found": "ANSI_D",
       "sheet_truth": "ANSI_D"
-    },
-    {
-      "error": null,
-      "module_error": 0.0,
-      "module_found": 2.9715,
-      "module_truth": 2.9714,
-      "name": "synthetic_010",
-      "sheet_found": "ANSI_D",
-      "sheet_truth": "ANSI_D"
-    },
-    {
-      "error": null,
-      "module_error": 0.0001,
-      "module_found": 2.6859,
-      "module_truth": 2.6857,
-      "name": "synthetic_011",
-      "sheet_found": "ISO_A1",
-      "sheet_truth": "ISO_A1"
     }
   ]
 }

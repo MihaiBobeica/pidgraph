@@ -151,7 +151,9 @@ def _split_function(function: str) -> tuple[str, str | None, str]:
     candidate = rest[0]
     if candidate == "S" and not isa.is_safety_device(function):
         return variable, None, rest  # Switch, an output function -- not a modifier.
-    if isa.lookup(isa.VARIABLE_MODIFIERS, candidate) and len(rest) > 1:
+    # "D" may terminate the letters (PD is a complete differential-pressure designation); other
+    # modifiers need at least one succeeding letter to be plausible as modifiers at all.
+    if isa.lookup(isa.VARIABLE_MODIFIERS, candidate) and (len(rest) > 1 or candidate == "D"):
         return variable, candidate, rest[1:]
     return variable, None, rest
 
@@ -185,9 +187,18 @@ def parse(raw: str, vocab: ProjectVocabulary | None = None) -> ParsedTag:
     if text.startswith("[") or (_CONNECTOR.match(text) and not _EQUIPMENT.match(text)):
         match = _CONNECTOR.match(text)
         if match:
+            reference = match.group("ref")
+            if reference.isdigit() and not text.startswith("["):
+                # A bare number is a connector only when the drawing brackets it. Unbracketed,
+                # it is as likely a zone numeral or a quantity, and claiming it as a connector
+                # gives OCR digit-noise a canonical identity.
+                return ParsedTag(
+                    raw=raw, kind=TagKind.UNKNOWN, conformance=Conformance.UNPARSED,
+                    notes=(*notes, "bare number; connector reading requires brackets"),
+                )
             return ParsedTag(
                 raw=raw, kind=TagKind.OFF_PAGE_CONNECTOR, conformance=Conformance.GRAMMAR_VALID,
-                canonical=match.group("ref"), notes=tuple(notes),
+                canonical=reference, notes=tuple(notes),
             )
 
     # R3 equipment -- MUST precede the instrument rule. "P-745" is a pump, not a pressure loop,

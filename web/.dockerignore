@@ -1,0 +1,6 @@
+# The build stage copies the source tree; these must never ride along. Host node_modules carry
+# platform-native binaries that break an alpine build, and .env.local carries local credentials.
+node_modules
+.next
+.env.local
+tsconfig.tsbuildinfo

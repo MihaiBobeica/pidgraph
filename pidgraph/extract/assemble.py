@@ -175,6 +175,28 @@ def _distance_to_segment(point: Point, start: Point, end: Point) -> tuple[float,
     return point.dist(closest), t
 
 
+def _segment_meets_bbox(start: Point, end: Point, box: BBox) -> bool:
+    """Whether a segment touches an (already expanded) box."""
+    if box.contains(start) or box.contains(end):
+        return True
+    # Sample-free slab test: clip the segment's parameter range against each axis.
+    dx, dy = end.x - start.x, end.y - start.y
+    t0, t1 = 0.0, 1.0
+    for delta, lo, hi, origin in ((dx, box.x0, box.x1, start.x), (dy, box.y0, box.y1, start.y)):
+        if abs(delta) < 1e-12:
+            if origin < lo or origin > hi:
+                return False
+            continue
+        a = (lo - origin) / delta
+        b = (hi - origin) / delta
+        if a > b:
+            a, b = b, a
+        t0, t1 = max(t0, a), min(t1, b)
+        if t0 > t1:
+            return False
+    return True
+
+
 def _nearest_region(regions: list[TextRegion], point: Point, within: float) -> TextRegion | None:
     best, best_d = None, within
     for region in regions:
@@ -221,14 +243,15 @@ def build(
         lo_y = min(line.start.y, line.end.y)
         hi_y = max(line.start.y, line.end.y)
         for sym in symbols:
-            reach = max(sym.bbox.width, sym.bbox.height) / 2 + port_radius
-            # Cheap rejection before the exact distance: most symbols are nowhere near most
-            # lines, and the exact test on every pair is the pipeline's hottest loop.
-            c = sym.centre
-            if c.x < lo_x - reach or c.x > hi_x + reach or c.y < lo_y - reach or c.y > hi_y + reach:
+            # Bind on proximity to the symbol's BOX, not to a circle of its larger half-extent.
+            # A circular reach around elongated equipment extends far beyond the narrow axis and
+            # binds conductors that merely pass nearby -- a fabricated edge, the one failure
+            # nothing downstream can detect.
+            box = sym.bbox.expanded(port_radius)
+            if box.x1 < lo_x or box.x0 > hi_x or box.y1 < lo_y or box.y0 > hi_y:
                 continue
-            distance, position = _distance_to_segment(c, line.start, line.end)
-            if distance <= reach:
+            if _segment_meets_bbox(line.start, line.end, box):
+                _, position = _distance_to_segment(sym.centre, line.start, line.end)
                 attached.append((position, sym.id))
         if not attached:
             continue

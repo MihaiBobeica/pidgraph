@@ -171,3 +171,36 @@ up as findings.
 | DESIGN-10 | Nameplate design-limit blocks are **not** read from the drawings while OCR reads ~25 % of regions | Attributing a lone pressure value to the wrong vessel is worse than reporting the comparison unresolved — pages carry more than one equipment item, so proximity is not attribution. The report states this instead of hiding it |
 | DESIGN-11 | A text region labels **at most one** node, and a labelled node's confidence is `min(geometry, read)` | One tag string annotating both members of a parallel train creates a silent duplicate identity; and a node is only as trustworthy as its weakest input |
 | DESIGN-12 | The snapshot API derives sheet dimensions from node extents when serving from the database | The RPC returns nodes and edges only; the UI iterates the page list, and an absent array is a blank screen. Extent-derived dimensions are approximate and only used for the viewport |
+
+---
+
+## Adversarial review — outcome and accepted risks
+
+The whole codebase was reviewed by an adversarial multi-agent pass (2026-08-25): independent
+finders per subsystem, each finding then verified by a separate agent prompted to refute it.
+**46 findings raised, 41 confirmed, 5 refuted.** Every confirmed correctness finding was fixed the
+same day — the criticals were: absence of drawing data treated as a rules conflict (now
+`needs_review`, capped severity); the SQL migration runner dropping comment-prefixed statements and
+rolling back prior work on a duplicate (now savepoint-per-statement); the database-backed UI path
+crashing for want of a derived page list; and port binding accepting near-misses by centre distance
+(now an exact segment–bbox slab test — benchmark edge precision moved 45.7 % → 46.2 % with symbol
+recall unchanged at 99.4 %, and the real graph shed spurious junction nodes, 584 → 425).
+
+A few confirmed findings are **accepted risks** rather than fixes, recorded here so the acceptance
+is a decision with an owner rather than an omission:
+
+| ID | Finding | Why it stands |
+|---|---|---|
+| RISK-01 | `classify` assigns PIPE before FRAME/GLYPH, so a long stroke inside a table row is a "pipe" until frame exclusion removes it | The order is load-bearing the other way round too: frames are recognised by containing long strokes. Furniture removal happens before assembly, so the misnomer never reaches the graph; renaming mid-pipeline states would touch every stage for zero behavioural change |
+| RISK-02 | Colour-cluster logo exclusion uses fixed count (≥50) and area (<8 %) thresholds rather than module units | The thresholds gate a *nomination*, not a deletion, and colour is already a non-normative signal (a drawing colouring lines by service keeps its content because the count gate fails). Module-scaling a mark count is not meaningful |
+| RISK-03 | The abstract UI view draws edges centre-to-centre, which can cross unrelated symbols | It is a schematic overlay, not a routing claim; the drawing pane shows true geometry. Routing polylines are stored on edges and a future pane can render them |
+| RISK-04 | Off-page connector matching is exact-string; a connector read with one bad character will not join sheets | The alternative — fuzzy joining — manufactures cross-sheet topology from misreads, which is the exact failure mode MAX_SUBSTITUTIONS=0 exists to prevent. An unjoined connector is a visible gap |
+| RISK-05 | The synthetic generator draws with one renderer (pymupdf), so domain randomisation does not cover renderer-specific artifacts | Randomisation covers geometry, density, fonts, stroke weight, rotation and noise; a second renderer is future work and the real-drawing validation set covers the gap in practice |
+| RISK-06 | `_colour_clusters` is O(n²) single-link clustering | n is the count of *coloured* marks, two orders of magnitude below total primitives on real sheets; measured cost is negligible next to rendering |
+
+New assumptions introduced by the fix batch:
+
+| ID | Assumption | Source / verification |
+|---|---|---|
+| ENG-03 | mupdf's pixmap ceiling is in **bytes with row padding**, so a pixel-count guard alone still hits `FzErrorLimit: Overly large image` | Observed on synthetic thin-stroke sheets whose derived DPI passed a 400 M-pixel guard and still failed; cap lowered to 120 M pixels (real case: ~67 M) with a fit-to-budget fallback |
+| ENG-04 | Recognition is an enrichment: any render or engine failure degrades that page to unread labels and records the error, never aborts extraction | `pipeline.run_page` wraps the render/recognise step; the degraded state is identical to running without a recogniser, which the rest of the pipeline already treats as a gap |

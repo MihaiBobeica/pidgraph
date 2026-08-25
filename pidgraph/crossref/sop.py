@@ -133,15 +133,20 @@ def parse_quantity(text: str, unit: str) -> Quantity | None:
 
 
 def unit_from_header(header: str) -> tuple[str, str] | None:
-    """Map a column header to ``(field name, unit)``."""
-    text = unicodedata.normalize("NFKC", header or "").lower()
+    """Map a column header to ``(field name, unit)``.
+
+    Unit tokens are matched as words, not substrings. A bare ``'f' in text`` matches any header
+    containing the letter -- "flow", most obviously -- and silently turns an unrelated column
+    into Fahrenheit temperatures.
+    """
+    text = unicodedata.normalize("NFKC", header or "").lower().replace("°", " deg ")
+    tokens = set(re.findall(r"[a-z]+", text))
     for key, unit in _PRESSURE_UNITS.items():
-        if key in text:
+        if key in tokens:
             return "pressure", unit
-    if "temp" in text:
-        for key, unit in _TEMPERATURE_UNITS.items():
-            if key in text.replace("°", "deg"):
-                return "temperature", unit
+    if "temp" in text or "temperature" in tokens:
+        if "c" in tokens or "degc" in tokens:
+            return "temperature", "degC"
         return "temperature", "degF"
     return None
 
@@ -149,8 +154,11 @@ def unit_from_header(header: str) -> tuple[str, str] | None:
 # --- subject resolution ---------------------------------------------------------------------------
 
 _TAG_SEPARATORS = r"(?:and|/|,|&)"
+# A train letter must NOT be followed by "-<digit>": otherwise "P-100 A/B-301" absorbs the B of
+# the next tag as a train of P-100, and B-301 is never seen whole.
 _TAG_IN_TEXT = re.compile(
-    rf"\b([A-Z]{{1,3}}-\d{{2,4}})\s*((?:[A-Z]\b(?:\s*{_TAG_SEPARATORS}\s*[A-Z]\b)*)?)",
+    rf"\b([A-Z]{{1,3}}-\d{{2,4}})\s*"
+    rf"((?:[A-Z]\b(?!-\d)(?:\s*{_TAG_SEPARATORS}\s*[A-Z]\b(?!-\d))*)?)",
     re.IGNORECASE,
 )
 _PART = re.compile(r"\((shell|tube|body|jacket)\)", re.IGNORECASE)
@@ -218,15 +226,44 @@ def load(path: str | Path) -> SopDocument:
             text = unicodedata.normalize("NFKC", _text_of(child)).strip()
             if text:
                 doc.paragraphs.append(text)
-        elif child.tag == f"{W}tbl":
-            doc.requirements.extend(_requirements_from_table(child, len(doc.requirements)))
+    # Tables are collected by iteration rather than as direct children: templated documents wrap
+    # their tables in content controls, and a direct-children walk reports "no requirements" on a
+    # document whose limits table is right there.
+    for table in body.iter(f"{W}tbl"):
+        doc.requirements.extend(
+            _requirements_from_table(table, len(doc.requirements), doc.notes)
+        )
 
     if not doc.requirements:
         doc.notes.append("no checkable requirements found; the document may be prose-only")
     return doc
 
 
-def _requirements_from_table(table, start_ordinal: int) -> list[Requirement]:
+def _grid_cells(row) -> list[str]:
+    """Cell texts positioned by grid column, honouring column spans.
+
+    Raw cell index is wrong the moment any cell spans columns: every cell after it shifts left
+    and the unit mapping silently reads the wrong column.
+    """
+    out: list[str] = []
+    for cell in row.findall(f"{W}tc"):
+        span = 1
+        props = cell.find(f"{W}tcPr")
+        if props is not None:
+            grid_span = props.find(f"{W}gridSpan")
+            if grid_span is not None:
+                try:
+                    span = max(1, int(grid_span.get(f"{W}val") or "1"))
+                except ValueError:
+                    span = 1
+        out.append(_text_of(cell))
+        out.extend("" for _ in range(span - 1))
+    return out
+
+
+def _requirements_from_table(
+    table, start_ordinal: int, notes: list[str] | None = None
+) -> list[Requirement]:
     """Lift a limits table into requirements.
 
     The header row establishes which unit each column carries, which is what allows ``/`` to be
@@ -236,7 +273,7 @@ def _requirements_from_table(table, start_ordinal: int) -> list[Requirement]:
     if len(rows) < 2:
         return []
 
-    headers = [_text_of(cell) for cell in rows[0].findall(f"{W}tc")]
+    headers = _grid_cells(rows[0])
     columns: dict[int, tuple[str, str]] = {}
     for index, header in enumerate(headers):
         mapped = unit_from_header(header)
@@ -248,7 +285,7 @@ def _requirements_from_table(table, start_ordinal: int) -> list[Requirement]:
     out: list[Requirement] = []
     ordinal = start_ordinal
     for row in rows[1:]:
-        cells = [_text_of(cell) for cell in row.findall(f"{W}tc")]
+        cells = _grid_cells(row)
         if not cells:
             continue
         subject = unicodedata.normalize("NFKC", cells[0]).strip()
@@ -261,6 +298,13 @@ def _requirements_from_table(table, start_ordinal: int) -> list[Requirement]:
                 if quantity is not None:
                     quantities[field_name] = quantity
         if not quantities:
+            # A row whose values fail to parse is a reportable gap, not something to skip in
+            # silence -- a silently dropped limit is indistinguishable from one that never
+            # existed.
+            if notes is not None:
+                notes.append(
+                    f"limits row {subject!r} had no parseable quantities and was not checked"
+                )
             continue
         tags, part = resolve_subject(subject)
         out.append(

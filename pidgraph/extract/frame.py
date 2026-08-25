@@ -88,7 +88,11 @@ def _border(prims: list[Primitive], page: BBox, scale: Scale) -> BBox | None:
     candidates = [
         p
         for p in prims
-        if p.longest_segment > scale.u(60.0) and p.bbox.width > page.width * 0.5
+        if p.longest_segment > scale.u(60.0)
+        # A border encloses the sheet, so it must span BOTH axes. Width alone admits a header
+        # pipe or a title-block band, and cropping to either deletes the real content.
+        and p.bbox.width > page.width * 0.5
+        and p.bbox.height > page.height * 0.5
     ]
     if not candidates:
         return None
@@ -114,10 +118,17 @@ def detect_frame(prims: list[Primitive], page: BBox, scale: Scale) -> Frame:
         # content area -- where it is indistinguishable from annotation and gets recognised as
         # tags. The inset clears that band. It is expressed in modules, so it scales.
         content = border.expanded(-scale.u(ZONE_BAND_MODULES))
-        reasons.append(
-            f"border detected at {border.width:.0f}x{border.height:.0f}pt; "
-            f"content inset by {ZONE_BAND_MODULES} modules to clear the zone band"
-        )
+        if content.width <= 0 or content.height <= 0:
+            # The inset inverted the box -- the "border" was too small to be one. Guessing here
+            # deletes the drawing; using the full page merely keeps some furniture.
+            content = page
+            border = None
+            reasons.append("border candidate too small after inset; using the full page")
+        else:
+            reasons.append(
+                f"border detected at {border.width:.0f}x{border.height:.0f}pt; "
+                f"content inset by {ZONE_BAND_MODULES} modules to clear the zone band"
+            )
     else:
         content = page
         reasons.append("no border found; using the full page")

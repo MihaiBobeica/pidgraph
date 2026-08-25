@@ -206,7 +206,10 @@ class TesseractBackend:
                     ],
                     capture_output=True, text=True, timeout=30, check=False,
                 )
-                out.append(clean(result.stdout))
+                # A non-zero exit with text on stdout is a failure, not a read. Trusting stdout
+                # unconditionally lets a crashed engine's partial output enter the cache as a
+                # successful recognition.
+                out.append(clean(result.stdout) if result.returncode == 0 else "")
             except Exception:
                 out.append("")
             finally:
@@ -295,9 +298,21 @@ class Recogniser:
     """
 
     def backend(self) -> Backend | None:
-        if not self.allow_network:
-            return None
-        return next((b for b in self.backends if b.available()), None)
+        """The first available backend, honouring the network gate.
+
+        ``allow_network=False`` means no *network*: a local engine needs none and stays usable.
+        Gating everything on the flag silently disabled the one backend the offline story
+        depends on.
+        """
+        local_only = {"tesseract"}
+        return next(
+            (
+                b
+                for b in self.backends
+                if (self.allow_network or b.name in local_only) and b.available()
+            ),
+            None,
+        )
 
     def recognise(self, crops: list) -> dict[str, Recognition]:
         """Recognise crops, using the cache first.

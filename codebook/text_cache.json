@@ -35,7 +35,42 @@
       "confidence": 0.0,
       "text": ""
     },
+    "0209d6eb94b307620bb93c04": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "S"
+    },
+    "020b95f3eb46fb3df1992914": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "023deb01d5f21daa2eb58d34": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "02676e6fc850fe47fcf8c6a4": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "02697358301aef488a5da815": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "7"
+    },
+    "026981d94ca34c7d90b9cd34": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "0275035ec3aee6d527003461": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "02976b5e9381517856223673": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -55,15 +90,70 @@
       "confidence": 0.75,
       "text": "MV-745-14"
     },
+    "033a7f944feb06ee78d78b0c": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "03494ac7e44ab47f1805d090": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "L"
+    },
+    "039d542ddbc1f3c5e8027d19": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "03d2139a0c80756fc69e054b": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "041319b54a08ad6255683fc6": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "0413ef40a343c5b6185cf5ea": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "042f5b8bf0419d7b884ebbc1": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "045faa6b0381309268b641a2": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "1\"-D2S"
     },
+    "04655905d76128c644ca21ac": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "048caaa99f073be77b802560": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "04a0b68021398bd5c0e23c7f": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "04afd79ea105d8512697e755": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "04bdb9c83d83ca1a9a994899": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "04d4d6dc412cc130bdf339f5": {
       "backend": "tesseract",
@@ -74,6 +164,16 @@
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "2PHASESEPARATORV-730-"
+    },
+    "051b945913f0b92574d7ff39": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": ")"
+    },
+    "05666af80800f1a857d800be": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "0566fc8deb5055bde263c325": {
       "backend": "tesseract",
@@ -90,25 +190,115 @@
       "confidence": 0.75,
       "text": "*PREFIXTOALLDEWCESTOBE746"
     },
+    "05f2d0ec4a496e2aca0bc1d3": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "0620c1482450c6dc31cbea90": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "-*"
+    },
+    "062103f2838e32ae72750eb0": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "0635c4f71534ce693bc743b1": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "0642533ebbdb521294040225": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "064996975b8321796d12219c": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "064be17ded7e417b6f081181": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "0653bc8acbd6c040fe5365e1": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "MV-746-08"
     },
+    "0691f580de132e79c94bcc62": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "069e470ece91c52704df9bf8": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "06a4ac5eee11c22346fa6ec4": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
     },
+    "06ae35ba1ee55eb1720361bb": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "06aeecb6f59a5aa6848b3832": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "06b7761bdaef11d63b200ae5": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "06dfbc71aca4e6b507d662b0": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "0730ba2560790442813cdbf5": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "0732307bde7fe9f48d64f3d3": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "7"
+    },
+    "079e381b442c91406d43cae9": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "J."
+    },
+    "07aa6b388f304a0e13a5242d": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "07b0423a3ef6b9ad5e09572a": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "07b08519e2f5f4c013fd39ad": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "4\"53\""
+    },
+    "07e7746706ecb98f62357a3a": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "07f6bb82819511d3da828fde": {
       "backend": "tesseract",
@@ -130,10 +320,35 @@
       "confidence": 0.75,
       "text": "PIT.22.7136"
     },
+    "083ebbf2ab1551d890417cb8": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "08524dd9a1998b40135fb9ae": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "4-14"
+    },
+    "086afd5b2d3e727a4fadc55c": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "0888b392155b04cb7b2fb087": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
+    "088e072b0edb1600518531ac": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "089756f86f3b0a9fb3a6b086": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "08996bf5eedf937b4dff5048": {
       "backend": "tesseract",
@@ -145,10 +360,25 @@
       "confidence": 0.0,
       "text": ""
     },
+    "08cbe72d9c813e6312ee8283": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "08f337e9587be506f31e9939": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "08f4afc7d9e6a55711fbbdce": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "3\"X2\""
+    },
+    "090ccebe65974ff103ce411d": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "092c33ff75f9449db443d7fa": {
       "backend": "tesseract",
@@ -160,7 +390,42 @@
       "confidence": 0.0,
       "text": ""
     },
+    "094005938e58abba052ca93c": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "L"
+    },
+    "096200b87157e68c66696a5d": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "4"
+    },
+    "09ebc55960b3dfcdd1a8820b": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "0a75d01de5cbcaeecd60b10a": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "0a7a55c470643f905ad5d77e": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "0a8b929170dd5f9d45328350": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "L"
+    },
     "0a94a7959ec3b2bdb0106241": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "0abd16bd173214c914186e5f": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -175,7 +440,17 @@
       "confidence": 0.0,
       "text": ""
     },
+    "0bf7a590c7396d9c3c16e67f": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "0c2c173283ec085f49d2ca51": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "0c4e213530795ee5b34d6b43": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -185,10 +460,40 @@
       "confidence": 0.75,
       "text": "APPROVED"
     },
+    "0c9a62338f94212da259bb1d": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "0c9bef204e4958b991b9c88b": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "0caa9e8da0257bb8581b02e1": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "L"
+    },
+    "0cc4835cca097028a3f70413": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "0d0c35476f24ff064c353e42": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "0d4de4e603e524d6af3ad047": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "0d6a5fcc786f8347dac4749a": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "0da874466f00be7de48b1a89": {
       "backend": "tesseract",
@@ -200,10 +505,20 @@
       "confidence": 0.75,
       "text": "MV-735-15"
     },
+    "0e6547454d916377a0aced3a": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "L"
+    },
     "0e93f134072171b4be7f9a38": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "0ea4a4603f617c926a0793cd": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "0ee6d406547b3ceb5cb086b9": {
       "backend": "tesseract",
@@ -220,12 +535,67 @@
       "confidence": 0.0,
       "text": ""
     },
+    "0f1fa18005c89d3848469539": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "0f30a271c4271ed8eecc0ad7": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "7"
+    },
+    "0f7d58abcd05ffad4b405d48": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "0f7f3393c30b5e990f0fca38": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "0fbac0dd0f43f9f3202595b9": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "0fe4e43a9b6c84455d74e4fc": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
     },
+    "0ff424d21b91509903db6548": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "1014c2dbf01d9494020769a7": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "102ebdfc6b55a88f4720c434": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "U"
+    },
+    "10321ef46b68529461111241": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "1099172316a6abaeebb7006b": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "10da10c0c77f1982e2c17a44": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "113012bfb3ba0a4585792992": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -239,6 +609,16 @@
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "HOT"
+    },
+    "11d52d96db472b8fabad282d": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "120d71bfa8c3040ae4f11d3a": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "U"
     },
     "1299f878726e138b6c268a16": {
       "backend": "tesseract",
@@ -270,7 +650,32 @@
       "confidence": 0.75,
       "text": "1/2-DD ."
     },
+    "137d53171258fb1f7bb4e21e": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "13a4b3e4a6ae62089d30cef6": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "13b9b4ec3627da9613dfaf73": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "13d6595434cce067c1db9d41": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
+    "13e1fdc502d962fc4072c359": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "140312c4c406ec849599e92c": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -290,12 +695,27 @@
       "confidence": 0.0,
       "text": ""
     },
+    "144fefbdc7dd93fb47ba5a4a": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "1492455835efd5783c1f2c7d": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
     },
+    "14b28c4be7b9653712d63c00": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "L"
+    },
     "14b79bad4059564baecbdd4b": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "14ca90f3d884ac6de244c4f8": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -310,15 +730,35 @@
       "confidence": 0.75,
       "text": "\"-095"
     },
+    "151a2ce1bc0daf2cf28a6c06": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "15cb726318588e7a34ec0f4b": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "S08"
     },
+    "15fff05e1f51aa9f107e5d76": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "163e1342a29128b51a6eab02": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "165feb2e87c656b8bd340220": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "1667f7f2b03c361ee7234ca8": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "16b19b5a10d97166b81b10ad": {
       "backend": "tesseract",
@@ -335,12 +775,22 @@
       "confidence": 0.0,
       "text": ""
     },
+    "17872e86e597615fe3843c30": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "1790bfa38c32b831a79933ea": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
     },
     "179798c5bc783fb30e2c7e50": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "1800ea581aede6b8f7d12ed1": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -360,6 +810,11 @@
       "confidence": 0.0,
       "text": ""
     },
+    "188423a943f822e3855d4da6": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "1886d6c3b5adc33e9ca3cb38": {
       "backend": "tesseract",
       "confidence": 0.75,
@@ -369,6 +824,16 @@
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "1946281dfa3b92d2168df452": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "1990ba20cba25dffedc4e74c": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "1991c1de17645cf6e5ec8ba7": {
       "backend": "tesseract",
@@ -380,15 +845,45 @@
       "confidence": 0.0,
       "text": ""
     },
+    "19d54efb26174e16dba3c823": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "19ec8948fc489f66d6ecacd8": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "1a43ef1665f17e533230135b": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "T"
+    },
     "1a7cccf1f63f949c7aaf96d2": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "INSULATION"
     },
+    "1a95a1255359a41598be0203": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "1ae38a9447af14a3574726eb": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "3\"2\""
+    },
+    "1b098ab7adebc026a25998ab": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "1b689e20b1f1d5c0cff14c00": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "1b69e0837466a3fdf0f94550": {
       "backend": "tesseract",
@@ -400,7 +895,22 @@
       "confidence": 0.0,
       "text": ""
     },
+    "1bd0dac4ad7d31e94e87579d": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "1bd85a70638b7854860358d0": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "1bea1fc9952756e41a43ccee": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "1bfe7a5e9d6574e3ea39547d": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -420,20 +930,115 @@
       "confidence": 0.75,
       "text": "6OR"
     },
+    "1c55a34fbea5a48daec6d225": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "1c5b155abbcfb307dea4ac12": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "1c75424acfc076abbbcd17cd": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "1cb6750ca642d3a95bc8f6a4": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "L)"
+    },
+    "1d27c485f6dfd4544826911c": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "1d48af517ec920bdf50e04fc": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "1d60fbc123bab05096929fc1": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "4"
+    },
+    "1dd16babc57e2d8b565c717c": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "1dd7ff804656ac212ab8edef": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "715A"
+    },
+    "1e0f04c2636ce0330d62985b": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
+    "1e35db3738d3cf32922a2227": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "U"
+    },
+    "1e5f43dd5f065c4c70e4efee": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "1e6ef4036b2d0c2d4127327c": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "1e964db63b46e2b3473a72a1": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "1"
+    },
+    "1e96efe52f0f1f8d5c5edea4": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "1eb95649d7de42b124608a5c": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "1ec31291ee19d5c49c18c71b": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "1ee07dc741caa49d8925adbe": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "\"1/2-128"
     },
+    "1eee78908748c14e77095871": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "1f3de21aa383628d94b934e3": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "1f74d671e79623409f544150": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "PIPING&INSTRUMENTATIONDIAGRAM"
+    },
+    "1ff8f175c64ab742c82849e0": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "T"
     },
     "209a2d0c9889e2c6fb52772c": {
       "backend": "tesseract",
@@ -445,35 +1050,110 @@
       "confidence": 0.0,
       "text": ""
     },
+    "20d4d75977f0d62716ab464a": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "20e2cb7de5bba05027c7ab32": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "1\"-D2S"
+    },
+    "21118c0ef803246f10770f16": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "6"
+    },
+    "212c7cab4260f85508221123": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "217b8c25a2851d0903fdbbbb": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "2"
     },
+    "2180d958e130f8e1672a87f2": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "220bb1ffdd87664fdcdb327e": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "3/4\""
+    },
+    "224db495aba0d0391858e73c": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "225f3ad9d3801ae7b7c1facb": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "2279dae2b62ca7385692b0a0": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "22b11022b253e08f10f1f1f5": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "MV-745-22"
     },
+    "22e8d4875ee576727ed1cf22": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "230ef90092277d8430e16e40": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "23197def2dc80ccfcf4ed2d9": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "23453832ee0358dcba457133": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "MV-745-12"
     },
+    "234cf657329369d371032e57": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "23ab563145d54e7007251793": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "23d4602bfdd6dc04e13429a3": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "U"
+    },
     "23ee5b84910dc44ef5985162": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "2 ."
+    },
+    "23f0bdd9c90408f0504de261": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
+    "24094d73da01864a2266d2db": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "L"
     },
     "24464c1d19b616a7a2712c76": {
       "backend": "tesseract",
@@ -485,10 +1165,60 @@
       "confidence": 0.0,
       "text": ""
     },
+    "24a859ea021b647600b93b4b": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "24ac7566959b3e45d3689c3e": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "J"
+    },
+    "24c95b4b268d6f88e3c1774d": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "2532153a2e44dc31130147b2": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "25476c3292cb36e3927604d8": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "2558d1edd4fa69ae7c55f92e": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "2591a7b2a61820883a99aebe": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "1/2\"-D6S"
+    },
+    "2595195803d53d6fef3c246f": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "2599cfca397edaf390f06c9e": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "25ae382aa4b811a805fd09f8": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "U"
+    },
+    "25e00d9203cd75d3a88b2f82": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "25fbf69f7fa81a5c22a996cf": {
       "backend": "tesseract",
@@ -505,10 +1235,20 @@
       "confidence": 0.0,
       "text": ""
     },
+    "266ffeb9679e41e8b35301e4": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "26947b9adaa6718f302f7434": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "26aa9f2a68686f035154707e": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "26d6ff799722643d0ea6b0ab": {
       "backend": "tesseract",
@@ -525,10 +1265,20 @@
       "confidence": 0.75,
       "text": "PELHOTNGLLIQUID"
     },
+    "2710ae3526419801b4093ab4": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "2719e274073439dfabe1f3f8": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "MANIFOLD"
+    },
+    "27253e945adfdad1a56042b0": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "272f5fddc06652afab29102d": {
       "backend": "tesseract",
@@ -540,7 +1290,42 @@
       "confidence": 0.75,
       "text": "M -720- )"
     },
+    "2768401539394ece207a00ba": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "277e658d256f4c2ae53e51bc": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "27bfe9dbb92cef9b7316e006": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "T"
+    },
+    "281dd2539d89f62fb014aaae": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "2855aa33d6284b27260cf672": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "2875cebad2740af3113e23dd": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "287e40793cfe15cb517c7cb6": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
+    "28a58ed5dfc4645eb2d20238": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -550,10 +1335,40 @@
       "confidence": 0.75,
       "text": "STABILIZER-REBOILERE-745"
     },
+    "28fde057889efc1154e88e8d": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "2914c9c58df8d5ddfd256033": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "1"
+    },
     "295c509259e91ad43e69bac7": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "29701eb676af1982aed4bd97": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "298e27c74d6a82bd2ee5ed83": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "2a01dfb59bd3551fae86a3fb": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "2a70df0d56645236d8ffde81": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "2b663ccff9995f6740db4876": {
       "backend": "tesseract",
@@ -570,10 +1385,40 @@
       "confidence": 0.0,
       "text": ""
     },
+    "2c1e9ea81c47a74ca7214573": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "2c6615823beb07f0defc959b": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "2ca80794bce9c2f7bc078e5b": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "L"
+    },
+    "2cb33ac5904d342bf7cd59ab": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "2cbb6aae72d31eb8d80dee0b": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "1/2\"-DBS"
+    },
+    "2d45df0bd49c7f41250384bd": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "2d53992e25b89925093e4727": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "2d56c16190235eb5656cc5a3": {
       "backend": "tesseract",
@@ -615,15 +1460,95 @@
       "confidence": 0.0,
       "text": ""
     },
+    "2eac7bfc2294862386e0025d": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "2eb5b59e6fa7567d200141b1": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": ")"
+    },
+    "2ed3c63d56d4c4afa45ee7c6": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "7"
+    },
+    "2eda4544808fb6b58a254b7a": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "2ef5479a3eaa1edd9b3b2edc": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "2efdbe9621f976383a6389fa": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "("
+    },
+    "2f27b03c3f9cc7567bf15afb": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "2f6c43ec690f5fe623a30eb9": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "2f90442688020e4e9c081db8": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "SI"
+    },
     "2fafdf385b7d4dd7f9352962": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "2\"X11/2"
     },
+    "2fe39173ea049c2f7d559676": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "306f735fb59f5918e68aeea0": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "3078d3d9d90ca6ea11500dde": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "30a4d9f9f3560bc6a53087b6": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "30b814747320723a83672b8a": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "30dc1d1122115b010401e842": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "1"
+    },
     "31067fd247da5a5620a7fbd2": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "314755428dbdee134356a68f": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "317b2a9ce1c640ebbae649ca": {
       "backend": "tesseract",
@@ -650,6 +1575,21 @@
       "confidence": 0.75,
       "text": "LO"
     },
+    "3293b16df840872516b7e5c4": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "32b0d8c615c9c4c8efc0ebf2": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "J"
+    },
+    "32b36942a3b38e6779259801": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "32b43c179559407343b0dfe9": {
       "backend": "tesseract",
       "confidence": 0.0,
@@ -664,6 +1604,16 @@
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "MV-715-02"
+    },
+    "33ef7ab405c99ee6c2d23451": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "3420a167532dd9033a9c6bf5": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "3436912286de1bc64668f67e": {
       "backend": "tesseract",
@@ -685,10 +1635,30 @@
       "confidence": 0.0,
       "text": ""
     },
+    "34910cec43181830bda04868": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "34dbe78b2b7bfd229c837e68": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "34e59d12b0cfffc87c7386ad": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "350906f599fc37af088613e9": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "356cda3b492747e19c6a738a": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "6"
     },
     "357e3f0f463fdf54bd243f6c": {
       "backend": "tesseract",
@@ -696,6 +1666,21 @@
       "text": ""
     },
     "358af918b504e3fe982c97d2": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "35eff1bcf62d33b70c283973": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "3609d50d3027954e5360a4f9": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "J"
+    },
+    "3632ae2ffc9c53e6805b44b3": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -710,6 +1695,11 @@
       "confidence": 0.75,
       "text": "WTS"
     },
+    "365ec87ef7fb0ef4bb12d30a": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "3679b83d049f3fc09c298b14": {
       "backend": "tesseract",
       "confidence": 0.0,
@@ -720,7 +1710,32 @@
       "confidence": 0.0,
       "text": ""
     },
+    "36eb6f1cdac68f6ad37c7d6e": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "373bd44d698d7cb176dd6a1e": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "("
+    },
+    "37650c582a1398543c341533": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "3765669f0af970aad99bb0f9": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "377a0a0a3d447747ea7b1a50": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "37c4f73d7406f10bbd1ae8dc": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -745,6 +1760,31 @@
       "confidence": 0.0,
       "text": ""
     },
+    "3901abf3cfb5697bfe71145d": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "39404a4c04061059383216c7": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "3959d94ea45c7035a96776c8": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
+    "39d3751b524770895e66b4be": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "39d5d5cf099e0a5afeaa8ca6": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "39e6b5d3e80f5ae0f269ddf7": {
       "backend": "tesseract",
       "confidence": 0.0,
@@ -755,15 +1795,65 @@
       "confidence": 0.0,
       "text": ""
     },
+    "3a146511bb2e7aebc9a39301": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "3a47d0da1d2dc5ae29127fb9": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
     },
+    "3a4d1239a278c4d6ad07157a": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "3a50bc06e72e9da9c458111e": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "3a5e5533a4aa5e4615f6e3f9": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "3a9f6c2c00dd8f4be86f6ef1": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "3abf38c8f6e87ae831486782": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "1\"-D2S"
+    },
+    "3acf0d7c6e4ac53a90717a61": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "3b2458e8f2c5be7f591455c8": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "3b269e91550adf3135198986": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "3b36c3ddb602d35d3a6d7e5e": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
+    "3b59ed9878607b39df782f13": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "3b6e6e636b8e29e3ad77ec8b": {
       "backend": "tesseract",
@@ -785,6 +1875,16 @@
       "confidence": 0.0,
       "text": ""
     },
+    "3bbdc361ecafd4a3d1503fcc": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "3c171a1f68de1f1203f66ddf": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "L"
+    },
     "3c4f04437b99752a8f34bbf0": {
       "backend": "tesseract",
       "confidence": 0.0,
@@ -795,10 +1895,30 @@
       "confidence": 0.0,
       "text": ""
     },
+    "3c916e458b82ee1d702623bf": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "3c991a953a73af324bd536d6": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "3cdac596e12a84215db0c6e8": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "1/ 2"
+    },
+    "3d0c7d86cd984a782ddbc243": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "3d19d26354a02c35df6d0b76": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "3d5f3a86bf3860f931ef2aee": {
       "backend": "tesseract",
@@ -825,6 +1945,16 @@
       "confidence": 0.0,
       "text": ""
     },
+    "3e2a1809f2b608b2a3c1af52": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "3e461e2bfcde789ae534a62c": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "3e534c1b748843683e6745ac": {
       "backend": "tesseract",
       "confidence": 0.0,
@@ -835,12 +1965,67 @@
       "confidence": 0.0,
       "text": ""
     },
+    "3ee8b252453e7d550cb63958": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "3f3986cdc3c5cca8d1e3cb66": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "3f8be148fbb7f1da84b0c85d": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "40137836cd06741b3e6df1bc": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "("
+    },
+    "4016c29ccbab7c2e2c6da981": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "402b8729099897365e414f7c": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "1"
+    },
     "403af7127049dcfa87945216": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "1\"-D2S"
     },
+    "409726de78baa4d02273f645": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
+    "40c7567bc9b56b08affd6401": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "411ef3afdef8cc46ff43086b": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "4197545ca64611a8a43c21eb": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "41ff8d8f6bd6b0078f9a5a7d": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "42701666df82fbf2c6226638": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -850,12 +2035,57 @@
       "confidence": 0.0,
       "text": ""
     },
+    "42956197ddf4f19393de18c3": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "7"
+    },
     "42c265d8355ba3c7e4636f2e": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "SS"
     },
+    "42e96baaf8fcc8cdab9ef55c": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "42ecb1a66db354ec86f1abb6": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "4342b3c7e7479c516096d3df": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
+    "435dface2157777edf937f48": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "43b8acb34df42f2f4a37bcd3": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "43d7ec091d626044397a3e91": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "("
+    },
+    "44069b5d40c87b39c763e005": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "L"
+    },
+    "441a8c4e77f552a7e64ce9e6": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "J"
+    },
+    "442259b578a2864a68322a42": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -864,6 +2094,16 @@
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "1/2\"-D2Z"
+    },
+    "44af8df1c70e7035349c32d0": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "44e7c4c64fd1999734a625b2": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "45f65d76c34bbc050b30b232": {
       "backend": "tesseract",
@@ -885,15 +2125,75 @@
       "confidence": 0.75,
       "text": "4P8"
     },
+    "465162a6bea689987bac2f15": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "J."
+    },
+    "468394281a357ae326310989": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "46c943f6e906f10f2740b178": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "57722"
     },
+    "46e7b243355613b7b479db34": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "4714d8237ae3a9a1dc63ab63": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "471ed2971e162bde61803be0": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "47434ba05aca065f5b34dac3": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "475355bbdb5862f8a91b0657": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "47a85f818536ec95b705171c": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "47b8ac3bf6e69c0e50874c68": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "47e3cf08091ae7a251240a9f": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "484bc0e44a98125e5c78881b": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "48d90f26dc7df9a311ba0062": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
+    "491a1cd93c66bb154ce3511c": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "493d7924f5e780f061067b70": {
       "backend": "tesseract",
@@ -910,6 +2210,16 @@
       "confidence": 0.0,
       "text": ""
     },
+    "49f58b1eb00acc0cbdb455e3": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "49fa859f529947d14385fbfc": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "4a0ac5182142a59750acce07": {
       "backend": "tesseract",
       "confidence": 0.75,
@@ -920,25 +2230,85 @@
       "confidence": 0.75,
       "text": "SS"
     },
+    "4a66d8d570f5d37aa7136e1b": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "4a8905f0b5b8233f434e4467": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "L"
+    },
+    "4b2a8438458134e845094770": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "4b601c2b5f3c60b17117fffd": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "4b806c55093b428023934205": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "W-746-01"
     },
+    "4b9258318458ab492670551f": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "4b97917c69023c15b027e105": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "J"
     },
+    "4bc5c0e0d4f02646c8a79d62": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
+    "4bcc48831c346ee0099adeed": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
+    "4c1a5dd088cd1e18a9d42f15": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "4c9e520834a5b3bfdfdbc4b3": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "4cace7eb5e5cbb1657554bd9": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "4cdc7730761c267dc1839e80": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "T"
+    },
+    "4cdde5c689bd3d4b8a58fd62": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "4d025b6c2bfc7e3e290984d9": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "4d3ee4811f8113f271f2b071": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "J"
     },
     "4d4d4b283074430b9ed53674": {
       "backend": "tesseract",
@@ -950,15 +2320,45 @@
       "confidence": 0.75,
       "text": "HOT"
     },
+    "4d8fe5c980fc3bf5fd584894": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "4d9b8751e0f7f007a67de3e0": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "2HOT"
     },
+    "4da36296b9504f253ed28ceb": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "4db816da06a61567d5e8dfa2": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "4dc08b2879bb561150dd57b5": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "4dc3ad74cd4d0bbd2ffc8e0f": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "4e093731f975d858546b8c5a": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "4e0d57fe397ad4b71550c193": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "4e2cf288c58b4ecdfc5e40be": {
       "backend": "tesseract",
@@ -976,6 +2376,31 @@
       "text": "M20"
     },
     "4ee71be25d73d0b7386d11b1": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "4eee4d588e35b3adf1759372": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "4efa3597aacbda2fb9664d4d": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "4f0b9a5746479ef77c4f0c6d": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "4f1061c3b6ea9add08cf1b67": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "4f1f0cb80240f552e45568dd": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -1005,7 +2430,42 @@
       "confidence": 0.75,
       "text": "SSR"
     },
+    "500c2db1c55e9a80cccb1b73": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "503b4741420d3fd26a472f7a": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "504d568ff740039d23260d42": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "506691bea22ba59f245c7114": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "J"
+    },
     "50a113baa1de3d3bc6646d1a": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "50a477e3869159e413779d25": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "50dc4352a89347e4d0c7a77c": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "51596688c2641c353177772f": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -1050,35 +2510,115 @@
       "confidence": 0.0,
       "text": ""
     },
+    "528f23f2d032631184bd9cbd": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "52bc0e17b2f2bdaeed06d5d4": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": ")"
+    },
+    "52c6cdcfc80e00ac42298a8b": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "52cc1b3b3d46f8403114b2b9": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "T"
+    },
+    "52cd395ae76eae19d902fbd2": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "L"
+    },
+    "532e4db6d03712a0507d7288": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "\""
+    },
+    "53b5cd6336b513c30806cfc3": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "53d453546004396842e95c8e": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
     },
+    "53ed487d9674f810f468b242": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
     "53f9a8eb869af445691d914a": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "544d27ca5d76d98563c9eb34": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
+    "54ad3fa6f63019ca46773e48": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "54b79b32238061fc01630940": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "54dca0e5d41dfbd331b58020": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "1\"-D2S"
     },
+    "54f1f913595642d5e8abf182": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "5526d1dfba75a0acff0ec4e5": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "554d0a8b1fea549df6302016": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "5596241224ef4db8161ae1a1": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "PROJECT"
     },
+    "55b2ab6f249560230b2053f2": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "5626dd209104d424bc0ab3c4": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "5640f098be44fc7537c476ea": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "565a4fc5ce1bfe4b41f25410": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "L"
     },
     "5683c872e298d048e25ea091": {
       "backend": "tesseract",
@@ -1090,15 +2630,55 @@
       "confidence": 0.75,
       "text": "124"
     },
+    "5709a1d921ca73dacb4705c4": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "57233f7092a1e493d9801cd8": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "U"
+    },
+    "5770ec8ba9081e3f1edb1796": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "577cf6017777ca32c14f8d61": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "3"
     },
+    "578cb53e338136b178aa4920": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "580ad5f8aa515bf503765d99": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "58173898238dc46c8963d766": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "5825d67efc0cab8d63609788": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "583c176f172120893e60892c": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "2)"
+    },
+    "5848c762e6da8404d9367148": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "U"
     },
     "58701918d1477d973d40c5bd": {
       "backend": "tesseract",
@@ -1110,12 +2690,22 @@
       "confidence": 0.75,
       "text": "3/4\""
     },
+    "58758d8d8374b28e00efdc0c": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "58851af5950c14a72c4fda8f": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "SL."
     },
     "58a1cf333f985f846b73f2f4": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "58db60c6723d64fba85d1e06": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -1135,10 +2725,25 @@
       "confidence": 0.75,
       "text": "4\"3\""
     },
+    "597625c72e6d6a20c820111e": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "597ba68a4d20a07f2f0d2c72": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "MV-71 5-098"
+    },
+    "597cb7cdbb860ac7e902ff4b": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "599946c20900322ac1c854b9": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "5a36d8b656387df08373ed3a": {
       "backend": "tesseract",
@@ -1150,15 +2755,80 @@
       "confidence": 0.0,
       "text": ""
     },
+    "5a6bd0908b23ec8955c6d912": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "5aac6de9039f4b87ebc2eaed": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "5b1a8ccc9c80f1d61c98ee0e": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "5b286e9481750c362251b782": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "(2"
     },
+    "5b80baefdd13622e3c74af8d": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "5ba73539dd7a02cefe91c197": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "L"
+    },
+    "5bc6dcceb121d7e938e77673": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "5c316c752a2d7919459ca05f": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "4A"
+    },
+    "5c50ba260b8a04e05c0e428a": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "("
+    },
+    "5c6cb15c4b03a16a74ade96d": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "5c84b0b245aa8ee6b89ea7b1": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "5c88dde9e0e81602a7d5939c": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "5c8f2c0ff1f3cd06270014a3": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "("
+    },
+    "5cae1d204541f8fe741546c8": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "5cc960726e878f5d7797c758": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "5ccee8247a0b8ecf535e0dd9": {
       "backend": "tesseract",
@@ -1175,6 +2845,11 @@
       "confidence": 0.0,
       "text": ""
     },
+    "5d335589de36796ee3848553": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "5d45b649cb153710ab7718d6": {
       "backend": "tesseract",
       "confidence": 0.75,
@@ -1185,10 +2860,80 @@
       "confidence": 0.0,
       "text": ""
     },
+    "5d51b7338970639cb216dd96": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "5d624d519ca0739ab23407c6": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "5da1dc6701809ba013f6bec7": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "SI"
+    },
     "5dac972430ffbddf1ddcb994": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "SPCH22557A"
+    },
+    "5dc4f85ed4cd7fbd6ca4a4ec": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "5dce11c7f8d3fdc6cdc88c2b": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": ")"
+    },
+    "5e4406c803b930bca4a4f670": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "5e645311ce800a7e484a5bc8": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "5e6514f1315b5a843b11e33d": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "5eaf8edf069f8cd7a6cb6ccf": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "5eb5b8688d556cc73d558e18": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "5ee7e4c424a748c4b63487ad": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "5f55372a3a3a5559b0cbe85d": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "5f707930c4be5c855de91016": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "5f782f21c1def134f31c720a": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "5f784d231411902efd25b20c": {
       "backend": "tesseract",
@@ -1205,10 +2950,20 @@
       "confidence": 0.0,
       "text": ""
     },
+    "5fb00ac516c7bd7f11e85597": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "5fd65c2ac748439292e8a9d8": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "1-DBC-3055-D-E-HT"
+    },
+    "5fde5ba5e58e29aa3dba0a14": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "5ff4c3a4f483b300bf40f4a7": {
       "backend": "tesseract",
@@ -1220,17 +2975,47 @@
       "confidence": 0.0,
       "text": ""
     },
+    "6046e768cc1cb170226a0591": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "6087a15894b76498afcf5998": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "1\"X1/2\"4"
+    },
+    "60b5d367a7e8f158cd897427": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "60be349c08929d8239a4e3be": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
     },
+    "60d123d6ed6a7f16030d48db": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "60f489652ad4f2cb2400a365": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "6138348417e8371920d84a3b": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "616f7cb8deae45c28e5c9c09": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "617043f39c85f64ee808a319": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -1240,15 +3025,60 @@
       "confidence": 0.0,
       "text": ""
     },
+    "61d05ae206913f8b1289cd12": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "61fa2fa169697d32dd9ba601": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
     },
+    "622e7e1541ef39efe124ccd4": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "62536b675fc552dad3b5f8ed": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "629c761f4113428942bafb33": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "630c2ac0cb077704d8893f97": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "6314eb2a10b52ac1d6db7e58": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
+    "636bfaa810bdd349165dc32b": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "63944777f7e18504b6224eff": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "6394e4bb3266cf125614dc6a": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "63af287d557a0da202fad013": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "7"
     },
     "63eb1d7c0abe5d7585d6b7da": {
       "backend": "tesseract",
@@ -1265,6 +3095,26 @@
       "confidence": 0.0,
       "text": ""
     },
+    "64504325f218a6ac82e3f119": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "64585799dd2d9f13c2a863e6": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "646d21b50339a7dd44b1ec05": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "647cff5dd1da0c567b59b5a3": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "651e4d3bc97614aaaefd0a97": {
       "backend": "tesseract",
       "confidence": 0.75,
@@ -1275,10 +3125,25 @@
       "confidence": 0.75,
       "text": "(09703722"
     },
+    "65f8f66c61df136f5c372e7d": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "6614844561b04a617f3a2a62": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "6623294f687d73ccaa0ee619": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "1"
+    },
+    "664e85344fc32e836a1108f7": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "6654fc245840a567d359e13b": {
       "backend": "tesseract",
@@ -1290,10 +3155,60 @@
       "confidence": 0.75,
       "text": "AUH146"
     },
+    "66bf40fd5a3e002726e0cf7a": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "66ce85b01567beda4030fd89": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "670563a1f79896c4c65cde9d": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "1/2-D25"
+    },
+    "6706c4f18dd08409de911eae": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "673bdb2825f3e2f2d3195da7": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "6798e21af7314f8e0464474a": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "6806b4aeabdb22799fd4bd1d": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "("
+    },
+    "6808c7089b982ae8ea48c155": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "685977eeb9dc9b4f8b4a4227": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "--"
+    },
+    "68bbcd14361bd36b9f130307": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "68e803c31263e7248f05addb": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
     },
     "68ea73c5672f5ff84c7b0ee7": {
       "backend": "tesseract",
@@ -1315,6 +3230,11 @@
       "confidence": 0.75,
       "text": "1/2\"-B25"
     },
+    "6992d46dc770846b0bcdcdf8": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "69a58cea9cd8dc1cab7445e2": {
       "backend": "tesseract",
       "confidence": 0.75,
@@ -1330,17 +3250,117 @@
       "confidence": 0.0,
       "text": ""
     },
+    "69c90809b887089a6690e782": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "6a0a28a6d4a11e093908c0c1": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "6a5c62271861aa7083477547": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
+    "6ab7ea003b67a06664652436": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "6ad1ecf659ae6d83eda5c7da": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "6af085ff1b785e9eca2daf0a": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "6b0f6dd7b8e8d86debaecb36": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "T"
+    },
+    "6b10b0c7707fa1e9f4f96e50": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "6b1a1aabe5fe3911f05d51c6": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "6b2461fb9b573582cf33cfdc": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "SI"
+    },
+    "6b58d919c86cddd1d2a6f008": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
     "6b8d5dc6f8d4c0c1e6ac1ddc": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "4"
+    },
+    "6b8e2157d8ad6541e03ea8ef": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "6ba3f57b5b43aa6c6f2191c3": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "7"
+    },
+    "6c0c0fef989555c3591179a3": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "6c10ce85949ff817b327c274": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "6c2557b5da6ad4f5b3591eca": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "MV-745-09"
     },
+    "6caf914af479192aa1bc90a6": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "1"
+    },
+    "6cb6e5ccfc37093cb16ee18d": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "6db296c7ef8b708a16f78e9e": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "6db88543477e8eadd57b0c4d": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "6deee744968c8b92c1d9cc7c": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "6df577187a9c2b1c463b9194": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -1355,6 +3375,21 @@
       "confidence": 0.0,
       "text": ""
     },
+    "6e8c32d3d9c0dc56c651330c": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "6ed618a61735617dc4db8a33": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "6f9aacee62ba43cd43db612d": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "6fadcd7849171d4ece61b610": {
       "backend": "tesseract",
       "confidence": 0.75,
@@ -1365,15 +3400,45 @@
       "confidence": 0.0,
       "text": ""
     },
+    "6feba3513211f4216f849fe5": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "707acc1ad35ee832d9ae2a61": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "L"
+    },
+    "707e4032c55336ca6f07058a": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "709e2fc7fc5c05c15c1724a1": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "ST"
     },
+    "70a2cdeddd5189f45b76df9e": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "71176968005523390a55cdcf": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "711b3f9549d0095b1e5c21f2": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "712efab6cff3e4022090ede0": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "714d89b611f71b450edbde06": {
       "backend": "tesseract",
@@ -1405,6 +3470,31 @@
       "confidence": 0.0,
       "text": ""
     },
+    "71be850aabe0d65f79716ca3": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "71e391d656f7c1c56124d7d9": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "71e64a8ccabbe32b9b8ff78c": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "71f1465f432f097cb1a234e7": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
+    "721834f61f7a61a6c3ee10ae": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "72252221a202a5bc97274101": {
       "backend": "tesseract",
       "confidence": 0.75,
@@ -1414,6 +3504,11 @@
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "725191c3a07ec84ee8bcf560": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "72d1bb7099d1f3703b4db6de": {
       "backend": "tesseract",
@@ -1435,7 +3530,72 @@
       "confidence": 0.75,
       "text": "\"LA."
     },
+    "74cc1ace4aabe8738d82d70c": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "752a744e21f2fea96b5b9ff3": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "L"
+    },
+    "758eb90bcc39d6c600dcb3eb": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "7596fc38f59f8affe66aa24b": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "75be007709688004afe08787": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "75ccddf08e1e4dd54ad1fc42": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "75f9021f4495ae779a3a1601": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "761361f80ceac0c184277a4e": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "76293b4678779265d4d6809f": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "L"
+    },
+    "7651ffdc84e39c7d6194fd40": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "7654a4431d8fc9b9a8fa76c7": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "766fc7a86b621ecb7a317c81": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "767f46646303e8ff829743a8": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "76afa432a4216d64c9b99b77": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -1445,15 +3605,65 @@
       "confidence": 0.0,
       "text": ""
     },
+    "76dc0c28cc37c6fcd8bb98fc": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "76ecd698d5f896a75d7739e5": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "775819723c5e91e774128936": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "7769901e6e78969727f3392e": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "MV-713-15B"
     },
+    "77a8b9edb9ff498e440f31ec": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "L"
+    },
+    "77cb333e148465c37a2e1ed1": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "78140c50ba61b286599a5824": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "7823c052fe11312fd97f251b": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "78408b12ca6aa399789b2429": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "\"WV-742-08"
+    },
+    "7849173eff54eab9ccac227a": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
+    "784c8ed39269053f50cf3f8f": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "7891e1572d1bd14a731e2bed": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "78afcee5ad460109af92691d": {
       "backend": "tesseract",
@@ -1465,20 +3675,70 @@
       "confidence": 0.0,
       "text": ""
     },
+    "78eb2c60202d799892574195": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "791bbafa1ede85ddf613bb9c": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "791d2355c33778073970b94b": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "793768ca212931f6d7f121dd": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "7949f8513ce0f453fd25f112": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "SODFEEDTOT"
     },
+    "796010187c333364b17b7de7": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "U"
+    },
+    "79e6658a1f424f5ac0c342ec": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "79e840200a69c1b712894c3b": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "79f77f165237a0602e8a19db": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "7a00312078be21292eb28cdc": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "112\""
+    },
+    "7a03f480df42d8512516a457": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "("
+    },
+    "7a45bcf8b3286faa846c3a73": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "7a684303c64590fd97876344": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "7a9432c965a3ea45bff42885": {
       "backend": "tesseract",
@@ -1490,6 +3750,11 @@
       "confidence": 0.75,
       "text": "3\"BYPASS"
     },
+    "7abf4ad433f58fcd5433cb89": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "7ac35b6b6b77afa41c16db26": {
       "backend": "tesseract",
       "confidence": 0.75,
@@ -1500,15 +3765,65 @@
       "confidence": 0.75,
       "text": "3/4\" 1"
     },
+    "7adbe94c0c84dbebb523526e": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "U"
+    },
     "7afc174874dbf8a8feeb693a": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
     },
+    "7b0d2758716bc27cc9ac30c7": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "7b25ef29160769ffa0a60b99": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "7b91740d53714764212a69cc": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "7ba1d108cc9019b750dfd6cd": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "7baa92ec63d1a6fa00ff58bb": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "("
+    },
+    "7c190495a960a8aa6370df0e": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "7c66d761034c96f8dcbc4e2a": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "7cc5bf87035bde7fa3e6ae61": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "7d14265fcb3ddbd3f1aa1ad3": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "PRCA"
+    },
+    "7d2ab1df1ed8546d93a7ded1": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "7d99b79ccf2ed0b85cad8c76": {
       "backend": "tesseract",
@@ -1525,12 +3840,27 @@
       "confidence": 0.75,
       "text": "SET& F."
     },
+    "7df1b58d250bbc122c76016b": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "J"
+    },
     "7e00c75b169a204ac0d01a9c": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "4"
     },
+    "7e1e13fb66699cb6aecea44a": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "7e2440641b6f17cb90aff345": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "7e364bf79e2705ae6c2ef223": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -1540,10 +3870,25 @@
       "confidence": 0.75,
       "text": "18 TY-742"
     },
+    "7e3bdcf596077b1e42041969": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "7ec10aabc0f6570c1407b595": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "7f94886159bff56eaf5f18dc": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "MV-742-13"
+    },
+    "7fc7ed4d1f8b7e29bba9119b": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "T"
     },
     "801286e9433bd2730fe3ef0e": {
       "backend": "tesseract",
@@ -1565,30 +3910,110 @@
       "confidence": 0.75,
       "text": "2B"
     },
+    "804da7d7117d2b320a35814b": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "("
+    },
+    "8053a107477a2ad89dae36ae": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "80da1131130917cb9cf2fe66": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "80efc20f7d2821d75c9ca531": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "8133dabec0f5e9dc03672d86": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
     "816eb232c4041223d62f1e08": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "145-15"
+    },
+    "81ac7e429024c03c79ce2e48": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "J"
     },
     "81bdc8207e49238030633dbe": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "\"LO"
     },
+    "81dd80e492e9dd0ea4fc04cc": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "T"
+    },
     "81eab82e828c0fb01d32e1fc": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "8211e38223528ab0c77c52d7": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "8248bdb72787bb8e7c948721": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "825da7a4ae06764a7baaac52": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "825fe99a8c417ecdd4b49484": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "145-1 )"
     },
+    "8268747dc3ab09241d089c70": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "827ddd6f650c0ae470aa191a": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "8288ebf0dc6758ecda40e664": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "82a4891bd7f05839c38ded21": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "82c94d1758752aa6f2edb09f": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "82f1df89c09314c628d27262": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "7"
+    },
+    "830217953b7173a9a70eaad9": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "J"
     },
     "830eaf88ba53a08b0e2befbc": {
       "backend": "tesseract",
@@ -1599,6 +4024,31 @@
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "83254a7db2f64c0d62a93631": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "8341da38eb1b539fbb9303e8": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
+    "834733100f55aace64d1434b": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "8379334bf07d27f617fe3100": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "838282f50492f6fc219310e4": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "T"
     },
     "83962cdb5a4d34c9630e6599": {
       "backend": "tesseract",
@@ -1614,6 +4064,26 @@
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "L"
+    },
+    "83c165502496657ae61d5111": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "83c1a6c83c9371b9ba80f2c4": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "83d88e58a78e22b46a9e1251": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "844204c2becdcad0f302330a": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "84946c264992b63675d9c3c3": {
       "backend": "tesseract",
@@ -1640,12 +4110,47 @@
       "confidence": 0.0,
       "text": ""
     },
+    "85d12cd8ee6e97030dc44acc": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "T"
+    },
+    "86ded18da4e465e018424fb4": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "4"
+    },
+    "8717e070823f3fc25cbbe35d": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "87401516bdddd7ad69095ffb": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "87a57dc0293286a8e65cfc2f": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
     },
+    "87c4efb5e3ef34a2d3d757a8": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "U"
+    },
     "883a07ef6be8841be21463a6": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "883d66b200bb2ed2c31d455d": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "886044e11d1581826585a8f8": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -1660,6 +4165,11 @@
       "confidence": 0.0,
       "text": ""
     },
+    "88cf95cfc7e391ce5ef94866": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "88ecddd6b91d486f94bd6f76": {
       "backend": "tesseract",
       "confidence": 0.0,
@@ -1670,12 +4180,42 @@
       "confidence": 0.75,
       "text": "/E-7158"
     },
+    "8938c1d5e54896ce235d1cdf": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "L"
+    },
+    "896c870060055d5ce8660764": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "896f0069a8adfef6711b72c1": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
     },
+    "89d5e8b74359a5aa419a2559": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "8a25c9daf0350439ea734910": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "8a347328a97b6f25494c3f5c": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "8a8028447607c208340a2203": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
+    "8a9757415c8fe4f3ea8a64f5": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -1690,10 +4230,20 @@
       "confidence": 0.0,
       "text": ""
     },
+    "8b15ad2c0f6a56bddcf68fa1": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "8b7a78cd4eb39df3a8176bed": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "2S"
+    },
+    "8b9ad0cb6fc147280b880cb7": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "8bd2d5ea1d93007a83447a3a": {
       "backend": "tesseract",
@@ -1705,6 +4255,16 @@
       "confidence": 0.75,
       "text": "MM"
     },
+    "8bee9412ed05faab829ce7fc": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "8c044bdb4532c2bbe66d3c31": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "()"
+    },
     "8c949861904619d81dfa61bd": {
       "backend": "tesseract",
       "confidence": 0.75,
@@ -1715,10 +4275,60 @@
       "confidence": 0.0,
       "text": ""
     },
+    "8ce97631008492d4b8bcccc7": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "1"
+    },
+    "8d0e2ef989e282a02189eac4": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "8d1caa5098c4444983fd18f9": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
+    "8d5cf83539edb4f60f64b33c": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "8dbaa9ce78b2e0d092e64f0d": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "2 SLEDPEG. SUMPPUMP.LOWLEVELWILLTUKNOFFSUMPPUMP."
+    },
+    "8dcca59515f9f035f7a357b6": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "8dda1fd2a0a5a6dae983340e": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "8e355ea627377c03d150161a": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "8e3b44133af2c7d676e13a36": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "8e5b5a8e279353ed43306ea5": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "8e77980f04d97b9fdbfc08f2": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "8e921f8c1d8b7a84de13057f": {
       "backend": "tesseract",
@@ -1730,12 +4340,47 @@
       "confidence": 0.0,
       "text": ""
     },
+    "8eb035417318f2fa0716c939": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "8eb2b40384a4181438def2b4": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "8efbad9798eaa3e00cce954a": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "8f0206e65507a63bfc83ce71": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "8f2c5a74329f74bdb1a96b5b": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
     },
+    "8f581ad09957e19ced965b77": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "8f595527a553131ac2662497": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "8f9ca60c2c11cb4813a2a6d6": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "904197983b35c6405b49499b": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -1750,6 +4395,11 @@
       "confidence": 0.75,
       "text": "FROM SLUG CATCHER V-710"
     },
+    "90826839e1e1035372c8df58": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "9093d419c88b77608c45ffe7": {
       "backend": "tesseract",
       "confidence": 0.0,
@@ -1760,20 +4410,40 @@
       "confidence": 0.0,
       "text": ""
     },
+    "90d327c46149b6186b76c964": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "90fc1636ed2799bc89bd9337": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "0A"
+    },
+    "90fdcae1e8b1dd01e574b16d": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "913c151e030a0951883d3fd3": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
     },
+    "91579939bc6536273dfe5e4f": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "1"
+    },
     "918ba789ce1d57f3884ecf22": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "1 /2J"
+    },
+    "918dba9817e15ecd75813a14": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "91b8930976b2b378275c1fb4": {
       "backend": "tesseract",
@@ -1785,12 +4455,42 @@
       "confidence": 0.75,
       "text": ")12\""
     },
+    "920d21714be61d83811b0a2c": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "922ae3c9af97cb445d5f1b92": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "924fc33c9b942aaf2aadb5c6": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "925889b5f005f36242949ab7": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "926239be89d347a4811e58bd": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "145-15"
     },
+    "92788cbbe1b92b7fe604c2b1": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "T"
+    },
     "92c7629e2ba6e5a81a1ac6be": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "93141f3a0fbc8d13c3a0745b": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -1799,6 +4499,11 @@
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "(NOTE1)"
+    },
+    "9349ca7e33cc8715273551d9": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "938bbccd4b9d18ae9b00d10d": {
       "backend": "tesseract",
@@ -1810,10 +4515,25 @@
       "confidence": 0.75,
       "text": "AS-8UILTFORPHA"
     },
+    "93b4def39fe72499b5134b8d": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "7"
+    },
+    "93c9089539aac1bf2ade25b3": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "93dba0fca450eefd38c28d01": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "3X2\""
+    },
+    "93dfdd3049cef607fd227de7": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "94284ccc39d046da30eeeab3": {
       "backend": "tesseract",
@@ -1824,6 +4544,26 @@
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "946f1be64c47b3d507b4ca5e": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "947cc73476fa67d8cc315ef2": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "J"
+    },
+    "94a346ea080accb4c4b0385d": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "94c31c80148370845c01fa12": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "94d1da960fbada50fbbe9cbd": {
       "backend": "tesseract",
@@ -1840,10 +4580,35 @@
       "confidence": 0.75,
       "text": "OUNT"
     },
+    "950054d2fb25cce6078d9b08": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "952b823e97ea856dc283150c": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "955b01a7be8484ca15dc5a03": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": ")"
+    },
+    "9574f0b3c6f6a7da7736a9e7": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "957787b13b6e38adb3776a84": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "PARTICULATEFILTERSEPARATORS-"
+    },
+    "95820c320f96451bd689fc2f": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "958c093ec24b14117e30d39b": {
       "backend": "tesseract",
@@ -1865,10 +4630,30 @@
       "confidence": 0.0,
       "text": ""
     },
+    "9610de5b854736a5b5450a46": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "()"
+    },
+    "9636c62bd308cbeaf557f574": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "96605f8d62e4c768c35bc247": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "9693c8f1319264afd608f61c": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "4O301A"
+    },
+    "96a17cd5a48edea0484d5d8a": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "96ec4c94c02cb4da279b467b": {
       "backend": "tesseract",
@@ -1880,10 +4665,30 @@
       "confidence": 0.75,
       "text": "- N-08"
     },
+    "975cc99c560c8e7534571dae": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "("
+    },
+    "97892bc70d193be3bba96792": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "U"
+    },
+    "978fd27baa923db758fbd7c6": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "979fd610b05682d614ed8684": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "1\"-D2S"
+    },
+    "97a629aba7caac13dc0b7603": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "97a8b13feb29ce072533765c": {
       "backend": "tesseract",
@@ -1895,10 +4700,25 @@
       "confidence": 0.75,
       "text": "TAPEROSS2RAT"
     },
+    "9859e84da4e0a1e34c64b18b": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "988d14af5a27c98867d09a97": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "98c126cf961a6b5c7516d691": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "3\"BYPASS"
+    },
+    "98dcb9e474d511e046db81d0": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "T"
     },
     "98f0011dc82105b9ccd45078": {
       "backend": "tesseract",
@@ -1910,6 +4730,11 @@
       "confidence": 0.75,
       "text": "3"
     },
+    "9917ed8feb01b6ba3e7365fb": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "9927dfbeaa93e52f4a1a6951": {
       "backend": "tesseract",
       "confidence": 0.0,
@@ -1920,15 +4745,60 @@
       "confidence": 0.75,
       "text": "1/2\"-D28"
     },
+    "99617e672392b8e5d8be810a": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "998ae7c06fefbb4c614f44c4": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
     },
+    "99aaf10bff12f21f64f68123": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
+    "99b7be5195dee48d18dd2766": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "9a00d1ec6a561dd60e518c03": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "1"
+    },
+    "9a07824ba9328dd947f2dff1": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "9acace4169d21656847bb68a": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "9aeba5608a1e030c6396c58c": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "9bc5031f8046c0fb8a8d1695": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "P-745"
+    },
+    "9bc955d0c2be4fbb87f961f4": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "9bf69cc61643dff72ace2eea": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "9c06f2d422abeed48e81587b": {
       "backend": "tesseract",
@@ -1939,6 +4809,16 @@
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "6\"B.F.F"
+    },
+    "9cd10b782b872da97123edde": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "9cfacf39533e6a6ac80df4b5": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "9cfad8932d64405391697ed2": {
       "backend": "tesseract",
@@ -1955,10 +4835,45 @@
       "confidence": 0.75,
       "text": "(NOTE1)"
     },
+    "9d3d298e55d29f34a2e34fe7": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "("
+    },
+    "9ddbf7521409b7aad2372d72": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "9e0c0f8a2924cde11d073953": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "()"
+    },
     "9e144199f1675173cf0482af": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "Y"
+    },
+    "9e16bcbff8431c9d0a8c9111": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "9e48fa11d862868ee5abecfd": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "9e8f5ce8dec00ec4150669fa": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "9ea02427828e54f2dfbeb0c3": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "9eef2d7f310a39c061054423": {
       "backend": "tesseract",
@@ -1970,10 +4885,70 @@
       "confidence": 0.75,
       "text": "-W715-104"
     },
+    "9f3a916b9a1190c7df40c724": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "9f459a0ecaf97cc6438ea9c3": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "1"
+    },
+    "9f4cadf1e3499dcc7ab4f4ff": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "T"
+    },
+    "9f4da0b6532171c20d405a02": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "9f8b923a08b108264ae6c443": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "9fd17374f625b5915dbae26e": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "L"
+    },
+    "a04366cc3dd67701d5674f2f": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "a0446523cdfb78f307df325c": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "a05242c08dcc8e28306799b8": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "Y -D9S"
+    },
+    "a0727f09634814807e2d6211": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I."
+    },
+    "a098bcff4a56eb0b87e6403a": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "a1235b139d5c66bf35f1b3e3": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "a1782fc9a48cac00282d8096": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "a181080706ae4ba4f5bfc371": {
       "backend": "tesseract",
@@ -1985,7 +4960,87 @@
       "confidence": 0.0,
       "text": ""
     },
+    "a1e79c4bfa629d813024023a": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "a2199613472c937f1b9793d7": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "a2d5e0ced866337511fa7776": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "a2efc599748f728a65be28c6": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "1"
+    },
+    "a3016611c82ae72bd7fd067f": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "a344c0ffb0136d921e0d66a5": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "a360f1fe15ca751c5b4ff212": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "a3899d74f3690c6875a49507": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "a3c33b256fe9bc6c543f5e56": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "()"
+    },
+    "a3d936e04896b142099a8a2d": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "7"
+    },
+    "a3fda0bd9ad113698d3289fe": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "a42eb74e98637a446a4d316d": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "a431d3b8954b40af9c5ae8ad": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "a4327fb356ebed6be8b338e3": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "a484b6a563fa9a769f81982d": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "a49dd7ba0f984fa70f76cedb": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "a5069d196eb61b93d6d1ccb6": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -1994,6 +5049,21 @@
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "a55758aa1d2cfce9759f6e0d": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "L"
+    },
+    "a5a8a980b28d46c60da67d78": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "a65164bbb6415a7cdb1a1e34": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "L"
     },
     "a694a1c3c20b81c831cb20ca": {
       "backend": "tesseract",
@@ -2004,6 +5074,31 @@
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "3X2\""
+    },
+    "a6b8dbebcee0c533a44fb86d": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "L"
+    },
+    "a6fe91e3787cba549c5deb2f": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "a71d4819273fa5f0d1e2ea39": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "a7312688ae9792a2a9d9beaa": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "a75ca3646ddf67ba0df0ee08": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "a7cc7dbd31d0c26e186c7bde": {
       "backend": "tesseract",
@@ -2025,20 +5120,75 @@
       "confidence": 0.0,
       "text": ""
     },
+    "a84e2f24e6f9d0a7b6ebf2be": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "a8825d9e91657889bc5db7b0": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "a8ca9e7ab11fa8bbed49c52c": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
+    "a8e008e8694787212b102980": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
+    "a93c7c308b1cda0ba1b2364e": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "a93e953e6b62d73a9b71dc05": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "3\"X2\""
+    },
+    "a9df25e89658b1ae41530b30": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "a9e5932b0a96458138597cb6": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "aa04d0742e6979efbbe83f7b": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "aa177394fc12d2d8beab6d3d": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
     },
+    "aa3cc8a6223d3c81830b585c": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "aa5ce91dea7662647e42d5d1": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "ab24e0eea9b7f9ef6e5abc09": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "ab3918e373c788915f08103a": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "ab3a17e153a956e8b13a5a72": {
       "backend": "tesseract",
@@ -2060,10 +5210,25 @@
       "confidence": 0.0,
       "text": ""
     },
+    "ab76f4c957fb87bce4f19387": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "abcd7abb6db3f8dd9b562f62": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "PRE"
+    },
+    "abf7c20069b6ba74c7286582": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "ac17f29eea2f9c9014c4c56d": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "ac38459d532ab6b44fb3ef20": {
       "backend": "tesseract",
@@ -2075,15 +5240,70 @@
       "confidence": 0.0,
       "text": ""
     },
+    "ac87e441dbd01d18bc18a20b": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "aca8b872d37fbdfcab339027": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "acb3e80e154f8db8bd95c66f": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "/-02S."
     },
+    "acf0d1ed0f60a390d1fddc2f": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "7"
+    },
+    "ad5c25421f0a1253db3bf547": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "7"
+    },
+    "adc018fba66e97686ba6139e": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "adc29c564e7e25a725c94305": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "1)"
+    },
+    "ade3e7d2ef4f1e3dd536566b": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "adea0e4001496592e967456b": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "ae1bfd23190b3da24c149f4d": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "MV-715-0248"
+    },
+    "ae3584b964e69096589fda74": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "\""
+    },
+    "ae510e9d5e3442fbe328f507": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "ae763abfcc2d377bb1416b60": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "ae7fbbd99e4de511a06b9258": {
       "backend": "tesseract",
@@ -2095,10 +5315,25 @@
       "confidence": 0.75,
       "text": "M 7 5-088"
     },
+    "aea2964f30f82da7763aa2b9": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "aec7b1b0a2d917011731981f": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "aede6fcdbdb0aa679e30eec8": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "'NGLSTABILIZERTOWER"
+    },
+    "af93a3004613c293ab812a4d": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
     },
     "afda4a907ca765ea53023cb7": {
       "backend": "tesseract",
@@ -2125,20 +5360,50 @@
       "confidence": 0.75,
       "text": "/MN"
     },
+    "b02c591dbefd4f9c0b723dd2": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "b0b20bfc38c1105d805d337c": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "1"
+    },
     "b0c2695a91e7fce4f36a84e1": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "b0c6d872d1cc43dd98917593": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "1"
     },
     "b0d0ac3e9b7b6dae8dc419bb": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "MV-746-094"
     },
+    "b0e94044f1d9058cccad0143": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "b0f2c2eacb3ef423f1f1b6c1": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "MV-715-07"
+    },
+    "b0f4815f9c6c7510f89e6e05": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "b141e4c29363acf2fd6f2ab5": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "J"
     },
     "b1bb2463c5a08cd30ba1746e": {
       "backend": "tesseract",
@@ -2150,7 +5415,22 @@
       "confidence": 0.0,
       "text": ""
     },
+    "b1dce3cac32a1d3e7613f9fb": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "b232549963a2c3f809c17b84": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "b234b3f0c459689d43c13040": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "b27bc6bb6c5b158488f6a639": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -2170,15 +5450,45 @@
       "confidence": 0.0,
       "text": ""
     },
+    "b32ba0a7ec19e3f65781ecbe": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "b3be19022264e2a3060dbcfa": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "b3c86bd37065550acbeae2c5": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
     },
+    "b3ef7b1810cecbd9b9610010": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "b3fccb413c041d4164ae0305": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "b423ed674c763a44fc26e0d8": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "43\""
+    },
+    "b42f51e0392a2c094b900a4d": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "b4863e6da4d093132607a7d3": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "b4da310944a3f44f74bc4e28": {
       "backend": "tesseract",
@@ -2191,6 +5501,11 @@
       "text": ""
     },
     "b532685edd02e5c5106041cd": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "b54971cb4069c66eba19fe38": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -2215,6 +5530,11 @@
       "confidence": 0.75,
       "text": "3\"2\""
     },
+    "b5a39f572af024df48ed609e": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "b5c33d2bac97aa8807904492": {
       "backend": "tesseract",
       "confidence": 0.0,
@@ -2224,6 +5544,16 @@
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "PFP. J"
+    },
+    "b5e4567051d70cdbd77fca5d": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "b5efe0c2a33dac53ab6d7992": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "b5f03d8556d28e8adcd474fc": {
       "backend": "tesseract",
@@ -2235,17 +5565,57 @@
       "confidence": 0.75,
       "text": "TV2"
     },
+    "b69162492cda5fc7b7bc6963": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "b69937c3782e68e7a8c2bf2d": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "b6be29d7bf8496169a2bb9df": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "MV-745-56"
+    },
+    "b6beffd4c8d7ffacda622312": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "b727430c81d4a5dc5f8cb2b1": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "A"
     },
+    "b7682871e52de1917f8fe40c": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
+    "b77a67a07bf0c477547f060d": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "b7bdebd270b02a348a7297b0": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "b8558e744b2c4aabc3c42b26": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "b86370b6e17e6b6a9e1a4140": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "b88afa7fdfee66b6c1218647": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -2255,10 +5625,65 @@
       "confidence": 0.0,
       "text": ""
     },
+    "b8b4b91480df397dbd12dc66": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "b921011d86f09346587eb1a4": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "b928a006cff778047326406a": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "b9915615b784307bbee588ed": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "b9b7f2db500d5eb87bb1b202": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "b9f1bebfbc58c8164668c2b7": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "J."
+    },
+    "ba304c79415cf4870111c499": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "ba8d89a96d1e3e4a4c3886ec": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "babb5822a37cbb3d750e941d": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "bac3d21d332b5a27754526ee": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "bb01e0f844abf60416dc3079": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "WO"
+    },
+    "bb3391b1deaffa524ac06151": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "bba93342f8d87bd18f90a2bb": {
       "backend": "tesseract",
@@ -2270,10 +5695,30 @@
       "confidence": 0.75,
       "text": "PRE"
     },
+    "bc82d3a73abcddadca06a7ab": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "bc95a8bcf5a0cd2bcf9bcce4": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "bccfd4a036a39d288af683f0": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "bcd1e4377a0917274883946f": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "M.W.P.300PSIG375'F"
+    },
+    "bd0cf7e02a1e361c8e9f99e2": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "bd1af13de2439c578a1bb9cb": {
       "backend": "tesseract",
@@ -2284,6 +5729,11 @@
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "bd4a789eb0af87e8e5c3f016": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "bd7036cea979a7c594975b1a": {
       "backend": "tesseract",
@@ -2300,12 +5750,32 @@
       "confidence": 0.75,
       "text": "MV7I3-08)"
     },
+    "be6c8f800a69a4a57dbb6d5e": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "be7e9cb98b016083f032ddcd": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
     },
+    "be9d86ea88ff52f1879b6190": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "bf34f144d805c7e4e36e428d": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "bf554ac203dbd9d0d7b5cf68": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "bf6b6eeec3c7cc3104e01b8a": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -2320,6 +5790,11 @@
       "confidence": 0.0,
       "text": ""
     },
+    "bfe9ece8911e5456a530703d": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "bfff0ded669400ef2e021fe4": {
       "backend": "tesseract",
       "confidence": 0.0,
@@ -2330,30 +5805,105 @@
       "confidence": 0.0,
       "text": ""
     },
+    "c0ec64458b927fe9e155e287": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "\""
+    },
     "c1253a144804f6ab52d53193": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "1-B2S"
+    },
+    "c133d6ecf3948fd76b968140": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "c135807c10df631ac6744c89": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "c1c322f2b74bddeb065d3a7a": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "298"
     },
+    "c1d48a5070c6992e4be02922": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "c235ee033bd567e2739f3139": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "MV-746- O02"
+    },
+    "c2642ec5cb019a220fe7e9cd": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "c2c9f7b2269af5e1d5abb20d": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "c31369de661f685000eeefde": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "c318b704a2d3ed1794b6c0a7": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "c3794e023d44858fd8ad87b3": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "FROMNGLCOOLFEED"
     },
+    "c3eca032d9c4128e0f77e9f7": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "c4029c509b68fab54145a8d2": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "MV-71 5-128"
+    },
+    "c430921f9fc849f8c1f5c712": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "T"
+    },
+    "c4b35a94450cccb77cc37505": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "c4b539ab209a9fa8af9b47cb": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "c543bfdec61f41f5d422c0bc": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "c545382f3ee9b3a7b5e030c1": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "c5bdc928a802b376837379f7": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "c625988e1d532480d02d223e": {
       "backend": "tesseract",
@@ -2375,15 +5925,60 @@
       "confidence": 0.75,
       "text": "1\"-D2S"
     },
+    "c6bff2774349d3915ee8c601": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "c6c97327bf027bc762070747": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "4\"-RV-6138-A"
     },
+    "c6fb33dfc1249760fc86e784": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "c76ec660b2309d98442ef837": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "c79830419882bf47023bf805": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "c7cfadd8c521658f4776a4eb": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "c7f3c53ac2a2be7b5dd78810": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "c814ad4baf17c0ca826fd314": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "c8197be49e96918e40da1749": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "MV-735-13"
+    },
+    "c8292bceb58645db3e3ff0a5": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "c84c8925a3f66d48685593e0": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "c87a8b0ddab29e4881b54c03": {
       "backend": "tesseract",
@@ -2395,17 +5990,57 @@
       "confidence": 0.75,
       "text": "2-D5S"
     },
+    "c8913faa52fea85273fa40d0": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "1)"
+    },
     "c8a561cc61a7660d292666b2": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "1\"-D2S"
+    },
+    "c8b933f3e0f866c8a3828bb9": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "J"
+    },
+    "c8ee9d395c64689067a8cd5c": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "T"
+    },
+    "c9054fe426cf6fa18b009535": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "c90ae6c79ae2a2ce9fec476d": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "c92bdc177b6ea027fd73989d": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "4\"3\""
     },
+    "c93d3ef652c2a580bed9b152": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "c947d365beb9c9cf74702a5c": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "c9ab67c9a2bb9a62c6cba844": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": ")"
+    },
+    "ca14a8b3c0eceb694d1c6469": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -2415,20 +6050,95 @@
       "confidence": 0.0,
       "text": ""
     },
+    "ca468a2ae1a3b1c9e8ce2eef": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "T"
+    },
+    "ca494737a675dd3fe78444f9": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "ca558d820c37de2380bae6f4": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "ca76f39a5467f4258d1ff4df": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
+    "ca81c66b24b2711f33211068": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "caa11342f8686dfc6b57a8b0": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "cacfefde48d071da74156f46": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "W-7"
+    },
+    "cae69c1338e98094f2257cb4": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "("
+    },
+    "caff27fc520f5c9dd242928f": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "cb6d67d3c76c05c4f28df16c": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "U"
+    },
+    "cb85e4d73527ffe708168b6d": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "cba1bffd86ff0fc3a65c1447": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "cbbac16a9e45dd4a9e6257b5": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
     },
+    "cc46fae580249b8f4c10ee9b": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "L"
+    },
+    "cc798f85e75c7232ad8929b2": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "cc96ac8d8ba4bd182c38a80c": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "ccae42bf6148bd34a48d681a": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "ccc66253da68b777451f6693": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "ccdae74a0a2146663dd15d69": {
       "backend": "tesseract",
@@ -2439,6 +6149,11 @@
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "cd196721bba98271af838587": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "1"
     },
     "cd296a033676162b91bbcc1d": {
       "backend": "tesseract",
@@ -2455,10 +6170,50 @@
       "confidence": 0.75,
       "text": "/2\" 1"
     },
+    "cd74d170c14a1915f2450912": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "cd88bd17335d111ba7df4016": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "KEK"
+    },
+    "cd97e75676dd75a667b23fe7": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "cdffaad3da0490bb4686dc86": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "ce1de482180b1a82b72ae18b": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "7"
+    },
+    "ce35ee9eea1e6aadf722a837": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "ce927b0f32ad976d7a8ae374": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "cf063687f53d53e4040eaf87": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "cf09a20476434ecf79b312c6": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "cfa77a8644e73cb16ef40e9b": {
       "backend": "tesseract",
@@ -2470,6 +6225,11 @@
       "confidence": 0.75,
       "text": "SBR"
     },
+    "cff597c41e4855214ecb6d78": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "cffb8fca7bc2fb13f9ff2f50": {
       "backend": "tesseract",
       "confidence": 0.75,
@@ -2479,6 +6239,16 @@
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "d01fabf18a1aa8a4f228e5e4": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "d0662e1a1d2af1d85c27cc95": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "d07bc7657531497eac185802": {
       "backend": "tesseract",
@@ -2500,10 +6270,20 @@
       "confidence": 0.75,
       "text": "(NOTE2) /"
     },
+    "d1bc0cde2fdc4364c91fc54b": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "d21506beab7e463bdb122761": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "d25c90bfc36ff98b8bdc9516": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "d2abb5763c2200d79bff20b8": {
       "backend": "tesseract",
@@ -2515,6 +6295,11 @@
       "confidence": 0.75,
       "text": "PROVIDED\"BYOTHERS"
     },
+    "d2e363784e7df512119245c5": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "d3042a684f0e173a6d6ba9a1": {
       "backend": "tesseract",
       "confidence": 0.0,
@@ -2525,7 +6310,37 @@
       "confidence": 0.75,
       "text": "MM"
     },
+    "d362c874619ce86123c2b80b": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "d386653f0d135a79ca2f12e3": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "d3a4232c4a874bd9cad59cca": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "d3b39e58b44092fffc181d6d": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "d434bee17cc7547d84b8b1ec": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "d434e32e745d6569ddb8f3bd": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "d4455d3ee58a283d5a69a634": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -2540,10 +6355,25 @@
       "confidence": 0.0,
       "text": ""
     },
+    "d484aa099b8252b9b5d1b817": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "d493c88bb92575eebb6b0d10": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "MV-745-01"
+    },
+    "d4e0e6d00de737311483303e": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "d5040ff2096ec6a2d35d49d2": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "d50749b826c3e6a14d865545": {
       "backend": "tesseract",
@@ -2560,6 +6390,11 @@
       "confidence": 0.75,
       "text": "MV-743--08"
     },
+    "d5892eb857a9e157c056a14f": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "T"
+    },
     "d5d4c9f8f6a8246c85bd5356": {
       "backend": "tesseract",
       "confidence": 0.75,
@@ -2574,6 +6409,16 @@
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "d68b398ea4612e390d11b5f2": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "d6a093e34a60115957962995": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "d6a35a80147bdb8c3d3c3c34": {
       "backend": "tesseract",
@@ -2590,6 +6435,21 @@
       "confidence": 0.75,
       "text": "INSUL/HT"
     },
+    "d6e7045b24d26fed4dfaed47": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "L)"
+    },
+    "d748bb97e27b1c955813f77a": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "L"
+    },
+    "d798302ebfb4db87bb6b82e2": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
     "d7a8d77f347fa388507e44d7": {
       "backend": "tesseract",
       "confidence": 0.0,
@@ -2600,10 +6460,40 @@
       "confidence": 0.75,
       "text": "03500"
     },
+    "d7e753118d2da20ec995c982": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "L"
+    },
+    "d7e96e83a1009dd68d292fc4": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "d7f50d4dc339dc1ed2c3f8f4": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "d80cd57d176638db042410fa": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "U"
+    },
     "d83e6abb21328aa77a8dc6e7": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "d88dfa18d707831dbcdb1a90": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
+    "d8d47a3ab12426c3f0c6b4ed": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "d8d72b8edbd8faf96fe09c5d": {
       "backend": "tesseract",
@@ -2614,6 +6504,11 @@
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "5/4"
+    },
+    "d8fd75e489fe4ef3fa1f62d7": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "d91465d1897f3d84f8487463": {
       "backend": "tesseract",
@@ -2630,6 +6525,11 @@
       "confidence": 0.0,
       "text": ""
     },
+    "d97d25f8c1ca0decfdab23af": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
     "da032efb79759c9b8940cb26": {
       "backend": "tesseract",
       "confidence": 0.75,
@@ -2639,6 +6539,16 @@
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "4-191"
+    },
+    "da1ddfc89d9602c6db4f1434": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "da2c4c5a52adfbb04ee4753c": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "da667c2f6fe8b6768cf8442a": {
       "backend": "tesseract",
@@ -2650,6 +6560,21 @@
       "confidence": 0.0,
       "text": ""
     },
+    "da90bcdea46cf4384ba89e25": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "J."
+    },
+    "dacf75b39c0693395e0ecb22": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "db2d7b8acb90d99d3d1f95de": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "T"
+    },
     "dbc8100de4404480ac11fa0c": {
       "backend": "tesseract",
       "confidence": 0.75,
@@ -2660,7 +6585,27 @@
       "confidence": 0.75,
       "text": "*"
     },
+    "dc15fff3522296e01a2658a3": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "7"
+    },
+    "dc172f40398cff1c52a8c1fb": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "1"
+    },
     "dc3e465e62bf8a55cd087df1": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "dc6e7c53790a6f8b2bc18f65": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "L"
+    },
+    "dc748524b02e91625f79f6ef": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -2675,20 +6620,90 @@
       "confidence": 0.75,
       "text": "INSUL/HT"
     },
+    "dcb46373d8b96c178244ebb1": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": ")"
+    },
+    "dcc6147d28fb0c50d04ad53b": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
+    "dcd0f25db4f5626c6e63f934": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "dcd406d661192ce5338fd333": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": ")"
+    },
+    "dcdaf4b3bc4d0aff25aa51f2": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "dce6220dcf82f8418c55d7b5": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "dcf8cf35f6d4ced3c9442d48": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "(T)"
+    },
+    "dd2dc3c97c9458136ad0cf1c": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "dd7698ca2a57215628c3cbc0": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "1"
+    },
+    "dd808052b17251a6785b5225": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "dda65e06fd57a1a1c5facb2d": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "ddb2eb89562c578a44913346": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "1\"- 2S"
     },
+    "ddf13b4ed23948398f0fe910": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "de08141d52e90c27516daecf": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "de0bbc54c2bc2032b64fc9c5": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "TOVAPORRECOVERYUNITVRU-7655"
+    },
+    "de3ed4bd0d23174e4270aba3": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
+    "dec53b7e46cd08ac75388898": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "deda766831099ed96255d91c": {
       "backend": "tesseract",
@@ -2700,6 +6715,11 @@
       "confidence": 0.75,
       "text": "MV-745-1D"
     },
+    "defb6e79e60c7ab246e01caf": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "df5da46b98e03daa14c5b3b5": {
       "backend": "tesseract",
       "confidence": 0.75,
@@ -2710,25 +6730,100 @@
       "confidence": 0.75,
       "text": "7 9-O5A"
     },
+    "df7df9bbb2f4fcc5ee8eda80": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "dfbd0356057923febfe1308f": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "dfd2b61d8b20129e7666f3ed": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "dffc3059a57a72c83d2c64a0": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "e00bf552be8c9914915ab46a": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "e030e12d6e9acd2dc17e8bb0": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "e031cd9af16c85329a6536ed": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "-2\""
+    },
+    "e03838f196634f6e50b2eeab": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "e07f8ff6ffbe744e59669b42": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
     },
+    "e0863f171399e881752933de": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "L"
+    },
     "e08fd26c58d382aacc6d4604": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
     },
+    "e0915b4279352bd5f1de1062": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "e13cd9e873253b0eb513a64f": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "e14aad14f9911abba0bb395a": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "MV-735-16"
+    },
+    "e150873b512b976e1292a348": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "e16425fe6c4cae046f5368c9": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "e20ebf652f579ece772bb248": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "e226e873452d1d8e5b6eb8ba": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "e24186a28df961ae3fdb3436": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "J."
     },
     "e2437bf46eae7b554213c1ca": {
       "backend": "tesseract",
@@ -2740,10 +6835,40 @@
       "confidence": 0.75,
       "text": "MA"
     },
+    "e26fc093e1356c0b167bfa45": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "e2746f95a162e9891c1034cf": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "e287cbec2b32029078ac0827": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "MV"
+    },
+    "e2a8524dfa7201703526d995": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "1"
+    },
+    "e3285647809e9875cf648dca": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "e375b81e597d3a1f0af4d948": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "e3773541787dfc5082809e9e": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "e3942ac79df0c55dc0ad8c8e": {
       "backend": "tesseract",
@@ -2760,10 +6885,55 @@
       "confidence": 0.75,
       "text": "7"
     },
+    "e3bd5d9b8a0b1134ddcd5d11": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "e407f7c9cbf05777ec0ad682": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "e4226da629508b7781abc92b": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": ") MV-745-459"
+    },
+    "e42afc4479fa3f2ee5c0cda1": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "Y"
+    },
+    "e43e394c3267cf044af03c60": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "e49f596ad8885b735a436adf": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "e4be5e38295510a9347d0225": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "e5159ad69f4975c9abb75dc4": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "e51f16cd1388d2e3165dd9f2": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "T"
+    },
+    "e54c4551c3458f49d79ce156": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "e59d147a465028255ac64475": {
       "backend": "tesseract",
@@ -2780,6 +6950,21 @@
       "confidence": 0.0,
       "text": ""
     },
+    "e5f448f1e7e0f5d09cef4cb2": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "e62a7b478c3053e1c8a41c71": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "e638b2b89ac23daee8ab00b6": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "e65333af4a4dd675c6097572": {
       "backend": "tesseract",
       "confidence": 0.0,
@@ -2790,22 +6975,82 @@
       "confidence": 0.75,
       "text": "742"
     },
+    "e7c96514780f0220bf1c0309": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
     "e838f1277f14e7dec11748b3": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "MV-745-06"
+    },
+    "e83f69131aabba09639ad11d": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "e8866977132eba34e41b0289": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "e8f82155a5a316a62f8cd255": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "e906fb3d313d553c064457f1": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "e916cf929096511e9ead5291": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "e924c343d4a2dee45a75aa61": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "e9684e9f8cb57f782a5568b7": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "e9a8b6307f25e9331d9552bb": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "e9e894073eb22e04ab629d00": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
     },
+    "ea27e19349c86d9ae8a9db71": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "ea4ed07f208fb54cb89d844b": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "FT G4"
     },
+    "eabb639395aca6bbd3e4d1b1": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "("
+    },
     "eae3afbc1d1cc870092a5596": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "eae4bfc7666cfea8b7ee0c11": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -2825,10 +7070,25 @@
       "confidence": 0.0,
       "text": ""
     },
+    "eb6f75de7e0425e666f83d5f": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "1"
+    },
     "eb73b37f4a6341f5032831ef": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "eb8d13dc9af8898e8fa339a9": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "ec11fb15050a2c834d658a8d": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "6"
     },
     "ec2a833fea36567aed948923": {
       "backend": "tesseract",
@@ -2840,20 +7100,50 @@
       "confidence": 0.0,
       "text": ""
     },
+    "ec336fac93932f119d0b8338": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "ec6074b62f161305a58b099a": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "ec97a9e1eb5231397315bd66": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "MV-715-14A"
+    },
+    "ecb992b6b480cbcdf1b50b41": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "J"
     },
     "eceb092a06f27b494d757a8b": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
     },
+    "ecf006e6fdd2faf4c21d4e1e": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
     "ed338254f95337752ec96939": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "ALS."
+    },
+    "ed9afa71257d3866be78d62b": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "eda61be21e4c651473395939": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "("
     },
     "edbe74cc5df4d37f58dc9b39": {
       "backend": "tesseract",
@@ -2865,15 +7155,45 @@
       "confidence": 0.75,
       "text": "1X1/2\"4"
     },
+    "eed8589b9c65cb337ae466c0": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "ef2c39ca3979391581139872": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "ef91e14f0df9e3c6dd606c68": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "PROJECT"
     },
+    "efc82c063bef3b70f7018511": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "f03f7c7cb18d55eca93fd916": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "KEK"
+    },
+    "f062c89c630289392c0254ff": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "f0963943063f3314c9505b02": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "f0b90839c38d0bc8504d6fc7": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "f0d96c2e653d01545c78c60f": {
       "backend": "tesseract",
@@ -2884,6 +7204,21 @@
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "f0f95a2e327056c29e537f87": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "f1a11b6f4a62ac8a1fae670d": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
+    },
+    "f1fb4b0f8059f3df2905734b": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "f23acad272924a5cdfa9f989": {
       "backend": "tesseract",
@@ -2905,12 +7240,32 @@
       "confidence": 0.0,
       "text": ""
     },
+    "f304d542908cb9a3346bed30": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "f3446abdcc5b7f7b9de8bd05": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
     },
+    "f38f226e995d1422c43b171a": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "f39a93e6f59bb134e06c12fb": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "f3bb2ad70c442c9d240f59e0": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "f3cd64f266aa762b66115166": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -2925,6 +7280,16 @@
       "confidence": 0.0,
       "text": ""
     },
+    "f3feee86a999aba9695ca3d0": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "f4146ecbb736569d974d9acf": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "f4a6707f59a114b87b34ad0f": {
       "backend": "tesseract",
       "confidence": 0.0,
@@ -2935,10 +7300,35 @@
       "confidence": 0.75,
       "text": "L."
     },
+    "f4ecc928b36f146e872b6ae4": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "f521f96182b72c64b9007263": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "f54474be171297b1b6070ed4": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "ASTEMTF"
+    },
+    "f5a01f03a5f6520a27d15ce1": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "f5a03f357303cc546272d11c": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "f5c056589b952cb71a926726": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "'"
     },
     "f62a7a6e2d4190f8ffd7619b": {
       "backend": "tesseract",
@@ -2950,7 +7340,17 @@
       "confidence": 0.75,
       "text": "W-735-12"
     },
+    "f66e4b64247f67b4ece78e29": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "f69d6a3fdf04a30ce5259cca": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "f6a89805b004c7d375409814": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -2960,17 +7360,62 @@
       "confidence": 0.0,
       "text": ""
     },
+    "f6c2f145d035b5f8ce71c480": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "f6cfd644b3e090758da4a9b2": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "1/16\"C.A.(EXCL.TUBES)"
+    },
+    "f6d4a8a24ba87e641b661d42": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "f6f3e8f3db4eb13d77b928f7": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "L"
+    },
+    "f71e3f54d2668a02ee441ba5": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "f7328d07a548e1da103880e8": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     },
     "f790b80e96f7aea07727fa55": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "1-B28"
     },
+    "f7a3c99f910a6a06ba087b35": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "f7cda11144d5fdc09fbddbd2": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "f80248cd2ac1240d2eebe0d0": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "f8329439f97743d5edf1ba2d": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "f88c37d396b4236dab4f36ce": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -2979,6 +7424,16 @@
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "1\"-02S"
+    },
+    "f8ae0caaa06d93ae6fd2024e": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "f8b9b0b4079d1d7e55252af1": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "f90290a206e09b45c7dd3a4f": {
       "backend": "tesseract",
@@ -2990,15 +7445,45 @@
       "confidence": 0.75,
       "text": "4\"-PL-2243-B"
     },
+    "f9a3d4c260c1693d5a2dde28": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "fa00162ed4012f55d39713ab": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "--"
+    },
     "fa034a6722cf28222dfea9f7": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
     },
+    "fa4107af16c8aac83ff7d75a": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "fa66197385e731dfcb83867c": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "fa73894e424de3e8c2045649": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "faa958a4ec1caa60c867d78e": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "7"
+    },
+    "faca0aa7178584c1400279b9": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "L"
     },
     "fae4714799746b3983b4fe6e": {
       "backend": "tesseract",
@@ -3010,10 +7495,25 @@
       "confidence": 0.75,
       "text": "ON"
     },
+    "fafc51b9fac87d513f8fe3fd": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "("
+    },
+    "fb0dee98ea5880743cf40ca3": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "fb35cd207c96f6b3fdf199a2": {
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "M B ANA RN NES"
+    },
+    "fb3f85c9ef07a0074eef0453": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "("
     },
     "fba5f95b045d018830f2b5ab": {
       "backend": "tesseract",
@@ -3035,7 +7535,22 @@
       "confidence": 0.75,
       "text": "6"
     },
+    "fc5e5a11be4eb7ba3b41613f": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "fc93106544170920c1107625": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "fc9662ec17aaf6e62f1a8d8d": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "fced32bc51eb1083dabe9c27": {
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
@@ -3044,6 +7559,21 @@
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "HOT"
+    },
+    "fd4ac5128a98081c1654a22c": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "fd632fede1ab83e82a4a915d": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "fda8dda2d1878810d8eaf1de": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
     },
     "fdcf5865485ff04b5a3bf9be": {
       "backend": "tesseract",
@@ -3060,6 +7590,16 @@
       "confidence": 0.75,
       "text": "008"
     },
+    "fe724ccae7fba4dac9d9b6e3": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "fe72ec0a3efc71369976e79d": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
     "fe8a1ca04bedef2484a8d78d": {
       "backend": "tesseract",
       "confidence": 0.75,
@@ -3069,6 +7609,36 @@
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "/2*-D 8"
+    },
+    "fe9bacd8a37ade8859430969": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "1"
+    },
+    "fec5219715282d779a177dc9": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "feee964073f1f8a32f16a81f": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "ff37dd082177d6469f89d46d": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
+    },
+    "ff388813117f4ee00bfc2369": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
+    "ff6113f3d7f4937582955de2": {
+      "backend": "tesseract",
+      "confidence": 0.0,
+      "text": ""
     }
   }
 }

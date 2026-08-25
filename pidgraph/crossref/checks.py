@@ -292,7 +292,34 @@ def check_design_limits(
                 continue
 
             for field_name, sop_quantity in req.quantities.items():
-                agree, message = _compare(field_name, sop_quantity, found.get(field_name))
+                pid_quantity = found.get(field_name)
+                if pid_quantity is None:
+                    # Absence is not a conflict. The drawing data may simply not have yielded
+                    # this field, and reporting it as critical accuses a correct document on the
+                    # strength of an extraction gap -- the exact failure the engine is designed
+                    # to under-claim on.
+                    out.append(
+                        Finding(
+                            check="design_limit",
+                            status=Status.NEEDS_REVIEW,
+                            severity=Severity.MEDIUM if recall > 0.8 else Severity.LOW,
+                            title=(
+                                f"{tag}"
+                                f"{' ' + req.subject_part if req.subject_part else ''}: "
+                                f"no {field_name} was read from the drawing"
+                            ),
+                            detail=(
+                                "The comparison cannot run without the drawing-side value. "
+                                "This is reported as unresolved, not as a conflict."
+                            ),
+                            confidence=min(0.5, max(recall, 0.1)),
+                            subject=tag,
+                            sop_evidence=req.evidence,
+                            graph_incomplete=True,
+                        )
+                    )
+                    continue
+                agree, message = _compare(field_name, sop_quantity, pid_quantity)
                 out.append(
                     Finding(
                         check="design_limit",

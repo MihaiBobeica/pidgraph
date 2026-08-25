@@ -50,6 +50,9 @@ class DocumentResult:
     source: str
     pages: list[PageResult] = field(default_factory=list)
     elapsed_s: float = 0.0
+    notes: list[str] = field(default_factory=list)
+    """Document-level events. Backend failures land here rather than on whichever page happened
+    to be processed last, which misattributes every earlier page's failure."""
 
     @property
     def graph_nodes(self) -> int:
@@ -63,6 +66,7 @@ class DocumentResult:
         return {
             "source": self.source,
             "elapsed_s": round(self.elapsed_s, 3),
+            "notes": list(self.notes),
             "pages": [
                 {
                     "page_index": p.page_index,
@@ -127,13 +131,21 @@ def run_page(page: Any, page_index: int, recogniser: Any | None = None) -> PageR
     # it additionally runs the local engine on the misses. Without any recogniser the regions
     # stay unread, which downstream code treats as a gap rather than as absence.
     texts_read = tags_parsed = 0
+    recognition_error: str | None = None
     if recogniser is not None and regions:
         from pidgraph.recognise import crops as crops_mod
         from pidgraph.standards.tags import parse as parse_tag
 
-        pixmap, factor = crops_mod.render_page(page, scale)
-        cut = crops_mod.cut(pixmap, factor, regions, scale)
-        results = recogniser.recognise(cut)
+        # Recognition is an enrichment, not a prerequisite: if the render or the engine fails,
+        # the graph is still extracted and the labels stay unread -- the same degraded state as
+        # having no recogniser at all, and the failure is recorded rather than fatal.
+        try:
+            pixmap, factor = crops_mod.render_page(page, scale)
+            cut = crops_mod.cut(pixmap, factor, regions, scale)
+            results = recogniser.recognise(cut)
+        except Exception as exc:  # any render/engine failure degrades, never aborts
+            recognition_error = f"{type(exc).__name__}: {exc}"
+            cut, results = [], {}
         by_region: dict[int, tuple[str, float]] = {}
         for crop in cut:
             hit = results.get(crop.key)
@@ -150,10 +162,13 @@ def run_page(page: Any, page_index: int, recogniser: Any | None = None) -> PageR
             if parse_tag(hit[0]).ok:
                 tags_parsed += 1
         regions = enriched
-        strategies["text_content"] = (
-            f"{recogniser.backend().name if recogniser.backend() else 'cache'} "
-            f"({texts_read}/{len(regions)} read, {tags_parsed} tags)"
-        )
+        if recognition_error is not None:
+            strategies["text_content"] = f"failed, labels left unread ({recognition_error})"
+        else:
+            strategies["text_content"] = (
+                f"{recogniser.backend().name if recogniser.backend() else 'cache'} "
+                f"({texts_read}/{len(regions)} read, {tags_parsed} tags)"
+            )
     else:
         strategies["text_content"] = "none available"
 
@@ -217,8 +232,7 @@ def run(path: str | Path) -> DocumentResult:
             result.pages.append(run_page(page, index, recogniser=recogniser))
 
     if recogniser is not None:
-        for message in recogniser.errors:
-            result.pages[-1].notes.append(f"recognition: {message}")
+        result.notes.extend(f"recognition: {m}" for m in recogniser.errors)
         recogniser.cache.save()
     result.elapsed_s = time.perf_counter() - started
 

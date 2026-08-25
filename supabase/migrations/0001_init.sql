@@ -207,6 +207,9 @@ stable
 security invoker
 as $$
     with recursive walk(node_id, depth, path) as (
+        -- Distinct-on below collapses the many paths that can reach one node in a cyclic plant
+        -- (parallel trains, bypasses); without it the walk enumerates every route and the result
+        -- both explodes and repeats nodes.
         select n.id, 0, array[n.stable_key]
           from nodes n
          where n.run_id = p_run and n.tag_name = p_tag
@@ -227,7 +230,12 @@ as $$
                'kind', n.kind,
                'depth', w.depth
            ) order by w.depth), '[]'::jsonb)
-      from walk w join nodes n on n.id = w.node_id;
+      from (
+          select distinct on (node_id) node_id, depth
+            from walk
+           order by node_id, depth
+      ) w
+      join nodes n on n.id = w.node_id;
 $$;
 
 -- p_run defaults to the newest document's current run, so a reader needs no id to see the graph.
@@ -317,7 +325,29 @@ create policy findings_read on findings for select using (
              where r.id = findings.run_id and (d.owner_id is null or d.owner_id = auth.uid()))
 );
 
-create policy attributes_read on node_attributes for select using (true);
-create policy requirements_read on sop_requirements for select using (true);
+-- Scoped like every other data table. `using (true)` here would let any signed-in user read
+-- attribute values and procedure requirements belonging to documents they do not own -- the two
+-- tables where the actual engineering numbers live.
+create policy attributes_read on node_attributes for select using (
+    exists (
+        select 1
+          from nodes n
+          join extraction_runs r on r.id = n.run_id
+          join documents d on d.id = r.document_id
+         where n.id = node_attributes.node_id
+           and (d.owner_id is null or d.owner_id = auth.uid())
+    )
+);
+create policy requirements_read on sop_requirements for select using (
+    exists (
+        select 1 from documents d
+         where d.id = sop_requirements.document_id
+           and (d.owner_id is null or d.owner_id = auth.uid())
+    )
+);
 create policy review_read on review_actions for select using (actor is null or actor = auth.uid());
 create policy review_write on review_actions for insert with check (actor = auth.uid());
+
+-- The revoke loop above stripped INSERT from everyone; the policy alone cannot give it back.
+-- Without this grant the review feature is a policy that permits an action no role can perform.
+grant insert on table review_actions to authenticated;

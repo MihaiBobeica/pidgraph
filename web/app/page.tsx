@@ -22,7 +22,16 @@ export default function Page() {
   }, []);
 
   const nodes = useMemo(
-    () => (snapshot?.nodes ?? []).filter((n) => n.page === page),
+    () =>
+      (snapshot?.nodes ?? []).filter(
+        // A node without a finite box cannot be drawn; letting it through puts NaN into svg
+        // attributes and blanks the layer without an error.
+        (n) =>
+          n.page === page &&
+          Array.isArray(n.bbox) &&
+          n.bbox.length === 4 &&
+          n.bbox.every((v) => Number.isFinite(v)),
+      ),
     [snapshot, page],
   );
   const keys = useMemo(() => new Set(nodes.map((n) => n.stable_key)), [nodes]);

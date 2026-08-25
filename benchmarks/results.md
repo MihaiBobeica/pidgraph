@@ -6,9 +6,9 @@ Scored against synthetic drawings whose ground truth was authored before renderi
 
 | Metric | Value |
 |---|---|
-| Samples | 12 |
-| Module recovered | 12/12 |
-| Sheet size identified | 12/12 |
+| Samples | 10 |
+| Module recovered | 10/10 |
+| Sheet size identified | 10/10 |
 | Median module error | 0.01% |
 | Worst module error | 0.01% |
 
@@ -16,10 +16,10 @@ Scored against synthetic drawings whose ground truth was authored before renderi
 
 | Metric | Result |
 |---|---|
-| symbol precision | symbol precision@0.3: 100.0% [98.2%-100.0%] n=212 |
-| symbol recall | symbol recall@0.3: 99.5% [97.4%-99.9%] n=213 |
-| edge precision | edge precision: 45.7% [39.0%-52.5%] n=208 |
-| edge recall | edge recall: 54.0% [46.6%-61.2%] n=176 |
+| symbol precision | symbol precision@0.3: 100.0% [97.7%-100.0%] n=166 |
+| symbol recall | symbol recall@0.3: 99.4% [96.7%-99.9%] n=167 |
+| edge precision | edge precision: 46.2% [38.7%-54.0%] n=160 |
+| edge recall | edge recall: 54.4% [46.0%-62.5%] n=136 |
 
 ## Notes
 

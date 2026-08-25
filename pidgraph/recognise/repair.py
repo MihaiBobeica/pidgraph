@@ -112,6 +112,11 @@ def repair(text: str, budget: int = MAX_SUBSTITUTIONS) -> Repair | None:
     despaced = _despace(raw)
     direct = parse(despaced)
     if direct.conformance is not Conformance.UNPARSED and direct.kind is not TagKind.UNKNOWN:
+        if despaced != raw and direct.kind is TagKind.OFF_PAGE_CONNECTOR:
+            # Collapsing spaces out of digit noise can manufacture a plausible connector
+            # reference. A connector accepted only because its spaces were removed is too weak
+            # to assert; the read stays as it was.
+            return None
         note = "spaces removed" if despaced != raw else "read directly"
         return Repair(raw, despaced, direct, 0, note)
 
