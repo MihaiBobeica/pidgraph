@@ -35,6 +35,9 @@ class RunRecord:
     edges: list[dict] = field(default_factory=list)
     findings: list[dict] = field(default_factory=list)
     requirements: list[dict] = field(default_factory=list)
+    sop_sha256: str = ""
+    sop_filename: str = ""
+    sop_storage_key: str = ""
 
 
 class GraphStore(Protocol):

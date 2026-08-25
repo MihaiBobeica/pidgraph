@@ -156,12 +156,16 @@ def _text_region_hints(page: Any) -> int:
     return count
 
 
-def probe_page(page: Any, page_index: int) -> PageCapabilities:
-    """Measure one page. Pure: no side effects, no mutation of ``page``."""
+def probe_page(page: Any, page_index: int, drawings: list | None = None) -> PageCapabilities:
+    """Measure one page. Pure: no side effects, no mutation of ``page``.
+
+    ``drawings`` may be supplied to avoid re-parsing: extracting a page's vector content is the
+    single most expensive parse, and three stages need it.
+    """
     rect = page.rect
     page_area = max(float(rect.width) * float(rect.height), 1e-9)
 
-    drawings = page.get_drawings()
+    drawings = drawings if drawings is not None else page.get_drawings()
     paint_types: Counter[str] = Counter()
     stroke_widths: Counter[float] = Counter()
     colours: set[tuple] = set()

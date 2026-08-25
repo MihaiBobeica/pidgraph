@@ -1,0 +1,17 @@
+# Offline by design: no database, no OCR binary, no network beyond package installs. Everything
+# network-dependent degrades to the file-backed paths, which is itself part of what is tested.
+name: ci
+on:
+  push: { branches: [main] }
+  pull_request:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.13" }
+      - run: pip install -e ".[dev,db]"
+      - run: ruff check pidgraph tests
+      - run: pytest -q
+        env: { PYTHONHASHSEED: "0" }

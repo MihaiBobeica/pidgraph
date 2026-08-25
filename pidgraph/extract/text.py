@@ -37,6 +37,17 @@ class TextRegion:
     source: Source
     mark_count: int
     page_index: int
+    text: str | None = None
+    """The recognised string, once recognition has run. None means unread, which downstream code
+    must treat differently from empty: an unread label is an extraction gap, not evidence."""
+    text_confidence: float = 0.0
+
+    def with_text(self, text: str, confidence: float) -> TextRegion:
+        return TextRegion(
+            bbox=self.bbox, orientation=self.orientation, source=self.source,
+            mark_count=self.mark_count, page_index=self.page_index,
+            text=text, text_confidence=confidence,
+        )
 
     @property
     def centre(self) -> Point:

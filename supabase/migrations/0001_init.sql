@@ -33,6 +33,23 @@ create table if not exists isa_edition (
     note        text
 );
 
+-- Seed rows. Without these the foreign keys above are traps: the first run insert names an
+-- edition that does not exist and fails at write time, far from this file. Idempotent.
+insert into isa_edition (designation, year, note) values
+    ('ANSI/ISA-5.1-1984', 1984, 'the reference guide''s letter table matches this edition'),
+    ('ANSI/ISA-5.1-2009', 2009, 'the verified rule set; adds the SIS modifier and Clause 6 dimensions'),
+    ('ANSI/ISA-5.1-2024', 2024, 'current edition; annexes moved to TR5.1.02/03')
+on conflict (designation) do nothing;
+
+insert into dexpi_class (name, package, description) values
+    ('instrument_circle', 'Instrumentation', 'device/function circle, identified dimensionally'),
+    ('ProcessInstrumentationFunction', 'Instrumentation', 'instrument bubble semantics'),
+    ('PipingNetworkSegment', 'Piping', 'a run of conductor between connection points'),
+    ('OperatedValve', 'Piping', 'valve with an actuator'),
+    ('Equipment', 'Equipment', 'tagged plant item'),
+    ('unknown', 'Other', 'unresolved shape; explicitly not forced into a known class')
+on conflict (name) do nothing;
+
 -- ---------------------------------------------------------------------------------------------
 -- Documents and runs
 -- ---------------------------------------------------------------------------------------------
@@ -213,19 +230,32 @@ as $$
       from walk w join nodes n on n.id = w.node_id;
 $$;
 
-create or replace function graph_snapshot(p_run uuid)
+-- p_run defaults to the newest document's current run, so a reader needs no id to see the graph.
+-- Resolving it here rather than in the client matters: a client passing null would otherwise
+-- match nothing and render an empty graph that looks like a successful read of an empty database.
+create or replace function graph_snapshot(p_run uuid default null)
 returns jsonb
 language sql
 stable
 security invoker
 as $$
+    with chosen as (
+        select coalesce(
+            p_run,
+            (select d.current_run_id
+               from documents d
+              where d.current_run_id is not null
+              order by d.created_at desc
+              limit 1)
+        ) as run_id
+    )
     select jsonb_build_object(
         'nodes', coalesce((
             select jsonb_agg(jsonb_build_object(
                 'stable_key', n.stable_key, 'kind', n.kind, 'dexpi_class', n.dexpi_class,
                 'tag', n.tag_name, 'label', n.label, 'bbox', n.bbox,
                 'page', n.page_index, 'confidence', n.confidence
-            )) from nodes n where n.run_id = p_run), '[]'::jsonb),
+            )) from nodes n where n.run_id = (select run_id from chosen)), '[]'::jsonb),
         'edges', coalesce((
             select jsonb_agg(jsonb_build_object(
                 'source', s.stable_key, 'target', t.stable_key, 'kind', e.kind,
@@ -234,7 +264,7 @@ as $$
             from edges e
             join nodes s on s.id = e.source_id
             join nodes t on t.id = e.target_id
-            where e.run_id = p_run), '[]'::jsonb)
+            where e.run_id = (select run_id from chosen)), '[]'::jsonb)
     );
 $$;
 

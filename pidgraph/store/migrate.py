@@ -57,11 +57,20 @@ def _split_statements(sql: str) -> list[str]:
         buffer.append(line)
         if tag is None and line.rstrip().endswith(";"):
             statement = "\n".join(buffer).strip()
-            if statement and not statement.startswith("--"):
+            # Keep the statement unless it is comments all the way down. Testing only the first
+            # line is a trap: a statement preceded by its explanatory comment starts with "--",
+            # and dropping on that basis silently discards most of a well-commented migration
+            # while the runner reports success.
+            if any(
+                stripped_line.strip() and not stripped_line.strip().startswith("--")
+                for stripped_line in statement.splitlines()
+            ):
                 statements.append(statement)
             buffer = []
     tail = "\n".join(buffer).strip()
-    if tail:
+    if tail and any(
+        line.strip() and not line.strip().startswith("--") for line in tail.splitlines()
+    ):
         statements.append(tail)
     return statements
 
@@ -117,13 +126,16 @@ def apply(dsn: str, directory: str | Path = MIGRATIONS, dry_run: bool = False) -
             for file in files:
                 sql = file.read_text(encoding="utf-8")
                 for statement in _split_statements(sql):
+                    # A savepoint per statement, not a transaction rollback on failure. Policies
+                    # have no "if not exists" form, so re-running hits duplicates -- and a full
+                    # rollback there silently discards every statement already executed (the
+                    # seed inserts, in practice) while the runner goes on to report success.
+                    cursor.execute("savepoint migration_step")
                     try:
                         cursor.execute(statement)
+                        cursor.execute("release savepoint migration_step")
                     except psycopg2.errors.DuplicateObject:
-                        # Policies and similar have no "if not exists" form. Re-running a
-                        # migration is normal, so an already-present object is not a failure.
-                        connection.rollback()
-                        cursor = connection.cursor()
+                        cursor.execute("rollback to savepoint migration_step")
                     except Exception as exc:
                         raise RuntimeError(
                             f"{file.name}: {exc}\nstatement began: {statement[:120]}"

@@ -66,6 +66,13 @@ class Cache:
         )
 
     def get(self, key: str) -> Recognition | None:
+        """A cached result, including a cached *failure*.
+
+        An entry with empty text means the crop was tried and found unreadable. That is a result
+        worth keeping: without it every unreadable crop -- and half of a stroke-font drawing is
+        unreadable to a local engine -- is re-run on every single invocation, which turned a warm
+        run into a minute of subprocess calls.
+        """
         entry = self.entries.get(key)
         if entry is None:
             self.misses += 1
@@ -308,7 +315,10 @@ class Recogniser:
                 continue
             cached = self.cache.get(crop.key)
             if cached is not None:
-                results[crop.key] = cached
+                # Any cached entry is final, including a cached failure; only usable text is
+                # surfaced to the caller.
+                if cached.usable:
+                    results[crop.key] = cached
             else:
                 pending.append(crop)
 
@@ -336,9 +346,11 @@ class Recogniser:
                 break
             for crop, text in zip(batch, texts, strict=False):
                 cleaned = clean(text)
-                if not cleaned:
-                    continue
-                recognition = Recognition(cleaned, 0.75, backend.name)
+                # Failures are cached too, as empty entries. They are answers -- "this crop is
+                # unreadable to this engine" -- and skipping them here re-runs the engine on the
+                # same pixels every invocation.
+                recognition = Recognition(cleaned, 0.75 if cleaned else 0.0, backend.name)
                 self.cache.put(crop.key, recognition)
-                results[crop.key] = recognition
+                if recognition.usable:
+                    results[crop.key] = recognition
         return results

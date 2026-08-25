@@ -86,9 +86,10 @@ class DocumentResult:
         }
 
 
-def run_page(page: Any, page_index: int) -> PageResult:
+def run_page(page: Any, page_index: int, recogniser: Any | None = None) -> PageResult:
     """Extract one page, recording the strategy chosen at each stage."""
-    caps = probe_page(page, page_index)
+    drawings = page.get_drawings()  # parsed once; every stage below reuses it
+    caps = probe_page(page, page_index, drawings=drawings)
     if not caps.has_vector_geometry and not caps.is_raster_page:
         raise ExtractionError(
             f"page {page_index} offers neither vector geometry nor a decodable raster; "
@@ -104,13 +105,13 @@ def run_page(page: Any, page_index: int) -> PageResult:
     notes: list[str] = []
 
     try:
-        scale = calibrate_page(page)
+        scale = calibrate_page(page, drawings=drawings)
     except CalibrationError as exc:
         raise ExtractionError(f"page {page_index}: {exc}") from exc
     strategies["calibration"] = f"module={scale.module:.3f}pt@{scale.confidence:.2f}"
     notes.extend(scale.warnings)
 
-    prims = extract_page(page, scale, page_index)
+    prims = extract_page(page, scale, page_index, drawings=drawings)
     page_box = BBox(0.0, 0.0, float(page.rect.width), float(page.rect.height))
     detected = frame_mod.detect_frame(prims, page_box, scale)
     content, furniture = frame_mod.split(prims, detected)
@@ -121,6 +122,40 @@ def run_page(page: Any, page_index: int) -> PageResult:
     marks = text_mod.glyph_marks(content)
     regions, how = text_mod.recover(page, marks, scale, page_index, content=detected.content)
     strategies["text_regions"] = how
+
+    # Recognition, cache-first. With a warm cache this costs one page render; with a cold cache
+    # it additionally runs the local engine on the misses. Without any recogniser the regions
+    # stay unread, which downstream code treats as a gap rather than as absence.
+    texts_read = tags_parsed = 0
+    if recogniser is not None and regions:
+        from pidgraph.recognise import crops as crops_mod
+        from pidgraph.standards.tags import parse as parse_tag
+
+        pixmap, factor = crops_mod.render_page(page, scale)
+        cut = crops_mod.cut(pixmap, factor, regions, scale)
+        results = recogniser.recognise(cut)
+        by_region: dict[int, tuple[str, float]] = {}
+        for crop in cut:
+            hit = results.get(crop.key)
+            if hit is not None and hit.usable:
+                by_region[id(crop.region)] = (hit.text, hit.confidence)
+        enriched = []
+        for region in regions:
+            hit = by_region.get(id(region))
+            if hit is None:
+                enriched.append(region)
+                continue
+            enriched.append(region.with_text(hit[0], hit[1]))
+            texts_read += 1
+            if parse_tag(hit[0]).ok:
+                tags_parsed += 1
+        regions = enriched
+        strategies["text_content"] = (
+            f"{recogniser.backend().name if recogniser.backend() else 'cache'} "
+            f"({texts_read}/{len(regions)} read, {tags_parsed} tags)"
+        )
+    else:
+        strategies["text_content"] = "none available"
 
     conductors = lines_mod.chain_dashes(lines_mod.merge(content, scale, page_index), scale)
     strategies["line_typing"] = (
@@ -147,6 +182,8 @@ def run_page(page: Any, page_index: int) -> PageResult:
             "content": len(content),
             "furniture": len(furniture),
             "text_regions": len(regions),
+            "texts_read": texts_read,
+            "tags_parsed": tags_parsed,
             "conductors": len(conductors),
             "instrument_circles": len(circles),
             "symbols": len(symbols),
@@ -163,11 +200,26 @@ def run(path: str | Path) -> DocumentResult:
 
     started = time.perf_counter()
     result = DocumentResult(source=str(path))
+
+    # One recogniser for the whole document, so the cache is shared and saved once. Its absence
+    # is not an error: the pipeline degrades to unread labels and says so per page.
+    try:
+        from pidgraph.recognise.ocr import Cache, Recogniser
+
+        recogniser: Any | None = Recogniser(cache=Cache.load())
+    except Exception:
+        recogniser = None
+
     with pymupdf.open(str(path)) as doc:
         if doc.page_count == 0:
             raise ExtractionError(f"{path} has no pages")
         for index, page in enumerate(doc):
-            result.pages.append(run_page(page, index))
+            result.pages.append(run_page(page, index, recogniser=recogniser))
+
+    if recogniser is not None:
+        for message in recogniser.errors:
+            result.pages[-1].notes.append(f"recognition: {message}")
+        recogniser.cache.save()
     result.elapsed_s = time.perf_counter() - started
 
     if result.graph_nodes == 0:

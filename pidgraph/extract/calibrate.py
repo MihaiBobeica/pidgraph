@@ -275,7 +275,9 @@ def _looks_like_fixed_plot_style(stroke_pt: float) -> bool:
 # ---- the recipe --------------------------------------------------------------------------------
 
 
-def calibrate_page(page: Any, min_confidence: float = 0.35) -> Scale:
+def calibrate_page(
+    page: Any, min_confidence: float = 0.35, drawings: list | None = None
+) -> Scale:
     """Recover the module for one page.
 
     Raises :class:`CalibrationError` rather than returning a low-confidence result, because every
@@ -284,7 +286,7 @@ def calibrate_page(page: Any, min_confidence: float = 0.35) -> Scale:
     rect = page.rect
     page_span = max(float(rect.width), float(rect.height))
     sheet, system = detect_sheet(float(rect.width), float(rect.height))
-    paths = page.get_drawings()
+    paths = drawings if drawings is not None else page.get_drawings()
     warnings: list[str] = []
 
     if system == "unknown":

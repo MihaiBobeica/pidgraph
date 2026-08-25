@@ -216,9 +216,18 @@ def build(
         # only would connect just the first and last item on a run and silently drop every
         # component between them, which is most of them.
         attached: list[tuple[float, int]] = []
+        lo_x = min(line.start.x, line.end.x)
+        hi_x = max(line.start.x, line.end.x)
+        lo_y = min(line.start.y, line.end.y)
+        hi_y = max(line.start.y, line.end.y)
         for sym in symbols:
             reach = max(sym.bbox.width, sym.bbox.height) / 2 + port_radius
-            distance, position = _distance_to_segment(sym.centre, line.start, line.end)
+            # Cheap rejection before the exact distance: most symbols are nowhere near most
+            # lines, and the exact test on every pair is the pipeline's hottest loop.
+            c = sym.centre
+            if c.x < lo_x - reach or c.x > hi_x + reach or c.y < lo_y - reach or c.y > hi_y + reach:
+                continue
+            distance, position = _distance_to_segment(c, line.start, line.end)
             if distance <= reach:
                 attached.append((position, sym.id))
         if not attached:
@@ -300,11 +309,28 @@ def build(
     for line in lines:
         endpoints.append((line.start, line.id))
         endpoints.append((line.end, line.id))
-    for i, (pt_a, id_a) in enumerate(endpoints):
-        for pt_b, id_b in endpoints[i + 1 :]:
-            if id_a != id_b and pt_a.dist(pt_b) <= junction_radius:
-                adjacency[id_a].add(id_b)
-                adjacency[id_b].add(id_a)
+    # Grid-bucketed rather than all-pairs: thousands of endpoints make the quadratic sweep the
+    # slowest thing in the pipeline, and coincidence is a purely local question.
+    cell = max(junction_radius, 1e-6)
+    grid: dict[tuple[int, int], list[int]] = defaultdict(list)
+    for i, (pt, _) in enumerate(endpoints):
+        grid[(int(pt.x // cell), int(pt.y // cell))].append(i)
+    for (cx, cy), members in grid.items():
+        neighbourhood = [
+            j
+            for dx in (0, 1)
+            for dy in ((0, 1) if dx == 0 else (-1, 0, 1))
+            for j in grid.get((cx + dx, cy + dy), ())
+        ]
+        for i in members:
+            pt_a, id_a = endpoints[i]
+            for j in neighbourhood:
+                if j <= i:
+                    continue
+                pt_b, id_b = endpoints[j]
+                if id_a != id_b and pt_a.dist(pt_b) <= junction_radius:
+                    adjacency[id_a].add(id_b)
+                    adjacency[id_b].add(id_a)
 
     seen: set[int] = set()
     for line in lines:
@@ -343,23 +369,61 @@ def build(
                 )
 
     # --- attach labels -------------------------------------------------------------------
-    # An instrument's tag sits inside its circle; other labels sit adjacent. Association is
-    # nearest-region here and is refined by a global assignment once text is recognised.
+    # An instrument's tag sits inside its circle; other labels sit adjacent. A region labels at
+    # most one node: without that constraint, one tag string annotates both members of a parallel
+    # train and the graph silently gains a duplicate identity.
+    #
+    # Recognised text is parsed into tag attributes here, so a node carries its canonical tag,
+    # kind and conformance verdict rather than a raw string. Unread regions still associate --
+    # an unread label is an extraction gap worth showing, not evidence of absence.
+    claimed: set[int] = set()
     for index, node in enumerate(graph.nodes):
         radius = max(node.bbox.width, node.bbox.height) / 2 + scale.u(1.0)
-        region = _nearest_region(regions, node.centre, radius)
-        if region is not None:
-            graph.nodes[index] = Node(
-                stable_key=node.stable_key,
-                page_index=node.page_index,
-                kind=node.kind,
-                bbox=node.bbox,
-                signature=node.signature,
-                dexpi_class=node.dexpi_class,
-                confidence=node.confidence,
-                label=f"region@{region.centre.x:.0f},{region.centre.y:.0f}",
-                attributes={"text_orientation": region.orientation},
-            )
+        best_i, best_d = None, radius
+        for r_index, region in enumerate(regions):
+            if r_index in claimed:
+                continue
+            d = region.centre.dist(node.centre)
+            # Prefer read regions over unread at equal footing by a small bias.
+            d -= scale.u(0.3) if region.text else 0.0
+            if d < best_d:
+                best_i, best_d = r_index, d
+        if best_i is None:
+            continue
+        claimed.add(best_i)
+        region = regions[best_i]
+
+        attributes: dict[str, str] = {"text_orientation": region.orientation}
+        label = region.text or f"region@{region.centre.x:.0f},{region.centre.y:.0f}"
+        confidence = node.confidence
+        if region.text:
+            from pidgraph.standards.tags import parse
+
+            parsed = parse(region.text)
+            if parsed.ok and parsed.canonical:
+                attributes.update(
+                    tag_canonical=parsed.canonical,
+                    tag_kind=str(parsed.kind),
+                    conformance=str(parsed.conformance),
+                )
+                if parsed.loop_id:
+                    attributes["loop_id"] = parsed.loop_id
+                if parsed.is_safety_device:
+                    attributes["safety_device"] = "true"
+                # A node is only as trustworthy as its weakest input: geometry may be exact while
+                # the read is not, so confidence propagates as the minimum.
+                confidence = min(node.confidence, max(region.text_confidence, 0.1))
+        graph.nodes[index] = Node(
+            stable_key=node.stable_key,
+            page_index=node.page_index,
+            kind=node.kind,
+            bbox=node.bbox,
+            signature=node.signature,
+            dexpi_class=node.dexpi_class,
+            confidence=confidence,
+            label=label,
+            attributes=attributes,
+        )
 
     isolated = sum(1 for n in graph.nodes if graph.degree(n.stable_key) == 0)
     if graph.nodes and isolated / len(graph.nodes) > 0.5:

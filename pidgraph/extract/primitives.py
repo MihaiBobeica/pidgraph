@@ -172,12 +172,14 @@ def classify(
     return Kind.OTHER
 
 
-def extract_page(page: Any, scale: Scale, page_index: int) -> list[Primitive]:
+def extract_page(
+    page: Any, scale: Scale, page_index: int, drawings: list | None = None
+) -> list[Primitive]:
     """Transform and classify every path on a page."""
     matrix = _transform(page)
     out: list[Primitive] = []
 
-    for index, path in enumerate(page.get_drawings()):
+    for index, path in enumerate(drawings if drawings is not None else page.get_drawings()):
         segments: list[Segment] = []
         curves = 0
         xs: list[float] = []

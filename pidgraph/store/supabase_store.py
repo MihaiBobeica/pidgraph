@@ -92,6 +92,20 @@ class SupabaseStore:
                 )
                 run_id = cursor.fetchone()[0]
 
+                # Classes seen on nodes are upserted into the vocabulary first, so the foreign
+                # key can never fail on a class the extractor legitimately produced. New classes
+                # land in the 'Other' package for a human to reclassify.
+                classes = sorted({n.get("dexpi_class") or "unknown" for n in record.nodes})
+                if classes:
+                    execute_values(
+                        cursor,
+                        """
+                        insert into dexpi_class (name, package) values %s
+                        on conflict (name) do nothing
+                        """,
+                        [(c, "Other") for c in classes],
+                    )
+
                 if record.nodes:
                     execute_values(
                         cursor,
@@ -107,9 +121,8 @@ class SupabaseStore:
                                 n["page_index"],
                                 n["stable_key"],
                                 n["kind"],
-                                # Class vocabulary is seeded separately; unresolved stays null.
-                                None,
-                                n.get("tag_name"),
+                                n.get("dexpi_class") or "unknown",
+                                (n.get("attributes") or {}).get("tag_canonical"),
                                 n.get("label"),
                                 n.get("bbox"),
                                 n.get("confidence", 1.0),
@@ -176,6 +189,51 @@ class SupabaseStore:
                             for f in record.findings
                         ],
                     )
+
+                # The procedure document and its requirements, so the database holds both sides
+                # of the cross-reference rather than only the drawing's.
+                if record.sop_sha256:
+                    cursor.execute(
+                        """
+                        insert into documents (kind, filename, storage_key, sha256, title)
+                        values ('sop', %s, %s, %s, %s)
+                        on conflict (sha256) do update set filename = excluded.filename
+                        returning id
+                        """,
+                        (
+                            record.sop_filename,
+                            record.sop_storage_key,
+                            record.sop_sha256,
+                            record.title,
+                        ),
+                    )
+                    sop_id = cursor.fetchone()[0]
+                    if record.requirements:
+                        execute_values(
+                            cursor,
+                            """
+                            insert into sop_requirements
+                                (document_id, ordinal, subject_raw, subject_tags, subject_part,
+                                 quantities, evidence)
+                            values %s
+                            on conflict (document_id, ordinal) do update
+                                set subject_raw = excluded.subject_raw,
+                                    subject_tags = excluded.subject_tags,
+                                    quantities = excluded.quantities
+                            """,
+                            [
+                                (
+                                    sop_id,
+                                    r["ordinal"],
+                                    r["subject_raw"],
+                                    list(r.get("subject_tags") or []),
+                                    r.get("subject_part"),
+                                    json.dumps(r.get("quantities") or {}),
+                                    r.get("evidence"),
+                                )
+                                for r in record.requirements
+                            ],
+                        )
 
                 # Pointed at last, so a reader filtering on the current run never sees a partial
                 # graph even while this transaction is in flight.

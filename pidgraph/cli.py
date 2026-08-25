@@ -119,22 +119,28 @@ def _index_from(
 ) -> tuple[ck.PlantIndex, dict[str, dict[str, Quantity]], dict[str, int]]:
     """Turn an extraction result into the index the cross-reference engine consumes.
 
-    Text recognition is not wired in yet, so tags come from the procedure's own vocabulary rather
-    than from the drawings. That is stated in the report rather than papered over: the extraction
-    recall figure reflects it, and every absence-based finding is capped accordingly.
+    Tags come from the drawings themselves now: recognition attaches read text to nodes and the
+    parser lifts it into canonical tags. The procedure's own tags are still merged in as
+    *subjects to check* -- an unreadable nameplate must not make its equipment vanish from the
+    checklist -- but drawing-side checks (duplicates) key only on what was actually read.
     """
     tags = {}
+    occurrences: Counter[str] = Counter()
+    for page in result.pages:
+        for node in page.graph.nodes:
+            canonical = node.attributes.get("tag_canonical")
+            if not canonical:
+                continue
+            parsed = parse_tag(canonical)
+            if parsed.ok and parsed.canonical:
+                tags[parsed.canonical] = parsed
+                occurrences[parsed.canonical] += 1
+
     for requirement in sop.requirements:
         for raw in requirement.subject_tags:
             parsed = parse_tag(raw)
             if parsed.canonical and parsed.kind is TagKind.EQUIPMENT:
-                tags[parsed.canonical] = parsed
-
-    # Duplicate detection is a *drawing-side* check: it asks whether one tag identifies two
-    # objects on the sheets. Procedure rows are not evidence of that -- an item with shell and
-    # tube limits is one piece of equipment described twice -- so no occurrences are supplied
-    # until tag recognition reads them from the drawings.
-    occurrences: Counter[str] = Counter()
+                tags.setdefault(parsed.canonical, parsed)
 
     text_regions = sum(p.counts.get("text_regions", 0) for p in result.pages)
     unresolved = sum(
@@ -148,7 +154,7 @@ def _index_from(
         ),
         unresolved_shapes=unresolved,
         text_regions=text_regions,
-        recognised_tags=0,
+        recognised_tags=sum(p.counts.get("tags_parsed", 0) for p in result.pages),
     )
     return index, {}, dict(occurrences)
 
@@ -164,9 +170,10 @@ def cmd_check(args: argparse.Namespace) -> int:
     report = ck.run(sop, index, limits, drawing_titles=[], tag_occurrences=occurrences)
     report.notes.insert(
         0,
-        "Text recognition is not yet wired in, so nameplate limits were not read from the "
-        "drawings. Every limit comparison is therefore reported as unresolved rather than as "
-        "agreement or conflict, and severities are capped. This is a known gap, not a result.",
+        "Nameplate design-limit blocks are not read from the drawings: local OCR on this "
+        "stroke font reads about a quarter of regions, and attributing a lone pressure value "
+        "to the wrong vessel is worse than reporting the comparison unresolved. Tags on the "
+        "drawing ARE read and drive the drawing-side checks.",
     )
     report.notes.append(ck.isa_edition_note())
 
@@ -212,9 +219,15 @@ def _persist(result, report, pid_path: Path, sop) -> str:
     produce a graph, and someone without database credentials should still get one. Naming the
     store in the output is what stops a silent fallback from reading like a successful write.
     """
-    from pidgraph.paths import sha256, storage_key
+    from pidgraph.paths import find_sop, sha256, storage_key
     from pidgraph.store.base import LocalJsonStore, RunRecord
     from pidgraph.store.supabase_store import choose_store
+
+    try:
+        sop_path = find_sop()
+        sop_sha, sop_key, sop_name = sha256(sop_path), storage_key(sop_path), sop_path.name
+    except InputNotFound:
+        sop_sha = sop_key = sop_name = ""
 
     pages = [p.graph.to_dict() for p in result.pages]
     record = RunRecord(
@@ -235,6 +248,21 @@ def _persist(result, report, pid_path: Path, sop) -> str:
         nodes=[n for page in pages for n in page["nodes"]],
         edges=[e for page in pages for e in page["edges"]],
         findings=[f.to_dict() for f in report.findings],
+        requirements=[
+            {
+                "ordinal": r.ordinal,
+                "subject_raw": r.subject_raw,
+                "subject_tags": list(r.subject_tags),
+                "subject_part": r.subject_part,
+                "quantities": {k: {"min": v.minimum, "max": v.maximum, "unit": v.unit}
+                               for k, v in r.quantities.items()},
+                "evidence": r.evidence,
+            }
+            for r in sop.requirements
+        ],
+        sop_sha256=sop_sha,
+        sop_filename=sop_name,
+        sop_storage_key=sop_key,
     )
 
     store = choose_store()
