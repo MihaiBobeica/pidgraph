@@ -107,7 +107,8 @@ class SupabaseStore:
                                 n["page_index"],
                                 n["stable_key"],
                                 n["kind"],
-                                None,  # class vocabulary is seeded separately; unresolved stays null
+                                # Class vocabulary is seeded separately; unresolved stays null.
+                                None,
                                 n.get("tag_name"),
                                 n.get("label"),
                                 n.get("bbox"),
