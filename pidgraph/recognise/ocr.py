@@ -111,29 +111,92 @@ def clean(text: str) -> str:
     return stripped
 
 
+# Installers commonly leave the binary off PATH, so a plain PATH lookup reports "not installed"
+# for a perfectly working installation. These are the standard locations.
+_TESSERACT_CANDIDATES = (
+    r"C:\Program Files\Tesseract-OCR\tesseract.exe",
+    r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe",
+    "/usr/bin/tesseract",
+    "/usr/local/bin/tesseract",
+    "/opt/homebrew/bin/tesseract",
+)
+
+# Engineering annotation uses a small character set. Constraining the engine is worth several
+# points on this content: unconstrained, it offers lower-case prose and punctuation that no tag
+# contains, and that output then fails every downstream match while looking like a successful read.
+_WHITELIST = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-/."\'()&*#'
+
+
+def find_tesseract() -> str | None:
+    """Locate the binary, on PATH or in a standard install location."""
+    import shutil
+
+    found = shutil.which("tesseract")
+    if found:
+        return found
+    return next((c for c in _TESSERACT_CANDIDATES if Path(c).exists()), None)
+
+
 class TesseractBackend:
-    """Local OCR. Present only if the binary is installed; absent is normal, not an error."""
+    """Local OCR. Needs no key and no network, so a committed cache built with it is reproducible.
+
+    Two adjustments matter on this content. Page segmentation is set to treat a crop as a single
+    line rather than a page, because each crop *is* one label and the layout analyser otherwise
+    invents structure that is not there. And the character set is constrained to what engineering
+    annotation uses.
+    """
 
     name = "tesseract"
 
-    def available(self) -> bool:
-        import shutil
+    def __init__(self, psm: str = "7", upscale: int = 2) -> None:
+        self.psm = psm
+        self.upscale = upscale
+        self.binary = find_tesseract()
 
-        return shutil.which("tesseract") is not None
+    def available(self) -> bool:
+        return self.binary is not None
+
+    def _prepare(self, blob: bytes) -> bytes:
+        """Upscale and harden the crop.
+
+        A CAD stroke font is thin and unfilled. Upscaling before recognition gives the engine more
+        to work with than the hairline it would otherwise see, and a hard threshold removes the
+        anti-aliasing that blurs a one-pixel stroke into grey.
+        """
+        import io
+
+        from PIL import Image
+
+        image = Image.open(io.BytesIO(blob)).convert("L")
+        if self.upscale > 1:
+            image = image.resize(
+                (image.width * self.upscale, image.height * self.upscale), Image.LANCZOS
+            )
+        image = image.point(lambda v: 0 if v < 160 else 255, mode="1")
+        buffer = io.BytesIO()
+        image.save(buffer, format="PNG")
+        return buffer.getvalue()
 
     def recognise_batch(self, images: list[bytes], count: int) -> list[str]:
         import subprocess
         import tempfile
 
+        if self.binary is None:
+            return [""] * count
+
         out: list[str] = []
         for blob in images[:count]:
             with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as handle:
-                handle.write(blob)
+                handle.write(self._prepare(blob))
                 temp = handle.name
             try:
-                # argv list, never a shell string: input paths are untrusted.
+                # An argument list, never a shell string: these paths are not ours to trust.
                 result = subprocess.run(
-                    ["tesseract", temp, "stdout", "--psm", "7"],
+                    [
+                        self.binary, temp, "stdout",
+                        "--psm", self.psm,
+                        "-c", f"tessedit_char_whitelist={_WHITELIST}",
+                    ],
                     capture_output=True, text=True, timeout=30, check=False,
                 )
                 out.append(clean(result.stdout))
@@ -207,7 +270,7 @@ class VisionModelBackend:
 
 def default_backends() -> list[Backend]:
     """Ordered by preference. The first available one is used to fill cache misses."""
-    return [VisionModelBackend(), TesseractBackend()]
+    return [TesseractBackend(), VisionModelBackend()]
 
 
 @dataclass

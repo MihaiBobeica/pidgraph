@@ -175,6 +175,53 @@ def cmd_check(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_recognise(args: argparse.Namespace) -> int:
+    """Read text from the drawing and report the tag yield."""
+    import pymupdf
+
+    from pidgraph.extract import frame as frame_mod
+    from pidgraph.extract import text as text_mod
+    from pidgraph.extract.calibrate import calibrate_page
+    from pidgraph.extract.primitives import BBox, extract_page
+    from pidgraph.recognise import crops, ocr, repair
+
+    path = _resolve(args.pid, find_pid)
+    cache = ocr.Cache.load()
+    recogniser = ocr.Recogniser(cache=cache)
+    backend = recogniser.backend()
+    print(f"backend: {backend.name if backend else 'none available'}")
+
+    texts: list[str] = []
+    with pymupdf.open(str(path)) as doc:
+        for index, page in enumerate(doc):
+            scale = calibrate_page(page)
+            pixmap, factor = crops.render_page(page, scale)
+            prims = extract_page(page, scale, index)
+            detected = frame_mod.detect_frame(
+                prims, BBox(0, 0, page.rect.width, page.rect.height), scale
+            )
+            content, _ = frame_mod.split(prims, detected)
+            regions, _ = text_mod.recover(
+                page, text_mod.glyph_marks(content), scale, index, content=detected.content
+            )
+            cut = crops.cut(pixmap, factor, regions, scale)
+            results = recogniser.recognise(cut)
+            texts += [results[c.key].text for c in cut if c.key in results]
+            print(f"  page {index}: {len(cut)} regions, {len(results)} read")
+
+    cache.save()
+    repairs, stats = repair.repair_all(texts)
+    kinds: Counter[str] = Counter(str(r.parsed.kind) for r in repairs)
+    print()
+    print(f"cache: {len(cache.entries)} entries")
+    print(f"reads: {stats['input']}  usable tags: {len(repairs)} "
+          f"({len(repairs) / max(stats['input'], 1):.0%})")
+    print(f"by kind: {dict(kinds)}")
+    for message in recogniser.errors:
+        print(f"  ! {message}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="pidgraph", description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
@@ -183,6 +230,7 @@ def build_parser() -> argparse.ArgumentParser:
         ("doctor", cmd_doctor, False),
         ("probe", cmd_probe, False),
         ("extract", cmd_extract, False),
+        ("recognise", cmd_recognise, False),
         ("check", cmd_check, True),
     ):
         p = sub.add_parser(name, help=handler.__doc__ or name)

@@ -119,7 +119,7 @@ def run_page(page: Any, page_index: int) -> PageResult:
         raise ExtractionError(f"page {page_index}: frame stripping removed all content")
 
     marks = text_mod.glyph_marks(content)
-    regions, how = text_mod.recover(page, marks, scale, page_index)
+    regions, how = text_mod.recover(page, marks, scale, page_index, content=detected.content)
     strategies["text_regions"] = how
 
     conductors = lines_mod.chain_dashes(lines_mod.merge(content, scale, page_index), scale)

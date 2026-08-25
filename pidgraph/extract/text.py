@@ -191,13 +191,21 @@ def recover(
     marks: list[Primitive],
     scale: Scale,
     page_index: int,
+    content: BBox | None = None,
 ) -> tuple[list[TextRegion], str]:
     """Recover text regions using the best strategy the page supports.
+
+    ``content`` restricts the result to the drawing area. Structural hints are published for
+    *every* text entity on the sheet, including the zone-grid numerals down the margins and the
+    title-block fields -- so without this filter the recogniser spends its effort on border
+    numbering and the graph acquires labels that are not annotation at all.
 
     Returns the regions and the name of the strategy used, so the choice is recorded on the run
     rather than being invisible.
     """
     structural = structural_regions(page, page_index)
+    if content is not None:
+        structural = [r for r in structural if content.contains(r.centre)]
     if len(structural) >= 10:
         covered = _coverage(structural, marks)
         if covered >= 0.6:

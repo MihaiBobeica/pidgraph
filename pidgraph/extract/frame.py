@@ -23,6 +23,14 @@ from dataclasses import dataclass
 from pidgraph.extract.calibrate import Scale
 from pidgraph.extract.primitives import BBox, Kind, Primitive
 
+ZONE_BAND_MODULES = 7.0
+"""Width of the margin band holding zone-grid numerals, in modules.
+
+Sized from the numerals themselves: a zone label is text plus its surrounding rule, which is a few
+modules across. Generous rather than tight, because a numeral read as a tag is worse than losing a
+little drawing area at the extreme edge.
+"""
+
 
 @dataclass(frozen=True)
 class Frame:
@@ -101,9 +109,15 @@ def detect_frame(prims: list[Primitive], page: BBox, scale: Scale) -> Frame:
 
     border = _border(prims, page, scale)
     if border is not None:
-        # Zone grids and rules live between the sheet edge and the border; step inside it.
-        content = border.expanded(-scale.u(1.0))
-        reasons.append(f"border detected at {border.width:.0f}x{border.height:.0f}pt")
+        # A drawing border is usually a nested pair of rules with the zone-grid numerals banded
+        # between them, so stepping just inside the outer rule still leaves the numbering in the
+        # content area -- where it is indistinguishable from annotation and gets recognised as
+        # tags. The inset clears that band. It is expressed in modules, so it scales.
+        content = border.expanded(-scale.u(ZONE_BAND_MODULES))
+        reasons.append(
+            f"border detected at {border.width:.0f}x{border.height:.0f}pt; "
+            f"content inset by {ZONE_BAND_MODULES} modules to clear the zone band"
+        )
     else:
         content = page
         reasons.append("no border found; using the full page")
