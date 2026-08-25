@@ -14,6 +14,7 @@ whose edges are port bindings, and the difference has to be visible rather than 
 from __future__ import annotations
 
 import hashlib
+import itertools
 from collections import defaultdict
 from dataclasses import asdict, dataclass, field
 from enum import StrEnum
@@ -120,6 +121,22 @@ def stable_key(page_index: int, centre: Point, kind: str, scale: Scale) -> str:
     return f"{kind[:3]}_{page_index}_{digest}"
 
 
+def _distance_to_segment(point: Point, start: Point, end: Point) -> tuple[float, float]:
+    """Perpendicular distance from a point to a segment, and its position along it.
+
+    The position is a 0..1 parameter used to order attachments along a conductor, so consecutive
+    inline components become adjacent in the graph rather than all connecting to one another.
+    """
+    dx, dy = end.x - start.x, end.y - start.y
+    length_sq = dx * dx + dy * dy
+    if length_sq <= 1e-12:
+        return point.dist(start), 0.0
+    t = ((point.x - start.x) * dx + (point.y - start.y) * dy) / length_sq
+    t = max(0.0, min(1.0, t))
+    closest = Point(start.x + t * dx, start.y + t * dy)
+    return point.dist(closest), t
+
+
 def _nearest_region(regions: list[TextRegion], point: Point, within: float) -> TextRegion | None:
     best, best_d = None, within
     for region in regions:
@@ -155,17 +172,25 @@ def build(
     touched: set[int] = set()
     endpoint_hits: dict[int, list[int]] = defaultdict(list)
     for line in lines:
-        for endpoint in line.endpoints():
-            best_sym, best_d = None, None
-            for sym in symbols:
-                reach = max(sym.bbox.width, sym.bbox.height) / 2 + port_radius
-                d = sym.centre.dist(endpoint)
-                if d <= reach and (best_d is None or d < best_d):
-                    best_sym, best_d = sym, d
-            if best_sym is not None:
-                touched.add(best_sym.id)
-                if best_sym.id not in endpoint_hits[line.id]:
-                    endpoint_hits[line.id].append(best_sym.id)
+        # Symbols attach along a conductor's whole length, not only at its ends. An inline
+        # component -- a valve on a header, a fitting in a run -- sits *on* the line, and the
+        # standard treats it as lying on one segment between two piping nodes. Binding endpoints
+        # only would connect just the first and last item on a run and silently drop every
+        # component between them, which is most of them.
+        attached: list[tuple[float, int]] = []
+        for sym in symbols:
+            reach = max(sym.bbox.width, sym.bbox.height) / 2 + port_radius
+            distance, position = _distance_to_segment(sym.centre, line.start, line.end)
+            if distance <= reach:
+                attached.append((position, sym.id))
+        if not attached:
+            continue
+        # Ordered along the conductor so consecutive attachments become adjacent components.
+        attached.sort()
+        for _, sym_id in attached:
+            touched.add(sym_id)
+            if sym_id not in endpoint_hits[line.id]:
+                endpoint_hits[line.id].append(sym_id)
 
     equipment_scale = 12.0  # modules; larger than any inline component
     promoted = [
@@ -213,11 +238,15 @@ def build(
 
     for line in lines:
         keys = bound.get(line.id, [])
-        if len(keys) >= 2 and keys[0] != keys[1]:
+        # Consecutive pairs, not just the extremes: items along a run are adjacent to their
+        # neighbours, not all connected to the first one.
+        for left, right in itertools.pairwise(keys):
+            if left == right:
+                continue
             graph.edges.append(
                 Edge(
-                    source=keys[0],
-                    target=keys[1],
+                    source=left,
+                    target=right,
                     evidence=EdgeEvidence.PORT_BINDING,
                     style=line.style,
                     confidence=0.85 if not line.bridged_gaps else 0.6,

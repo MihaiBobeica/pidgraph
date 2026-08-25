@@ -1,0 +1,163 @@
+{
+  "aggregate": {
+    "edge_precision": {
+      "ci_high": 0.5245992562365418,
+      "ci_low": 0.3904315970047479,
+      "hits": 95,
+      "label": "edge precision",
+      "reportable": true,
+      "total": 208,
+      "value": 0.4567307692307692
+    },
+    "edge_recall": {
+      "ci_high": 0.6117735799841477,
+      "ci_low": 0.4660727025222357,
+      "hits": 95,
+      "label": "edge recall",
+      "reportable": true,
+      "total": 176,
+      "value": 0.5397727272727273
+    },
+    "symbol_precision": {
+      "ci_high": 1.0,
+      "ci_low": 0.9822017627741826,
+      "hits": 212,
+      "label": "symbol precision@0.3",
+      "reportable": true,
+      "total": 212,
+      "value": 1.0
+    },
+    "symbol_recall": {
+      "ci_high": 0.9991707862618927,
+      "ci_low": 0.9738897334907749,
+      "hits": 212,
+      "label": "symbol recall@0.3",
+      "reportable": true,
+      "total": 213,
+      "value": 0.9953051643192489
+    }
+  },
+  "calibration": {
+    "max_module_error": 0.00014124672246262457,
+    "median_module_error": 5.32639304040906e-05,
+    "module_recovered": 12,
+    "samples": 12,
+    "sheet_correct": 12
+  },
+  "notes": [
+    "Truth is authored before the drawing is rendered, so no part of the pipeline contributed to it.",
+    "Module and sheet size are varied across samples, so any hardcoded absolute dimension would fail on most of them.",
+    "Synthetic drawings are cleaner and more regular than real ones. These are an upper bound, not a prediction of field performance.",
+    "Rates below n=5 are withheld; every reported rate carries its denominator and a Wilson interval."
+  ],
+  "samples": [
+    {
+      "error": null,
+      "module_error": 0.0001,
+      "module_found": 3.6268,
+      "module_truth": 3.6266,
+      "name": "synthetic_000",
+      "sheet_found": "ANSI_D",
+      "sheet_truth": "ANSI_D"
+    },
+    {
+      "error": null,
+      "module_error": 0.0,
+      "module_found": 1.9225,
+      "module_truth": 1.9225,
+      "name": "synthetic_001",
+      "sheet_found": "ANSI_B",
+      "sheet_truth": "ANSI_B"
+    },
+    {
+      "error": null,
+      "module_error": 0.0,
+      "module_found": 3.8945,
+      "module_truth": 3.8945,
+      "name": "synthetic_002",
+      "sheet_found": "ANSI_B",
+      "sheet_truth": "ANSI_B"
+    },
+    {
+      "error": null,
+      "module_error": 0.0001,
+      "module_found": 2.171,
+      "module_truth": 2.1711,
+      "name": "synthetic_003",
+      "sheet_found": "ISO_A1",
+      "sheet_truth": "ISO_A1"
+    },
+    {
+      "error": null,
+      "module_error": 0.0001,
+      "module_found": 2.1668,
+      "module_truth": 2.1665,
+      "name": "synthetic_004",
+      "sheet_found": "ANSI_B",
+      "sheet_truth": "ANSI_B"
+    },
+    {
+      "error": null,
+      "module_error": 0.0001,
+      "module_found": 3.0946,
+      "module_truth": 3.095,
+      "name": "synthetic_005",
+      "sheet_found": "ISO_A1",
+      "sheet_truth": "ISO_A1"
+    },
+    {
+      "error": null,
+      "module_error": 0.0001,
+      "module_found": 3.5043,
+      "module_truth": 3.504,
+      "name": "synthetic_006",
+      "sheet_found": "ANSI_B",
+      "sheet_truth": "ANSI_B"
+    },
+    {
+      "error": null,
+      "module_error": 0.0001,
+      "module_found": 2.3771,
+      "module_truth": 2.3772,
+      "name": "synthetic_007",
+      "sheet_found": "ANSI_B",
+      "sheet_truth": "ANSI_B"
+    },
+    {
+      "error": null,
+      "module_error": 0.0,
+      "module_found": 2.144,
+      "module_truth": 2.1441,
+      "name": "synthetic_008",
+      "sheet_found": "ANSI_D",
+      "sheet_truth": "ANSI_D"
+    },
+    {
+      "error": null,
+      "module_error": 0.0,
+      "module_found": 2.7112,
+      "module_truth": 2.7112,
+      "name": "synthetic_009",
+      "sheet_found": "ANSI_D",
+      "sheet_truth": "ANSI_D"
+    },
+    {
+      "error": null,
+      "module_error": 0.0,
+      "module_found": 2.9715,
+      "module_truth": 2.9714,
+      "name": "synthetic_010",
+      "sheet_found": "ANSI_D",
+      "sheet_truth": "ANSI_D"
+    },
+    {
+      "error": null,
+      "module_error": 0.0001,
+      "module_found": 2.6859,
+      "module_truth": 2.6857,
+      "name": "synthetic_011",
+      "sheet_found": "ISO_A1",
+      "sheet_truth": "ISO_A1"
+    }
+  ]
+}
