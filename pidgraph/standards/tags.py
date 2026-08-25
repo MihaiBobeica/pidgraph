@@ -223,7 +223,7 @@ def parse(raw: str, vocab: ProjectVocabulary | None = None) -> ParsedTag:
             f"order is '{canonical_fn}' (the modifier is a column-2 letter)"
         )
 
-    variable, modifier, succeeding = _split_function(canonical_fn)
+    variable, modifier, _succeeding = _split_function(canonical_fn)
     if isa.lookup(isa.VARIABLES, variable) is None:
         conformance = Conformance.GRAMMAR_VALID
         notes.append(f"'{variable}' is not a listed first letter")
