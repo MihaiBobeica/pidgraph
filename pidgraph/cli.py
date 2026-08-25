@@ -81,9 +81,24 @@ def cmd_extract(args: argparse.Namespace) -> int:
         print(page.summary())
         for warning in page.graph.warnings:
             print(f"    ! {warning}")
-    out = report_mod.write_json(result.to_dict(), OUTPUTS / "graph.json")
-    print(f"\nwrote {out}")
+    written = _write_graphs(result)
+    print("\nwrote " + ", ".join(str(p) for p in written))
     return 0
+
+
+def _write_graphs(result) -> list[Path]:
+    """Emit the graph in the project shape and in interchange formats.
+
+    GraphML and node-link JSON are what a downstream consumer can actually load -- NetworkX reads
+    both directly -- so the output is usable outside this codebase rather than only within it.
+    """
+    from pidgraph.extract import export
+
+    paths = [report_mod.write_json(result.to_dict(), OUTPUTS / "graph.json")]
+    plant = export.combined([p.graph.to_networkx() for p in result.pages])
+    paths.append(export.to_graphml(plant, OUTPUTS / "graph.graphml"))
+    paths.append(export.to_node_link(plant, OUTPUTS / "graph.nodelink.json"))
+    return paths
 
 
 def _index_from(
@@ -162,7 +177,7 @@ def cmd_check(args: argparse.Namespace) -> int:
     )
     report_mod.write_markdown(text, OUTPUTS / "report.md")
     report_mod.write_jsonl(report, OUTPUTS / "findings.jsonl")
-    report_mod.write_json(result.to_dict(), OUTPUTS / "graph.json")
+    _write_graphs(result)
 
     print(
         f"verified={len(report.verified)}  findings={len(report.issues)}  "

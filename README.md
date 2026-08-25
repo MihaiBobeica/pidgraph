@@ -24,11 +24,26 @@ python -m venv .venv && .venv/Scripts/python -m pip install -e ".[dev]"
 .venv/Scripts/python -m pidgraph.cli check
 ```
 
+Commands: `doctor` · `probe` · `extract` · `recognise` · `check`.
+
 `doctor` needs nothing beyond Python and reports what is missing. `check` runs the whole pipeline
 and writes `outputs/report.md`, `outputs/findings.jsonl` and `outputs/graph.json`.
 
-Commands: `doctor` · `probe` (what each page offers) · `extract` (drawings to graph) · `check`
-(drawings plus procedure to a report). All accept `--pid` and `--sop` to override input discovery.
+`extract` and `check` write the graph three ways: the project's own JSON, **GraphML**, and
+**node-link JSON**. The latter two load directly into NetworkX:
+
+```python
+import networkx as nx
+g = nx.read_graphml("outputs/graph.graphml")   # MultiDiGraph, 584 nodes / 1262 edges
+nx.shortest_path(g.to_undirected(), source, target)
+```
+
+Node attributes carry class, confidence and true drawing coordinates, so a consumer can lay the
+graph out as drawn. All commands accept `--pid` and `--sop` to override input discovery.
+
+**Text recognition** uses Tesseract if the binary is present — no key, no network. Results are
+cached by crop content hash into `codebook/text_cache.json` and committed, so the pipeline is
+offline and deterministic after the first pass.
 
 ---
 
@@ -119,13 +134,17 @@ Measured on the supplied drawings:
 | Text regions | 1073 recovered; structural hints cover 84–92 % of marks |
 | Graph | 480 nodes, 299 edges, ~16 s |
 | Cross-reference | 5 procedure requirements parsed, including a two-train row and a range |
+| Text recognition | 617 regions, 349 read (56%), **89 parsing as valid tags (25%)** with local OCR |
+| Graph output | NetworkX `MultiDiGraph`, also written as GraphML and node-link JSON |
 
 **Known gaps, stated plainly:**
 
-- **Text recognition is not wired in.** Regions are located but not read, so nameplate limits are
-  not extracted from the drawings and every limit comparison currently reports as unresolved rather
-  than as agreement or conflict. The engine itself is complete and its fault-injection suite passes;
-  this is a missing input, not a missing capability.
+- **Text recognition reads 25% of regions as valid tags.** That runs on local OCR with no key, and
+  the committed cache makes it reproducible — but a half-scale CAD stroke font is close to a worst
+  case for it. Reads like `MV-715-14A` and `1/2"-D2S` are exact; `MV-713-15B` is one character
+  wrong. It is not yet good enough to drive the design-limit comparison, so those still report as
+  unresolved. The cross-reference engine is complete and its fault-injection suite passes; this is
+  a weak input, not a missing capability.
 - **Roughly 40 % of nodes are isolated.** The graph reports this on itself rather than hiding it.
 - **Dash typing is partial.** An individual dash is shorter than the minimum length separating a
   conductor from a glyph mark, so most never reach line tracing as conductors. Investigation

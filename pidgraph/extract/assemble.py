@@ -96,6 +96,44 @@ class Graph:
             "warnings": list(self.warnings),
         }
 
+    def to_networkx(self):
+        """Return the graph as a NetworkX ``MultiDiGraph``.
+
+        Multi-edge and directed: two components can be joined by more than one conductor (a line
+        and its bypass), and process flow has a direction. Collapsing either would lose real
+        structure.
+
+        Attributes are flattened to primitives here rather than at export time, because the
+        interchange formats below cannot serialise nested values and the failure surfaces as an
+        unhelpful error deep inside the writer.
+        """
+        import networkx as nx
+
+        graph = nx.MultiDiGraph()
+        for node in self.nodes:
+            graph.add_node(
+                node.stable_key,
+                kind=str(node.kind),
+                dexpi_class=node.dexpi_class,
+                label=node.label or "",
+                page=node.page_index,
+                confidence=float(node.confidence),
+                x=float(node.centre.x),
+                y=float(node.centre.y),
+                x0=float(node.bbox.x0), y0=float(node.bbox.y0),
+                x1=float(node.bbox.x1), y1=float(node.bbox.y1),
+            )
+        for edge in self.edges:
+            graph.add_edge(
+                edge.source,
+                edge.target,
+                kind="process",
+                style=str(edge.style),
+                evidence=str(edge.evidence),
+                confidence=float(edge.confidence),
+            )
+        return graph
+
     def summary(self) -> str:
         kinds: dict[str, int] = defaultdict(int)
         for node in self.nodes:
