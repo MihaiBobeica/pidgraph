@@ -144,7 +144,7 @@ class TestScaleInvariance:
 
 class TestFailsLoudly:
     def test_blank_page_raises_rather_than_returning_a_guess(self):
-        """A wrong module produces confident garbage everywhere, so refusing is the only safe exit."""
+        """A wrong module produces confident garbage downstream; refusing is the only safe exit."""
         doc = pymupdf.open()
         doc.new_page(width=11 * 72, height=17 * 72)
         try:
@@ -154,6 +154,9 @@ class TestFailsLoudly:
             doc.close()
 
     def test_scale_u_is_the_only_route_to_an_absolute_size(self):
-        scale = Scale(unit_system="ISA", module=2.5, sheet="ANSI_B", page_width_pt=1.0, page_height_pt=1.0)
+        scale = Scale(
+            unit_system="ISA", module=2.5, sheet="ANSI_B",
+            page_width_pt=1.0, page_height_pt=1.0,
+        )
         assert scale.u(7.0) == 17.5
         assert scale.u(0.2) == 0.5
