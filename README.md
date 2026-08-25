@@ -41,6 +41,23 @@ nx.shortest_path(g.to_undirected(), source, target)
 Node attributes carry class, confidence and true drawing coordinates, so a consumer can lay the
 graph out as drawn. All commands accept `--pid` and `--sop` to override input discovery.
 
+## Configuration
+
+Secrets are **referenced, not stored**. `.env` holds entries that name a location in a password
+manager rather than carrying the value:
+
+```
+DATABASE_URL=op://Private/pidgraph/DATABASE_URL
+```
+
+The file is then inert — it can be read or copied without disclosing anything, and there is no
+plaintext credential on disk. Values are fetched through the 1Password CLI at the moment they are
+needed and held only in memory. A literal value works too, and a real environment variable always
+wins over both, which is how containers and CI inject secrets.
+
+`pidgraph doctor` reports which keys resolve **without ever printing a value**, so its output is
+safe to paste into a bug report.
+
 **Text recognition** uses Tesseract if the binary is present — no key, no network. Results are
 cached by crop content hash into `codebook/text_cache.json` and committed, so the pipeline is
 offline and deterministic after the first pass.

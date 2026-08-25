@@ -13,6 +13,7 @@ import sys
 from collections import Counter
 from pathlib import Path
 
+from pidgraph.config import bootstrap
 from pidgraph.crossref import checks as ck
 from pidgraph.crossref import report as report_mod
 from pidgraph.crossref.sop import Quantity
@@ -35,6 +36,9 @@ def _resolve(explicit: str | None, finder) -> Path:
 
 def cmd_doctor(args: argparse.Namespace) -> int:
     """Environment check. Deliberately depends on nothing beyond the standard library."""
+    from pidgraph.config import Config, find_cli
+    from pidgraph.recognise.ocr import find_tesseract
+
     print(f"python           {sys.version.split()[0]}")
     ok = True
     for name in ("pymupdf", "numpy", "scipy", "shapely", "networkx"):
@@ -44,6 +48,15 @@ def cmd_doctor(args: argparse.Namespace) -> int:
         except ImportError:
             print(f"{name:<16} MISSING")
             ok = name in ("scipy", "shapely", "networkx") and ok
+
+    print(f"{'tesseract':<16} {find_tesseract() or 'not found (text recognition unavailable)'}")
+    print(f"{'1password cli':<16} {find_cli() or 'not found (op:// references cannot resolve)'}")
+
+    print()
+    # Configuration status only -- no value is ever printed, resolved or otherwise.
+    for key, status in Config.load().describe():
+        print(f"  {key:<32} {status}")
+    print()
 
     for label, finder in (("drawing", find_pid), ("procedure", find_sop)):
         try:
@@ -258,6 +271,9 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
+    # Resolve configuration before anything reads the environment. Secret references are fetched
+    # here and held in memory; nothing is written back to disk.
+    bootstrap()
     args = build_parser().parse_args(argv)
     try:
         return args.handler(args)
