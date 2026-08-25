@@ -9,3 +9,8 @@ outputs/*
 !outputs/.gitkeep
 data/external/
 *.egg-info/
+web/node_modules/
+web/.next/
+web/node_modules/
+web/.next/
+web/tsconfig.tsbuildinfo

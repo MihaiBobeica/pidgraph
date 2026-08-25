@@ -1,0 +1,40 @@
+# Hosted deployment.
+#
+# The extraction pipeline is NOT deployed here, and that is forced rather than chosen. The free
+# tier has no background worker, cron or private service type; free web services spin down after
+# fifteen minutes and cold-start on the next request; the filesystem is ephemeral with no disk
+# attachable; and an instance is 0.1 CPU / 512 MB. There is no way to run asynchronous ingestion
+# inside those limits, and an imaging pipeline would exhaust the memory on a full-size sheet.
+#
+# So: the pipeline runs locally against the shared database, and this hosts the interface only.
+# Ingestion is a batch operation, so nothing is lost. The worker block below enables the hosted
+# path on a paid plan -- same image, different command.
+
+services:
+  - type: web
+    name: pidgraph-web
+    runtime: docker
+    plan: free
+    dockerfilePath: ./web/Dockerfile
+    dockerContext: ./web
+    # A pure liveness probe. Health checks must answer within a few seconds, so anything that
+    # opens a database connection here makes cold-start deploys flap.
+    healthCheckPath: /api/health
+    buildFilter:
+      paths: [web/**]
+    envVars:
+      # Secrets live in a dashboard-created environment group: a group declared in this file
+      # cannot hold values marked as not synced.
+      - fromGroup: pidgraph-secrets
+
+# Enable on a paid plan to run ingestion in the cloud. Declaring this with plan "free" fails to
+# sync, because no free instance type exists for a worker.
+#
+#  - type: worker
+#    name: pidgraph-worker
+#    runtime: docker
+#    plan: starter
+#    dockerfilePath: ./Dockerfile
+#    dockerCommand: python -m pidgraph.cli check
+#    envVars:
+#      - fromGroup: pidgraph-secrets

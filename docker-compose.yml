@@ -1,0 +1,29 @@
+# Local stack. The pipeline runs here and writes to the same external database the hosted UI
+# reads, so there is exactly one datastore and it is the one you supply.
+services:
+  pipeline:
+    build: .
+    env_file: [.env]
+    volumes:
+      # The parent directory is mounted, never the drawing folder itself: its name may contain
+      # characters that are hostile as a compose value or a shell argument.
+      - ./data:/app/data:ro
+      - ./outputs:/app/outputs
+    # Overridden per invocation, e.g.  docker compose run --rm pipeline check
+    command: ["doctor"]
+
+  web:
+    build:
+      context: ./web
+      args:
+        # Public configuration is inlined at build time, not read at runtime, so it must be a
+        # build argument. Rotating the key requires a rebuild, not a restart.
+        NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+    ports: ["3000:3000"]
+    healthcheck:
+      # curl is not present in the slim images; using it here would report unhealthy forever.
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
