@@ -41,6 +41,31 @@ nx.shortest_path(g.to_undirected(), source, target)
 Node attributes carry class, confidence and true drawing coordinates, so a consumer can lay the
 graph out as drawn. All commands accept `--pid` and `--sop` to override input discovery.
 
+## Running it — three modes
+
+**1. No database.** Works out of the box, nothing to configure. Results go to `outputs/` and the
+interface reads them from there. This is the default and the fallback: `check` always names the
+store it used, so a fallback never reads like a successful database write.
+
+**2. Your own Supabase.** Point `DATABASE_URL` at it and apply the schema:
+
+```bash
+python -m pidgraph.cli migrate           # inspects and reports, changes nothing
+python -m pidgraph.cli migrate --apply   # applies it
+```
+
+Inspection is the default because applying a schema to a live project is a real change to someone
+else's infrastructure. Migrations are idempotent, so re-running is safe, and the result is verified
+rather than assumed — a schema that reported success while leaving a table missing would otherwise
+fail much later, during a write.
+
+**3. Someone else's Supabase, read-only.** Give out `NEXT_PUBLIC_SUPABASE_URL` and the `anon` key
+only. That pair is read-only under row-level security, which is what makes it shareable.
+
+⚠ **Do not share `DATABASE_URL` to let someone view a graph.** It is a Postgres superuser
+credential — full write and drop rights over the whole project. The anon key exists precisely for
+this case.
+
 ## Configuration
 
 Secrets are **referenced, not stored**. `.env` holds entries that name a location in a password

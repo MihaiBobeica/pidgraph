@@ -191,6 +191,7 @@ def cmd_check(args: argparse.Namespace) -> int:
     report_mod.write_markdown(text, OUTPUTS / "report.md")
     report_mod.write_jsonl(report, OUTPUTS / "findings.jsonl")
     _write_graphs(result)
+    stored = _persist(result, report, pid_path, sop)
 
     print(
         f"verified={len(report.verified)}  findings={len(report.issues)}  "
@@ -199,7 +200,87 @@ def cmd_check(args: argparse.Namespace) -> int:
     for finding in report.issues:
         print(f"  [{finding.severity}] {finding.title}")
     print(f"\nwrote {OUTPUTS / 'report.md'}, {OUTPUTS / 'findings.jsonl'}, "
-          f"{OUTPUTS / 'graph.json'}")
+          f"{OUTPUTS / 'graph.json'}, {OUTPUTS / 'graph.graphml'}")
+    print(f"persisted to {stored}")
+    return 0
+
+
+def _persist(result, report, pid_path: Path, sop) -> str:
+    """Write the run to whichever store is configured, and name it.
+
+    Falling back to the filesystem rather than failing is deliberate: the pipeline's job is to
+    produce a graph, and someone without database credentials should still get one. Naming the
+    store in the output is what stops a silent fallback from reading like a successful write.
+    """
+    from pidgraph.paths import sha256, storage_key
+    from pidgraph.store.base import LocalJsonStore, RunRecord
+    from pidgraph.store.supabase_store import choose_store
+
+    pages = [p.graph.to_dict() for p in result.pages]
+    record = RunRecord(
+        document_sha256=sha256(pid_path),
+        document_kind="pid",
+        filename=pid_path.name,
+        storage_key=storage_key(pid_path),
+        extractor_version="0.1.0",
+        isa_edition="ANSI/ISA-5.1-2009",
+        page_count=len(result.pages),
+        title=sop.title,
+        strategies={str(p.page_index): p.strategies for p in result.pages},
+        scale={
+            str(p.page_index): {"module": p.scale.module, "sheet": p.scale.sheet}
+            for p in result.pages
+        },
+        stats={"nodes": result.graph_nodes, "edges": result.graph_edges},
+        nodes=[n for page in pages for n in page["nodes"]],
+        edges=[e for page in pages for e in page["edges"]],
+        findings=[f.to_dict() for f in report.findings],
+    )
+
+    store = choose_store()
+    try:
+        return f"{store.name} (run {store.write_run(record)})"
+    except Exception as exc:
+        print(f"  ! {store.name} write failed ({type(exc).__name__}: {exc}); falling back to files")
+        fallback = LocalJsonStore()
+        return f"{fallback.name} (run {fallback.write_run(record)})"
+
+
+def cmd_migrate(args: argparse.Namespace) -> int:
+    """Apply the database schema. Inspects first, and defaults to reporting rather than changing."""
+    from pidgraph.config import Config
+    from pidgraph.store import migrate
+
+    dsn = Config.load().get("DATABASE_URL")
+    if not dsn:
+        print(
+            "DATABASE_URL is not configured. The pipeline runs without a database -- results go "
+            "to outputs/ and the interface reads them from there."
+        )
+        return 2
+
+    report = migrate.apply(dsn, dry_run=not args.apply)
+    if report.error:
+        print(f"error: {report.error}")
+        return 1
+
+    if not args.apply:
+        print("Inspection only. Re-run with --apply to make changes.")
+        print()
+        print(f"  already present: {report.existing_tables or 'none'}")
+        print(f"  would create:    {report.missing or 'nothing (schema is current)'}")
+        return 0
+
+    print(f"applied: {', '.join(report.applied)}")
+    print(f"  created:   {report.created_tables or 'nothing new'}")
+    print(f"  functions: {report.functions or 'none'}")
+    if report.missing:
+        # Verified rather than assumed: a schema that reported success but left a table missing
+        # would fail much later, during a write, far from the cause.
+        print(f"  MISSING:   {report.missing}")
+        return 1
+    print()
+    print("schema is current")
     return 0
 
 
@@ -259,6 +340,7 @@ def build_parser() -> argparse.ArgumentParser:
         ("probe", cmd_probe, False),
         ("extract", cmd_extract, False),
         ("recognise", cmd_recognise, False),
+        ("migrate", cmd_migrate, False),
         ("check", cmd_check, True),
     ):
         p = sub.add_parser(name, help=handler.__doc__ or name)
@@ -266,6 +348,11 @@ def build_parser() -> argparse.ArgumentParser:
             p.add_argument("--pid", help="path to the drawing (default: probe the data directory)")
         if needs_sop:
             p.add_argument("--sop", help="path to the procedure document")
+        if name == "migrate":
+            p.add_argument(
+                "--apply", action="store_true",
+                help="make changes; without this the command only inspects and reports",
+            )
         p.set_defaults(handler=handler)
     return parser
 
