@@ -1,14 +1,14 @@
 # Benchmark results
 
-These numbers come from synthetic drawings. We wrote down the correct graph first and rendered the drawing from it afterwards, so nothing here is scored against output the pipeline produced itself.
+These numbers come from synthetic drawings, not from the sample sheets in `data/`. We wrote down the correct graph first — every symbol, every edge, every tag — and rendered the drawing from it afterwards, so nothing here is scored against output the pipeline produced itself. That is the only way topology is known exactly. ISA and ISO size symbols as ratios to a module; the generator varies that module, the sheet size, and the density from sample to sample, which is why a hardcoded point size would fail on most of these drawings rather than passing quietly.
 
-The corpus is seeds 500 through 529. Development was tuned against seeds 0 through 9 only, so anything from seed 500 up is held out. Rates are exact-string matches in drawing coordinates, each with a Wilson interval. Any rate with fewer than five instances behind it is withheld rather than printed.
+The corpus is seeds 500 through 529. Development was tuned against seeds 0 through 9 only, so anything from seed 500 up is held out. Rates are exact-string matches in drawing coordinates, each with a Wilson interval. One wrong character in a tag is a miss: `PT-101` is not `PI-101`, and character error rate would hide that. Any rate with fewer than five instances behind it is withheld rather than printed.
 
-The generator uses this repository’s stroke alphabet (`recognise/glyphs.py`; `benchmark/strokefont.py` imports it). What is measured is segmentation and matching under randomised size, weight, tracking, shear, and jitter. It is not transfer to a font the matcher has never seen. Only the real drawing measures that. Synthetic drawings are cleaner than real ones, so treat everything here as an upper bound.
-
-Module and sheet size vary from sample to sample, so any absolute dimension hardcoded in the pipeline would fail on most of these drawings rather than passing quietly.
+The generator uses this repository’s stroke alphabet (`recognise/glyphs.py`; `benchmark/strokefont.py` imports it). What is measured is segmentation and matching under randomised size, weight, tracking, shear, and jitter — the same hairline SHX-style strokes the real sheets use. It is not transfer to a font the matcher has never seen. Only the real drawing measures that. Synthetic drawings are cleaner than real ones, so treat everything here as an upper bound.
 
 ## Calibration
+
+The module is over-determined: the narrow stroke and the instrument bubble each predict it through a published ratio (ISA Table 6.3: signal line 0.2 measurement units; Table 6.1: bubble 7). Agreement is the confidence signal. All thirty held-out sheets recovered a module and a sheet size. The median error is 7.5 percent; the worst is 15 percent. Downstream thresholds are multiples of whatever was recovered, so a 7.5 percent miss scales the whole page rather than breaking a single hardcoded gate.
 
 | Metric | Value |
 |---|---|
@@ -19,6 +19,8 @@ Module and sheet size vary from sample to sample, so any absolute dimension hard
 | Worst module error | 15.01% |
 
 ## Detection and connectivity
+
+Symbols here are the instrument bubbles, valves, and other shapes the assembler has to group before it can bind a line. Edges are those bindings: endpoint on a port, or two endpoints coinciding. Text is exact-string. Attachment is whether the right tag landed on the right node. Line attachment is the same idea for line numbers on conductors.
 
 | Metric | Result |
 |---|---|
@@ -33,4 +35,4 @@ Module and sheet size vary from sample to sample, so any absolute dimension hard
 | line precision | line attachment precision: 100.0% [96.1%-100.0%] n=94 |
 | line recall | line attachment recall: 90.4% [83.2%-94.7%] n=104 |
 
-Predicted unique edges sit on the authored connectivity (518 predicted against 519 truth pairs).
+Predicted unique edges sit on the authored connectivity (518 predicted against 519 truth pairs). The attachment recall gap is the conservative rule showing up as numbers: a tag that cannot bind one-to-one is left unbound rather than assigned to the nearest neighbour and silently duplicating a parallel train.

@@ -2,7 +2,17 @@
 
 This file is the citations and measurements the pipeline stands on. When an assumption changes, update it in the same commit as the code. A stale register is worse than none.
 
-Drawings are assumed to follow the convention in the Kimray *How to Read an Oil and Gas P&ID* guide. That guide is not shipped; see [`reference/`](reference/README.md). Where the guide is silent we fall back to the standards below. Where the guide and a drawing disagree, the drawing is reported as non-conformant.
+A piping and instrumentation diagram is a scaled diagram in a published language. The rows below are how we pinned that language down instead of measuring one plot and calling the result a rule.
+
+Three editions of ANSI/ISA-5.1 are in play at once. The Kimray *How to Read an Oil and Gas P&ID* guide is the vocabulary for these oil-and-gas abbreviations — `MV` for a manual valve, equipment class letters, the lower-case differential `PdI` — but its letter table is the 1984 table, not the 2009 edition its cover claims. It still has `M` for Momentary, gives `P` as *Pressure, Vacuum*, and has no Safety Instrumented System entry. The current edition is 2024; annexes A and B moved to technical reports that are explicitly nonmandatory. We take Kimray as the base table, overlay `Z` (SIS) from 2009, and we do not report annex guidance as a violation. The guide is not shipped; see [`reference/`](reference/README.md). Where the guide is silent we fall back to the standards below. Where the guide and a drawing disagree, the drawing is reported as non-conformant.
+
+The module is the other half of the language. ISA-5.1 clause 6 sizes symbols in measurement units and fixes only a minimum (1/16 inch or 1.50 mm). Clause 4.1.6 says the ratios in the tables must survive scaling. Table 6.1 puts the instrument bubble at 7 (optionally 8) units; Table 6.3 puts a signal line at 0.2 and a process line at 0.4. ISO 81714-1 calls the same quantity M and ties line width to M/10. ISO 10628-1 assigns widths by object class against M = 2.5 mm. On the sample sheets those ratios decode as a module of 2.4 points — a fact about one plot, which is why it must not appear in the code. Text height is not an estimator: there is no published bubble-to-text ratio (PIP dimensions text, ISA dimensions the bubble, neither relative to the other), and on a stroke font the marks are a mixture.
+
+Two letter-table traps are load-bearing. `S` means Safety only for a closed set of self-actuated emergency-protective devices (`FSV`, `PSV`, `TSV`, `PSE`, `TSE`); everywhere else it means Switch. Coding the obvious rule would have emitted `LSV` as a safety device. `Z`, not `S`, is the Safety Instrumented System modifier — and without the 2009 overlay the parser would have had no concept of SIS tagging at all. Industry writes the differential backwards (`DPI`); the standard wants `PDI`; Kimray writes `PdI`. We normalise and say so.
+
+Classes, when we know them, are DEXPI 1.4 names (Proteus Schema 4.2.0). DEXPI 2.0 replaces Proteus, so serialisation stays behind an adapter. Several DEXPI beliefs we started with were wrong: a `PipingNetworkSegment` does not own its nodes, `SensingLocation` has four subtypes not two, and instrumentation class URIs live under `sandbox.dexpi.org`, not POSC Caesar. Those refutations are in the table below because a POSC-only validator would reject every instrument in a valid file.
+
+Read **Refuted or corrected** before proposing a change. Several of those rows would have shipped as defects. The `INPUT-*` rows are measurements on the files in `data/`. If a new drawing disagrees with one, that is expected: change the drawing, not the pipeline.
 
 | Prefix | What it covers |
 |---|---|

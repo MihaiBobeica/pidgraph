@@ -5,8 +5,6 @@ services:
     build: .
     env_file: [.env]
     volumes:
-      # The parent directory is mounted, never the drawing folder itself: its name may contain
-      # characters that are hostile as a compose value or a shell argument.
       - ./data:/app/data:ro
       - ./outputs:/app/outputs
     # Overridden per invocation, e.g.  docker compose run --rm pipeline check

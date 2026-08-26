@@ -1,12 +1,12 @@
 # pidgraph
 
-A piping and instrumentation diagram is how the plant is plumbed and instrumented. A standard operating procedure is how it is supposed to be run. This repository turns the drawing into a NetworkX graph and writes down where that graph and the procedure disagree.
+A piping and instrumentation diagram records how a plant is plumbed and instrumented. A standard operating procedure records how that plant is intended to be operated. This repository extracts the drawing as a NetworkX graph and reports disagreements between that graph and the procedure.
 
-Geometric thresholds follow the drawing’s own module, not a size we measured off one plot. Lines that cross without a jump are left unjoined. A scanned page is refused rather than turned into an empty graph.
+Geometric thresholds follow the drawing’s own module rather than an absolute size measured on a single plot. Lines that cross without a jump are left unjoined. A scanned page is refused rather than turned into an empty graph.
 
 ## Install
 
-You need Python 3.11 or newer. From the repository root, create a virtual environment and install the package with the development extras.
+Python 3.11 or newer is required. From the repository root, create a virtual environment and install the package with the development extras.
 
 Windows:
 
@@ -28,11 +28,11 @@ Then run the environment check. On Unix, use `bin` instead of `Scripts`.
 .venv\Scripts\python -m pidgraph.cli doctor
 ```
 
-`doctor` needs nothing but Python. It tells you what is present and what is missing. Tesseract is optional; without it, raster lettering is left unread. Ollama is optional; without it, the Ask pane still runs the graph tools, it just does not phrase the answer. Configuration knobs live in [`.env.example`](.env.example).
+`doctor` requires only Python. It reports what is present and what is missing. Tesseract is optional; without it, raster lettering is left unread. Ollama is optional; without it, the Ask pane still runs the graph tools and simply does not phrase the answer. Configuration knobs live in [`.env.example`](.env.example).
 
 ## Run
 
-Place the drawing under `data/pid/` or `data/p&id/` (PDF only) and the procedure under `data/sop/` (Word, PDF, plain text, or Markdown). This checkout already ships `data/p&id/diagram.pdf` and `data/sop/sop.docx`. Pass `--pid` and `--sop` if you do not want that discovery.
+Place the drawing under `data/pid/` (PDF only) and the procedure under `data/sop/` (Word, PDF, plain text, or Markdown). This checkout ships `data/pid/diagram.pdf` and `data/sop/sop.docx`. Pass `--pid` and `--sop` to override discovery.
 
 ```bash
 .venv\Scripts\python -m pidgraph.cli check
@@ -52,7 +52,7 @@ g.number_of_nodes(), g.number_of_edges()
 nx.shortest_path(g.to_undirected(), source, target)
 ```
 
-Nodes carry a kind, a DEXPI class where we know it, a canonical tag, drawing-space coordinates, and a confidence. Edges carry a line style, the evidence for the connection, and a line number when a label bound. Edge direction is the order the assembler walked the drawing, not process flow.
+Nodes carry a kind, a DEXPI class where one is known, a canonical tag, drawing-space coordinates, and a confidence. Edges carry a line style, the evidence for the connection, and a line number when a label bound. Edge direction is the order the assembler walked the drawing, not process flow.
 
 Other commands:
 
@@ -66,17 +66,20 @@ Other commands:
 
 ## Approach
 
-Each page is asked what it actually contains before anything is assumed. Calibration recovers the drawing’s own module. Later thresholds are multiples of that unit, so an absolute size in points would be a fact about one plot, not a rule.
+1. **Probe.** Each page is inspected for what it actually offers: vectors, a text layer, dash arrays, raster. Later stages pick a strategy from that inventory. A page with good geometry and a useless text layer is not treated as a different kind of document.
+2. **Calibrate.** ISA and ISO size symbols as ratios to a per-drawing length (the *module*; ISA calls it a measurement unit). Calibration recovers that length from the page. Every later threshold is a multiple of it. A size in points would only be true of one plot scale, so it is never a rule.
+3. **Frame.** The title block, border, logo, and other sheet furniture are stripped so they are not mistaken for plant.
+4. **Lines, then lettering.** Process and signal lines are recovered first. Many drawings draw dashes as runs of short strokes instead of a dash array; those strokes are about the size of a letter. Only chaining — seeing that the marks form a long run rather than a word — can tell a dashed line from a label.
+5. **Recognise.** Lettering drawn as CAD pen paths is matched from the strokes already in the file. Tesseract is tried only when that matcher refuses a region. Marks that looked like letters but no recogniser could read are put back with the symbols, so a letter-shaped bracket stays a symbol instead of vanishing.
+6. **Assemble.** Remaining marks are grouped into symbols. A line becomes an edge only when an endpoint lands on a symbol port, or when two endpoints coincide. Two lines that merely cross — no jump mark, no shared endpoint — are left unjoined. A false connection in the graph looks identical to a real pipe or signal later; a missed genuine join is the cheaper error.
 
-The title block and furniture are stripped. Conductors are recovered before lettering, because a simulated dash is about the size of a glyph and only chaining can tell the two apart. Stroke lettering is read from the pen paths that are already in the file; Tesseract is the fallback when the matcher refuses. Letter-shaped marks that no recogniser could read are returned to the symbol pool, then symbols are grouped, then line ends are bound to ports. A fabricated edge looks identical to a real one later, so crossing lines without a jump are not joined.
+The plant graph is a NetworkX `MultiDiGraph`. Tags are parsed with the ISA-5.1 grammar. Unknown shapes stay `unknown`; they are not assigned the nearest known class. Comparing the graph to the procedure is a rules engine. A language model may rephrase an answer in the Ask pane; it does not decide whether a finding exists.
 
-The plant graph is a NetworkX `MultiDiGraph`. Tags are parsed with the ISA-5.1 grammar. Unknown shapes stay `unknown` rather than being forced to the nearest class. The cross-reference is a rules engine: a language model may phrase an answer, it does not decide a finding.
-
-The page-by-page map and the graph contract live in [`docs/architecture.md`](docs/architecture.md). Options we already rejected live in [`docs/tradeoffs.md`](docs/tradeoffs.md).
+The page-by-page map and the graph contract live in [`docs/architecture.md`](docs/architecture.md). Rejected options live in [`docs/tradeoffs.md`](docs/tradeoffs.md).
 
 ## Assumptions
 
-We only extract born-digital vector PDFs. The sample drawing in `data/` is a test case; nothing measured off that sheet may become a constant in the code. Kimray’s letter table is the 1984 ISA table, not the 2009 edition its cover claims, so Safety Instrumented System tagging (`Z`) is overlaid from the later standard. Annex guidance is not reported as a violation. Nameplate design-limit blocks are not read from the drawing, because pinning a lone pressure to the wrong vessel is worse than leaving the comparison unresolved. The held-out scores are synthetic, and the generator draws this matcher’s own stroke alphabet, so treat them as an upper bound rather than a prediction on an unseen font.
+Only born-digital vector PDFs are extracted. The sample drawing in `data/` is a test case; nothing measured off that sheet may become a constant in the code. Kimray’s letter table is the 1984 ISA table, not the 2009 edition its cover claims, so Safety Instrumented System tagging (`Z`) is overlaid from the later standard. Annex guidance is not reported as a violation. Nameplate design-limit blocks are not read from the drawing, because pinning a lone pressure to the wrong vessel is worse than leaving the comparison unresolved. The held-out scores are synthetic, and the generator draws this matcher’s own stroke alphabet, so they are an upper bound rather than a prediction on an unseen font.
 
 The numbered register, with citations, is [`docs/assumptions.md`](docs/assumptions.md). How the scores were produced is [`benchmarks/results.md`](benchmarks/results.md).
 
@@ -94,7 +97,7 @@ To re-run the held-out sweep (slow: it renders and extracts thirty drawings):
 .venv\Scripts\python -m pidgraph.cli benchmark --count 30 --seed0 500 --dir outputs/sweep_corpus --out benchmarks
 ```
 
-These figures are from those thirty drawings (seeds 500–529). Development only saw seeds 0–9. The generator draws the matcher’s own letters, so read the text row narrowly: this is segmentation and matching under noise, not transfer to a foreign font. Treat the whole table as an upper bound on real drawings.
+These figures are from those thirty drawings (seeds 500–529). Development only saw seeds 0–9. The generator draws the matcher’s own letters, so the text row should be read narrowly: this is segmentation and matching under noise, not transfer to a foreign font. The table as a whole is an upper bound on real drawings.
 
 | | precision | recall |
 |---|---|---|
@@ -105,7 +108,7 @@ These figures are from those thirty drawings (seeds 500–529). Development only
 
 ## Sample data
 
-The drawing and procedure that shipped with the repository are `data/p&id/diagram.pdf` and `data/sop/sop.docx`. Running `pidgraph check` on those files produced the snapshot in `samples/`:
+The drawing and procedure that shipped with the repository are `data/pid/diagram.pdf` and `data/sop/sop.docx`. Running `pidgraph check` on those files produced the snapshot in `samples/`:
 
 | File | What |
 |---|---|
@@ -125,7 +128,7 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:3000`. The left pane is the `data/` tree (PDF and Word only; you can add or remove files, not folders). The middle pane is the graph or the document. The right pane is procedure findings and Ask. Drawing PDFs are extracted; anything under `sop/`, or any Word file, is previewed instead.
+Open `http://localhost:3000`. The left pane is the `data/` tree (PDF and Word only; files may be added or removed, not folders). The middle pane is the graph or the document. The right pane is procedure findings and Ask. Drawing PDFs are extracted; anything under `sop/`, or any Word file, is previewed instead.
 
 Ask uses `find_tag`, `describe`, `neighbors`, and `walk`. If Ollama is running, it phrases the result; if it is not, the tools still answer. Neither `check` nor the UI needs a database. `pidgraph migrate --apply` persists to Postgres when `DATABASE_URL` is set.
 

@@ -1,16 +1,8 @@
 """Input path resolution.
 
-Two hazards this module exists to contain:
-
-1. The assignment README documents the drawing at ``data/pid/`` while the shipped folder is
-   ``data/p&id/``. We probe both rather than hardcoding either, so the grader's expectation and
-   the delivered layout both work.
-
-2. That folder name contains a literal ``&``. It is the PowerShell call operator, a ``cmd.exe``
-   command separator, and a URL query separator -- and ``urllib.parse`` will silently truncate a
-   path containing it rather than raising. Nothing here ever interpolates a path into a shell
-   string or a URL; callers get ``Path`` objects, and storage keys are derived from a content
-   hash (see :func:`storage_key`), never from the folder name.
+Drawings live under ``data/pid/`` (or ``data/PID/``). Procedures live under ``data/sop/``
+(or ``data/SOP/``). Callers get :class:`Path` objects; storage keys are derived from a content
+hash (see :func:`storage_key`), never from the on-disk name.
 """
 
 from __future__ import annotations
@@ -21,7 +13,7 @@ from collections.abc import Iterable
 from pathlib import Path, PurePosixPath
 
 # Probed in order. The first directory that exists and contains a readable file wins.
-PID_DIR_CANDIDATES: tuple[str, ...] = ("p&id", "pid", "P&ID", "PID")
+PID_DIR_CANDIDATES: tuple[str, ...] = ("pid", "PID")
 SOP_DIR_CANDIDATES: tuple[str, ...] = ("sop", "SOP")
 
 PID_SUFFIXES: tuple[str, ...] = (".pdf",)
@@ -100,8 +92,8 @@ def sha256(path: Path, chunk: int = 1 << 20) -> str:
 def storage_key(path: Path, prefix: str = "raw") -> str:
     """Object-storage key for a file.
 
-    Derived from the content hash and the suffix -- never from the on-disk name. This is what
-    keeps ``&`` (and Windows backslashes, and spaces) out of storage keys and signed URLs.
-    Built with :class:`PurePosixPath` so the separator is ``/`` regardless of host platform.
+    Derived from the content hash and the suffix -- never from the on-disk name, so Windows
+    backslashes and spaces stay out of storage keys and signed URLs. Built with
+    :class:`PurePosixPath` so the separator is ``/`` regardless of host platform.
     """
     return str(PurePosixPath(prefix) / f"{sha256(path)}{path.suffix.lower()}")

@@ -1,6 +1,6 @@
 # P&ID / SOP Cross-Reference Report
 
-- **Drawings:** `data/p&id/diagram.pdf`
+- **Drawings:** `data/pid/diagram.pdf`
 - **Procedure:** `data/sop/sop.docx` — *Majorsville – Initial Purge of Condensate Skid*
 - **Estimated extraction recall:** 12%
 
