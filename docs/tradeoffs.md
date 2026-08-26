@@ -1,27 +1,27 @@
 # Trade-offs
 
-Decisions that still shape the code. Citations: [`assumptions.md`](assumptions.md).
+These are decisions that still shape the code. If you are about to propose an alternative, it is probably already here. Citations live in [`assumptions.md`](assumptions.md).
 
-**Capability per stage, not a vector/raster fork.** Real pages mix good geometry with a useless text layer. Each stage picks from a probe. Raster ingest is specified and currently refused.
+Real pages mix good geometry with a useless text layer, so we did not fork the whole pipeline into vector versus raster. Each stage (lines, symbols, text) picks from a probe of what the page actually has. Raster ingest is specified and currently refused rather than returning an empty graph.
 
-**Join endpoints, never crossings.** A fabricated edge is structurally identical to a real one.
+We join endpoints and never crossings. A fabricated edge is structurally identical to a real one, and missing a genuine hop is the cheaper mistake.
 
-**Recover the module `U` instead of hardcoding point sizes.** Absolute thresholds are facts about one plot. Calibration can fail.
+We recover the drawing’s own module instead of hardcoding point sizes. Absolute thresholds are facts about one plot. Calibration can fail; we would rather it fail than silently fit the sample sheet.
 
-**Greedy one-to-one over ascending bbox gap for labels, not nearest-neighbour.** Global sort plus a kind bonus; a text region labels at most one node (`extract/attach.py`).
+Labels are assigned greedy and one-to-one over ascending box gap, with a small bonus for the drafting-preferred kind (`extract/attach.py`). Nearest-neighbour swaps tags on parallel trains. A text region labels at most one node.
 
-**NetworkX node-link JSON on disk.** Postgres is optional persist (`DATABASE_URL`), not the primary store. Neo4j / GraphML / a custom `graph.json` were not taken.
+The on-disk form is NetworkX node-link JSON. Postgres is an optional persist when `DATABASE_URL` is set, not the primary store. Neo4j, GraphML, and a custom `graph.json` were not taken.
 
-**DEXPI class names, ISA tag grammar.** Unknown symbols stay `unknown`.
+Classes are DEXPI names; tags follow the ISA grammar. Unknown symbols stay `unknown`. Forcing the nearest class hides template overfit.
 
-**Rules decide findings; a model may only phrase them.** Ask is optional local Ollama.
+Rules decide findings. A model may only phrase them. The Ask pane is optional local Ollama.
 
-**Synthetic graphs first, then render.** Topology is known exactly. The held-out table is an upper bound. Fine-tuning on the three real sheets was rejected.
+Synthetic graphs are authored first, then rendered. That is the only way topology is known exactly. The held-out table is an upper bound and is labelled as one. Fine-tuning on the three real sheets was rejected: you cannot train and hold out on the same handful.
 
-**Exact-string accuracy for text, not character error rate.** One wrong character in a tag is a different component.
+Text accuracy is exact-string, not character error rate. One wrong character in a tag is a different component.
 
-**Score in drawing coordinates**, never pixels.
+Scores are computed in drawing coordinates, never pixels, so a resolution change does not move the number.
 
-**Local CLI and files.** Next.js shells `python -m pidgraph.*`; there is no Python HTTP server and no hosted worker. Docker Compose is optional.
+The command line and the files are local. The UI is Next.js shelling `python -m pidgraph.*`. There is no Python HTTP server and no hosted worker. Docker Compose is optional.
 
-**Normative vs advisory standards.** Annex guidance is not reported as a violation.
+Annex guidance in the standards is advisory. It is not reported as a violation.

@@ -1,100 +1,97 @@
 # Architecture
 
+A run takes a vector PDF of a piping and instrumentation diagram and a standard operating procedure. The drawing is turned into a NetworkX graph on disk. A small rules engine compares that graph to the procedure and writes a report. The browser, when you use it, shells out to Python; it is not a second server.
+
+Install and the command line live in the root [`README`](../README.md). Citations live in [`assumptions.md`](assumptions.md). Rejected options live in [`tradeoffs.md`](tradeoffs.md).
+
 ```mermaid
 flowchart LR
   subgraph inputs [inputs]
     PDF[vector PDF]
-    SOP[SOP docx/pdf/txt/md]
+    SOP[procedure]
   end
   subgraph core [pidgraph]
     Pipe[pipeline.run_page]
-    G[MultiDiGraph nodelink JSON]
-    XR[crossref rules]
+    G[MultiDiGraph]
+    XR[rules]
   end
   PDF --> Pipe --> G
   G --> XR
   SOP --> XR
-  XR --> Out[report.md + findings.jsonl]
-  G --> Disk[outputs/]
-  Disk --> UI[Next.js shells python -m]
+  XR --> Out[report and findings]
+  G --> Disk[outputs]
+  Disk --> UI[browser shells Python]
 ```
 
-Install and CLI: [`../README.md`](../README.md). Citations: [`assumptions.md`](assumptions.md). Rejected options: [`tradeoffs.md`](tradeoffs.md).
+## How a drawing becomes a graph
 
-## Pipeline
+Only born-digital vector PDFs are extracted. A raster or scanned page raises an error rather than becoming an empty graph. Discovery in `pidgraph/paths.py` looks for `.pdf` only.
 
-`pidgraph/pipeline.py` `run_page()`. Born-digital vector PDFs only; a raster page raises `ExtractionError`. Discovery (`pidgraph/paths.py`) accepts `.pdf` for drawings.
+Per page, `run_page` in `pidgraph/pipeline.py` does this:
 
-| Step | Module | What |
-|---|---|---|
-| 1 Probe | `ingest/probe.py` | Vectors, text layer, dash arrays, raster |
-| 2 Calibrate | `extract/calibrate.py` | Recover module `U`. Later thresholds are `scale.u(k)`, not point sizes |
-| 3 Primitives | `extract/primitives.py` | Marks in drawing space; lettering promotion is a hypothesis |
-| 4 Frame | `extract/frame.py` | Title block / furniture vs content |
-| 5 Lines | `extract/lines.py` | Conductors before text: simulated dashes are glyph-sized; chaining is the test |
-| 6 Text | `extract/text.py` | Regions from remaining glyph marks |
-| 7 Recognise | `recognise/` | Vector stroke match first; unread regions optionally go to Tesseract. Failure degrades to unread labels, never aborts |
-| 8 Symbols | `extract/symbols.py` | After unread promotion is reverted — letter-shaped brackets stay symbols |
-| 9 Assemble | `extract/assemble.py` `build()` | Port binding + endpoint proximity. Crossing lines are not joined. `attach.py` runs last inside `build()`: tags and line numbers onto existing nodes/edges only |
+1. **Probe** (`ingest/probe.py`) asks what the page actually offers: vectors, a text layer, dash arrays, raster. A page can have good geometry and a useless text layer, so later stages pick a strategy from this answer rather than forking the whole pipeline into “vector” versus “raster”.
+2. **Calibrate** (`extract/calibrate.py`) recovers the drawing’s own module. Every later threshold is a multiple of that unit, not a point size tuned on the sample sheet.
+3. **Primitives** (`extract/primitives.py`) put the marks into one drawing-space coordinate system. Promoting a mark to lettering is a hypothesis, not a commitment.
+4. **Frame** (`extract/frame.py`) separates the title block and furniture from the content.
+5. **Lines** (`extract/lines.py`) recover conductors before text. A simulated dash is glyph-sized; only the chaining test can tell a dash run from a label.
+6. **Text** (`extract/text.py`) builds regions from the glyph marks the lines did not consume.
+7. **Recognise** (`recognise/`) reads stroke lettering first. Regions the matcher refuses may go to Tesseract. If rendering or the engine fails, labels stay unread and extraction continues.
+8. **Symbols** (`extract/symbols.py`) run after unread promotion is reverted, so letter-shaped brackets stay symbols instead of vanishing into the text pool.
+9. **Assemble** (`extract/assemble.py` `build()`) binds line ends to symbol ports. Crossing lines are not joined. Tag attachment (`extract/attach.py`) runs last, inside `build()`, and only writes attributes onto nodes and edges that already exist.
 
-ISA-5.1 grammar: `pidgraph/standards/`. Unknown symbols stay `dexpi_class=unknown`.
+Tags are parsed with the ISA-5.1 grammar in `pidgraph/standards/`. Classes are DEXPI names where we know them. Unknown symbols stay `unknown`.
 
-## Graph contract
+## What the graph holds
 
-NetworkX `MultiDiGraph`, written as node-link JSON (`extract/export.py`). No GraphML, no `graph.json`.
+The plant graph is a NetworkX `MultiDiGraph`, written as node-link JSON by `extract/export.py`. There is no GraphML writer and no second `graph.json` schema.
 
 | | Attributes |
 |---|---|
-| Node | `kind`, `dexpi_class`, `label`, `tag_canonical`, `page`, `confidence`, `x0,y0,x1,y1` |
+| Node | `kind`, `dexpi_class`, `label`, `tag_canonical`, `page`, `confidence`, and the box `x0,y0,x1,y1` |
 | Edge | `kind`, `style`, `evidence`, `confidence`, `line_ids`; `line_number` when a line label bound |
 
-Edge direction is **assembly order**, not process flow. Fluid type is not a first-class attribute. An empty graph that reports success is a pipeline bug: stages raise rather than return empty.
+Edge direction is assembly order, not process flow. Fluid type (gas versus liquid) is not a first-class attribute; a line label may mention it. An empty graph that reports success is a pipeline bug: a stage that cannot produce a usable result raises rather than returning empty.
 
-## SOP / findings
+## Procedure and findings
 
-`crossref/sop.py` `load()`:
+`crossref/sop.py` loads the procedure. Word files are Office Open XML. PDFs use PyMuPDF tables when a grid is present. Plain text and Markdown are paragraphs only. Legacy `.doc` is discovered by the path probe and then rejected at load, with a message to save as `.docx` or PDF.
 
-| Suffix | Loader |
-|---|---|
-| `.docx` | Office Open XML |
-| `.pdf` | PyMuPDF tables when a grid is present |
-| `.txt`, `.md` | Paragraphs only |
-| `.doc` | Discovered by `paths.py`, rejected at load |
+The checks in `crossref/checks.py` are a rules engine: tags named in both documents, design-limit rows, intra-drawing consistency. Design-limit nameplates are not read from the drawing (`limits` is empty in the command line). A language model may phrase an answer; it does not decide a finding. The sample procedure agrees with the sample drawing everywhere, so correctness is shown by fault injection in `tests/test_crossref.py`, not by waiting for a real discrepancy.
 
-`crossref/checks.py` is a rules engine: tags in both documents, design-limit rows, intra-drawing consistency. Design-limit nameplates are not read from the drawing (`limits = {}` in `cli.py`). A model may phrase an answer; it does not decide a finding. The sample SOP agrees with the sample drawing; correctness is `tests/test_crossref.py` fault injection.
-
-## Package map
+## Where the code lives
 
 | Role | Path |
 |---|---|
-| CLI | `pidgraph/cli.py` — `doctor`, `probe`, `extract`, `check`, `recognise`, `benchmark`, `migrate` |
+| Command line | `pidgraph/cli.py` — `doctor`, `probe`, `extract`, `check`, `recognise`, `benchmark`, `migrate` |
 | Pipeline | `pidgraph/pipeline.py` |
 | Graph write | `pidgraph/extract/export.py` |
-| SOP + findings | `pidgraph/crossref/` |
-| Local files / optional Postgres | `pidgraph/store/` |
-| Synthetic P/R | `pidgraph/benchmark/` |
+| Procedure and findings | `pidgraph/crossref/` |
+| Local files and optional Postgres | `pidgraph/store/` |
+| Synthetic precision and recall | `pidgraph/benchmark/` |
 | Ask tools | `pidgraph/agent/` — `find_tag`, `describe`, `neighbors`, `walk` |
 | Review UI | `web/` |
 | Sample inputs | `data/p&id/`, `data/sop/` |
 
-## UI
+## Review UI
 
-Next.js at `http://localhost:3000` (`web/`: `npm install && npm run dev`). No Python HTTP server. Routes shell `python -m pidgraph.{library, cli extract, render, preview, agent}`.
+From `web/`, `npm install` then `npm run dev`, then `http://localhost:3000`. There is no Python HTTP server. The Next.js routes spawn `python -m pidgraph.{library, cli extract, render, preview, agent}`.
 
-| Route | Python |
+| Route | What it runs |
 |---|---|
 | `/api/library` | `-m pidgraph.library` |
 | `/api/extract` | `-m pidgraph.cli extract --pid` |
 | `/api/render` | `-m pidgraph.render` |
 | `/api/preview`, `/api/document` | `-m pidgraph.preview` |
 | `/api/ask` | `-m pidgraph.agent` |
-| `/api/snapshot` | reads JSON (or Supabase RPC) |
-| `/api/health` | none |
+| `/api/snapshot` | Reads the node-link JSON, or the Supabase function when the public env vars are set |
+| `/api/health` | Nothing; a liveness probe |
 
-File snapshot: `outputs/<sha256>/graph.nodelink.json` plus **root** `outputs/findings.jsonl` (written by `check`, not by UI `extract`). Supabase `graph_snapshot` only when `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are set **and** no `hash` query is passed.
+Selecting a drawing PDF extracts to `outputs/<sha256>/graph.nodelink.json`. Findings in file mode always come from the root `outputs/findings.jsonl`, which is written by `check`, not by the UI extract. That means the panel can show findings from a different run than the graph on screen. The Supabase `graph_snapshot` path is used only when `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are set and no hash is passed; then graph and findings come from the same call.
 
-## Ops
+## Operations
 
-- CLI image: `python:3.13-slim-bookworm` (pin; unpinned `python:3.13-slim` aliases trixie).
-- Compose `pipeline` runs the CLI. Compose `web` is Node-only: no Python, no `data/`/`outputs/` mounts — extraction and previews need `npm run dev` against a local `.venv`.
-- `pidgraph migrate --apply` applies `supabase/migrations/` when `DATABASE_URL` is set. `check` still writes the JSON files.
+The command-line image is pinned to `python:3.13-slim-bookworm`. Unpinned `python:3.13-slim` currently aliases Debian trixie, which renamed a large set of library packages.
+
+Compose `pipeline` runs that image. Compose `web` is a Node image with no Python and no mounts for `data/` or `outputs/`, so extraction and previews only work from `npm run dev` against a local virtual environment.
+
+`pidgraph migrate --apply` applies `supabase/migrations/` when `DATABASE_URL` is set. `check` still writes the JSON files either way.

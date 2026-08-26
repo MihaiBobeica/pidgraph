@@ -1,6 +1,12 @@
 # Benchmark results
 
-Protocol: graph authored first, PDF rendered from it, pipeline scored against that truth. Seeds 500–529 (held-out; development used 0–9). Rates are exact-string in drawing coordinates, with Wilson intervals; n < 5 withheld. Generator uses the matcher's stroke alphabet (`recognise/glyphs.py` / `benchmark/strokefont.py`) — segmentation and matching under noise, not font transfer. Synthetic, so an upper bound.
+These numbers come from synthetic drawings. We wrote down the correct graph first and rendered the drawing from it afterwards, so nothing here is scored against output the pipeline produced itself.
+
+The corpus is seeds 500 through 529. Development was tuned against seeds 0 through 9 only, so anything from seed 500 up is held out. Rates are exact-string matches in drawing coordinates, each with a Wilson interval. Any rate with fewer than five instances behind it is withheld rather than printed.
+
+The generator uses this repository’s stroke alphabet (`recognise/glyphs.py`; `benchmark/strokefont.py` imports it). What is measured is segmentation and matching under randomised size, weight, tracking, shear, and jitter. It is not transfer to a font the matcher has never seen. Only the real drawing measures that. Synthetic drawings are cleaner than real ones, so treat everything here as an upper bound.
+
+Module and sheet size vary from sample to sample, so any absolute dimension hardcoded in the pipeline would fail on most of these drawings rather than passing quietly.
 
 ## Calibration
 
@@ -27,4 +33,4 @@ Protocol: graph authored first, PDF rendered from it, pipeline scored against th
 | line precision | line attachment precision: 100.0% [96.1%-100.0%] n=94 |
 | line recall | line attachment recall: 90.4% [83.2%-94.7%] n=104 |
 
-Predicted unique edges sit on authored connectivity (n=518 against 519 truth pairs). Module and sheet size vary per sample, so a hardcoded point size would fail on most of these drawings.
+Predicted unique edges sit on the authored connectivity (518 predicted against 519 truth pairs).
