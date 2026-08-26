@@ -1,7 +1,7 @@
 """A vector stroke font for the synthetic generator.
 
 The real input renders text the way CAD plotters always have: each character is a handful of pen
-strokes, not a filled outline (INPUT-06). A generator that placed text with a TrueType font would
+strokes, not a filled outline. A generator that placed text with a TrueType font would
 produce something the recogniser finds *easier* than the real content, and every figure measured
 on it would be flattered. So the generator draws its own strokes.
 

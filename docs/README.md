@@ -5,7 +5,7 @@ The root [`README`](../README.md) is the entry point: what a piping and instrume
 Recommended reading order:
 
 1. [`architecture.md`](architecture.md) — one page from PDF marks to a NetworkX graph, then from that graph and a procedure to a report. File paths live here.
-2. [`assumptions.md`](assumptions.md) — the standards, the measurements, and the beliefs later shown to be false. ISA-5.1, ISO 81714, DEXPI, and the sample sheets. A row from this file must not be copied into the code as a constant.
+2. [`assumptions.md`](assumptions.md) — what extraction, tag parsing, findings, and the held-out claim stand on. A row from this file must not be copied into the code as a constant.
 3. [`tradeoffs.md`](tradeoffs.md) — approaches already tried or rejected, and why. A proposed alternative is likely already recorded here.
 4. [`../benchmarks/results.md`](../benchmarks/results.md) — how the precision and recall numbers were produced, and what they do not mean.
 

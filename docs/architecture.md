@@ -2,7 +2,7 @@
 
 A run takes two documents that are supposed to describe the same plant: a vector PDF of a piping and instrumentation diagram, and a standard operating procedure. The drawing is turned into a NetworkX graph on disk. A small rules engine compares that graph to the procedure and writes a report. The browser, when used, shells out to Python; it is not a second server.
 
-Install and the command line live in the root [`README`](../README.md). The standards and measurements behind the thresholds live in [`assumptions.md`](assumptions.md). Rejected options live in [`tradeoffs.md`](tradeoffs.md).
+Install and the command line live in the root [`README`](../README.md). What extraction and findings stand on lives in [`assumptions.md`](assumptions.md). Rejected options live in [`tradeoffs.md`](tradeoffs.md). Docker, Debian, the pooler, and `migrate --apply` live in Operations below, not in the register.
 
 ```mermaid
 flowchart LR
@@ -97,7 +97,7 @@ Selecting a drawing PDF extracts to `outputs/<sha256>/graph.nodelink.json`. Find
 
 ## Operations
 
-The command-line image is pinned to `python:3.13-slim-bookworm`. Unpinned `python:3.13-slim` currently aliases Debian trixie, which renamed a large set of library packages (`libglib2.0-0` became `libglib2.0-0t64`; `libgl1-mesa-glx` disappeared).
+The command-line image is pinned to `python:3.13-slim-bookworm`. Unpinned `python:3.13-slim` currently aliases Debian trixie, which renamed a large set of library packages (`libglib2.0-0` became `libglib2.0-0t64`; `libgl1-mesa-glx` disappeared). These package facts belong here rather than in the assumptions register.
 
 Compose `pipeline` runs that image. Compose `web` is a Node image with no Python and no mounts for `data/` or `outputs/`, so extraction and previews only work from `npm run dev` against a local virtual environment.
 

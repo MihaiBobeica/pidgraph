@@ -6,6 +6,8 @@ The corpus is seeds 500 through 529. Development was tuned against seeds 0 throu
 
 The generator uses this repository’s stroke alphabet (`recognise/glyphs.py`; `benchmark/strokefont.py` imports it). What is measured is segmentation and matching under randomised size, weight, tracking, shear, and jitter — the same hairline SHX-style strokes the real sheets use. It is not transfer to a font the matcher has never seen. Only the real drawing measures that. Synthetic drawings are cleaner than real ones, so the table is an upper bound.
 
+Related published corpora are not scored here. PID2Graph (Zenodo `10.5281/zenodo.14803338`, CC BY-SA 4.0) and its OPEN100 subset are a GraphML-annotated set of real drawings; protocol and baselines are in arXiv:2411.13929 v3 / IEEE DSAA 2025 (OPEN100 Stitched rows of Table III). DEXPI TrainingTestCases are CC BY 4.0.
+
 ## Calibration
 
 The module is over-determined: the narrow stroke and the instrument bubble each predict it through a published ratio (ISA Table 6.3: signal line 0.2 measurement units; Table 6.1: bubble 7). Agreement is the confidence signal. All thirty held-out sheets recovered a module and a sheet size. The median error is 7.5 percent; the worst is 15 percent. Downstream thresholds are multiples of whatever was recovered, so a 7.5 percent miss scales the whole page rather than breaking a single hardcoded gate.

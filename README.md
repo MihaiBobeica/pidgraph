@@ -81,7 +81,7 @@ The page-by-page map and the graph contract live in [`docs/architecture.md`](doc
 
 Only born-digital vector PDFs are extracted. The sample drawing in `data/` is a test case; nothing measured off that sheet may become a constant in the code. Kimray’s letter table is the 1984 ISA table, not the 2009 edition its cover claims, so Safety Instrumented System tagging (`Z`) is overlaid from the later standard. Annex guidance is not reported as a violation. Nameplate design-limit blocks are not read from the drawing, because pinning a lone pressure to the wrong vessel is worse than leaving the comparison unresolved. The held-out scores are synthetic, and the generator draws this matcher’s own stroke alphabet, so they are an upper bound rather than a prediction on an unseen font.
 
-The numbered register, with citations, is [`docs/assumptions.md`](docs/assumptions.md). How the scores were produced is [`benchmarks/results.md`](benchmarks/results.md).
+What extraction and findings stand on is [`docs/assumptions.md`](docs/assumptions.md). How the scores were produced is [`benchmarks/results.md`](benchmarks/results.md).
 
 ## Test
 
