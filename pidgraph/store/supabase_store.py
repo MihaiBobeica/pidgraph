@@ -18,6 +18,66 @@ from dataclasses import dataclass
 
 from pidgraph.store.base import RunRecord
 
+_NODE_COLUMN_KEYS = frozenset(
+    {"tag_canonical", "tag_prefix", "tag_sequence", "tag_suffix", "loop_id", "conformance"}
+)
+"""Attribute keys that map to first-class ``nodes`` columns; everything else becomes a
+``node_attributes`` row so no recovered fact is dropped at the persistence boundary."""
+
+
+def _node_row(run_id, node: dict) -> tuple:
+    """One ``nodes`` insert row. Pure, so the mapping is testable without a database."""
+    attributes = node.get("attributes") or {}
+    return (
+        run_id,
+        node["page_index"],
+        node["stable_key"],
+        node["kind"],
+        node.get("dexpi_class") or "unknown",
+        attributes.get("tag_canonical"),
+        attributes.get("tag_prefix"),
+        attributes.get("tag_sequence"),
+        attributes.get("tag_suffix"),
+        attributes.get("loop_id"),
+        attributes.get("conformance"),
+        node.get("label"),
+        node.get("bbox"),
+        node.get("confidence", 1.0),
+        json.dumps(node.get("provenance", {})),
+    )
+
+
+def _attribute_rows(node_id, node: dict) -> list[tuple]:
+    """``node_attributes`` rows for every attribute that is not a first-class column."""
+    attributes = node.get("attributes") or {}
+    provenance = {"source": "drawing_text"}
+    if attributes.get("attach_method"):
+        provenance["method"] = attributes["attach_method"]
+    payload = json.dumps(provenance)
+    return [
+        (node_id, name, str(value), payload)
+        for name, value in sorted(attributes.items())
+        if name not in _NODE_COLUMN_KEYS
+    ]
+
+
+def _edge_row(run_id, source_id, target_id, edge: dict) -> tuple:
+    """One ``edges`` insert row: attributes are the facts, provenance is how they arrived."""
+    provenance = dict(edge.get("provenance") or {})
+    if edge.get("line_ids"):
+        provenance["line_ids"] = list(edge["line_ids"])
+    return (
+        run_id,
+        source_id,
+        target_id,
+        edge.get("kind", "process"),
+        edge.get("style"),
+        edge["evidence"],
+        edge.get("confidence", 1.0),
+        json.dumps(edge.get("attributes") or {}),
+        json.dumps(provenance),
+    )
+
 
 @dataclass
 class SupabaseStore:
@@ -112,24 +172,11 @@ class SupabaseStore:
                         """
                         insert into nodes
                             (run_id, page_index, stable_key, kind, dexpi_class, tag_name,
+                             tag_prefix, tag_sequence, tag_suffix, loop_id, conformance,
                              label, bbox, confidence, provenance)
                         values %s
                         """,
-                        [
-                            (
-                                run_id,
-                                n["page_index"],
-                                n["stable_key"],
-                                n["kind"],
-                                n.get("dexpi_class") or "unknown",
-                                (n.get("attributes") or {}).get("tag_canonical"),
-                                n.get("label"),
-                                n.get("bbox"),
-                                n.get("confidence", 1.0),
-                                json.dumps(n.get("provenance", {})),
-                            )
-                            for n in record.nodes
-                        ],
+                        [_node_row(run_id, n) for n in record.nodes],
                     )
 
                 # Edges reference nodes by their content-addressed key, so the mapping to surrogate
@@ -137,16 +184,25 @@ class SupabaseStore:
                 cursor.execute("select stable_key, id from nodes where run_id = %s", (run_id,))
                 ids = dict(cursor.fetchall())
 
-                rows = [
-                    (
-                        run_id,
-                        ids[e["source"]],
-                        ids[e["target"]],
-                        e.get("kind", "process"),
-                        e.get("style"),
-                        e["evidence"],
-                        e.get("confidence", 1.0),
+                attribute_rows = [
+                    row
+                    for n in record.nodes
+                    if n["stable_key"] in ids
+                    for row in _attribute_rows(ids[n["stable_key"]], n)
+                ]
+                if attribute_rows:
+                    execute_values(
+                        cursor,
+                        """
+                        insert into node_attributes (node_id, name, value, provenance)
+                        values %s
+                        on conflict (node_id, name) do update set value = excluded.value
+                        """,
+                        attribute_rows,
                     )
+
+                rows = [
+                    _edge_row(run_id, ids[e["source"]], ids[e["target"]], e)
                     for e in record.edges
                     if e["source"] in ids and e["target"] in ids
                 ]
@@ -155,7 +211,8 @@ class SupabaseStore:
                         cursor,
                         """
                         insert into edges
-                            (run_id, source_id, target_id, kind, style, evidence, confidence)
+                            (run_id, source_id, target_id, kind, style, evidence, confidence,
+                             attributes, provenance)
                         values %s
                         """,
                         rows,

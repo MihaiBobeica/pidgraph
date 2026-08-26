@@ -20,7 +20,7 @@ from pidgraph.extract import frame as frame_mod
 from pidgraph.extract import lines as lines_mod
 from pidgraph.extract import symbols as symbols_mod
 from pidgraph.extract import text as text_mod
-from pidgraph.extract.assemble import Graph, build
+from pidgraph.extract.assemble import build, graph_summary
 from pidgraph.extract.calibrate import CalibrationError, Scale, calibrate_page
 from pidgraph.extract.primitives import BBox, extract_page, promote_lettering
 from pidgraph.ingest.probe import PageCapabilities, probe_page
@@ -35,7 +35,7 @@ class PageResult:
     page_index: int
     capabilities: PageCapabilities
     scale: Scale
-    graph: Graph
+    graph: Any
     strategies: dict[str, str] = field(default_factory=dict)
     counts: dict[str, int] = field(default_factory=dict)
     notes: list[str] = field(default_factory=list)
@@ -44,7 +44,7 @@ class PageResult:
 
     def summary(self) -> str:
         strat = " ".join(f"{k}={v}" for k, v in self.strategies.items())
-        return f"page {self.page_index}: {self.graph.summary()}\n    {strat}"
+        return f"page {self.page_index}: {graph_summary(self.graph)}\n    {strat}"
 
 
 @dataclass
@@ -58,38 +58,11 @@ class DocumentResult:
 
     @property
     def graph_nodes(self) -> int:
-        return sum(len(p.graph.nodes) for p in self.pages)
+        return sum(p.graph.number_of_nodes() for p in self.pages)
 
     @property
     def graph_edges(self) -> int:
-        return sum(len(p.graph.edges) for p in self.pages)
-
-    def to_dict(self) -> dict:
-        return {
-            "source": self.source,
-            "elapsed_s": round(self.elapsed_s, 3),
-            "notes": list(self.notes),
-            "pages": [
-                {
-                    "page_index": p.page_index,
-                    "capabilities": p.capabilities.summary(),
-                    "scale": {
-                        "unit_system": p.scale.unit_system,
-                        "module_pt": round(p.scale.module, 4),
-                        "sheet": p.scale.sheet,
-                        "symbol_modules": round(p.scale.symbol_modules or 0, 3),
-                        "render_dpi": round(p.scale.render_dpi()),
-                        "confidence": p.scale.confidence,
-                        "warnings": list(p.scale.warnings),
-                    },
-                    "strategies": p.strategies,
-                    "counts": p.counts,
-                    "notes": p.notes,
-                    "graph": p.graph.to_dict(),
-                }
-                for p in self.pages
-            ],
-        }
+        return sum(p.graph.number_of_edges() for p in self.pages)
 
 
 def run_page(page: Any, page_index: int, recogniser: Any | None = None) -> PageResult:
@@ -301,8 +274,12 @@ def run_page(page: Any, page_index: int, recogniser: Any | None = None) -> PageR
             "conductors": len(conductors),
             "instrument_circles": len(circles),
             "symbols": len(symbols),
-            "nodes": len(graph.nodes),
-            "edges": len(graph.edges),
+            "nodes": graph.number_of_nodes(),
+            "edges": graph.number_of_edges(),
+            "tags_bound_nodes": graph.graph.get("attach", {}).get("bound_nodes", 0),
+            "tags_bound_edges": graph.graph.get("attach", {}).get("bound_edges", 0),
+            "tags_composed": graph.graph.get("attach", {}).get("composed_bubbles", 0),
+            "tags_unbound": len(graph.graph.get("attach", {}).get("unbound", [])),
         },
         notes=notes,
         regions=list(regions),

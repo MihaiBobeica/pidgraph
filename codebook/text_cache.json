@@ -775,6 +775,11 @@
       "confidence": 0.0,
       "text": ""
     },
+    "17709aa5df806623acfbb5d8": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "MV-101-15A"
+    },
     "17872e86e597615fe3843c30": {
       "backend": "tesseract",
       "confidence": 0.75,
@@ -1039,6 +1044,11 @@
       "backend": "tesseract",
       "confidence": 0.75,
       "text": "T"
+    },
+    "2097daf7c8d5bae825f7b928": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "M-111-101"
     },
     "209a2d0c9889e2c6fb52772c": {
       "backend": "tesseract",
@@ -1945,6 +1955,11 @@
       "confidence": 0.0,
       "text": ""
     },
+    "3e16cbe8f1c1415ab3bf1301": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "I"
+    },
     "3e2a1809f2b608b2a3c1af52": {
       "backend": "tesseract",
       "confidence": 0.0,
@@ -2019,6 +2034,11 @@
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "41a464e6d29d8400ca7eed0e": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "MV-105-15A1"
     },
     "41ff8d8f6bd6b0078f9a5a7d": {
       "backend": "tesseract",
@@ -5684,6 +5704,11 @@
       "backend": "tesseract",
       "confidence": 0.0,
       "text": ""
+    },
+    "bb5387f5c77b12bc4d0f9823": {
+      "backend": "tesseract",
+      "confidence": 0.75,
+      "text": "MV-104-101"
     },
     "bba93342f8d87bd18f90a2bb": {
       "backend": "tesseract",

@@ -111,8 +111,8 @@ class TestNoLeakage:
         assert "Private" in rendered
 
     def test_applying_to_the_environment_reports_names_only(self, monkeypatch):
-        monkeypatch.delenv("OPENAI_API_KEY", raising=False)
-        config = Config(entries={"OPENAI_API_KEY": "sk-do-not-log-me"})
-        applied = config.apply_to_environ(["OPENAI_API_KEY"])
-        assert applied == ["OPENAI_API_KEY"]
-        assert "sk-do-not-log-me" not in " ".join(applied)
+        monkeypatch.delenv("DATABASE_URL", raising=False)
+        config = Config(entries={"DATABASE_URL": "postgresql://do-not-log-me"})
+        applied = config.apply_to_environ(["DATABASE_URL"])
+        assert applied == ["DATABASE_URL"]
+        assert "do-not-log-me" not in " ".join(applied)

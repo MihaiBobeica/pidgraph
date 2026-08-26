@@ -30,6 +30,11 @@ class SampleResult:
     edge_recall: Score | None = None
     text_precision: Score | None = None
     text_recall: Score | None = None
+    attach_precision: Score | None = None
+    attach_recall: Score | None = None
+    attach_unmatched_tagged: int = 0
+    line_precision: Score | None = None
+    line_recall: Score | None = None
     error: str | None = None
 
     @property
@@ -53,6 +58,8 @@ class BenchmarkReport:
         p_hits = p_total = r_hits = r_total = 0
         e_p_hits = e_p_total = e_r_hits = e_r_total = 0
         t_p_hits = t_p_total = t_r_hits = t_r_total = 0
+        a_p_hits = a_p_total = a_r_hits = a_r_total = 0
+        l_p_hits = l_p_total = l_r_hits = l_r_total = 0
         for sample in self.samples:
             if sample.error or threshold not in sample.symbol_sweep:
                 continue
@@ -71,6 +78,16 @@ class BenchmarkReport:
                 t_p_total += sample.text_precision.total
                 t_r_hits += sample.text_recall.hits
                 t_r_total += sample.text_recall.total
+            if sample.attach_precision and sample.attach_recall:
+                a_p_hits += sample.attach_precision.hits
+                a_p_total += sample.attach_precision.total
+                a_r_hits += sample.attach_recall.hits
+                a_r_total += sample.attach_recall.total
+            if sample.line_precision and sample.line_recall:
+                l_p_hits += sample.line_precision.hits
+                l_p_total += sample.line_precision.total
+                l_r_hits += sample.line_recall.hits
+                l_r_total += sample.line_recall.total
         return {
             "symbol_precision": metrics.score(p_hits, p_total, f"symbol precision@{threshold}"),
             "symbol_recall": metrics.score(r_hits, r_total, f"symbol recall@{threshold}"),
@@ -78,6 +95,10 @@ class BenchmarkReport:
             "edge_recall": metrics.score(e_r_hits, e_r_total, "edge recall"),
             "text_precision": metrics.score(t_p_hits, t_p_total, "text precision"),
             "text_recall": metrics.score(t_r_hits, t_r_total, "text recall"),
+            "attachment_precision": metrics.score(a_p_hits, a_p_total, "attachment precision"),
+            "attachment_recall": metrics.score(a_r_hits, a_r_total, "attachment recall"),
+            "line_precision": metrics.score(l_p_hits, l_p_total, "line attachment precision"),
+            "line_recall": metrics.score(l_r_hits, l_r_total, "line attachment recall"),
         }
 
     def calibration_accuracy(self) -> dict[str, float | int]:
@@ -97,6 +118,9 @@ class BenchmarkReport:
         return {
             "calibration": self.calibration_accuracy(),
             "aggregate": {k: v.to_dict() for k, v in aggregate.items()},
+            # Tag-bearing nodes matched to no truth symbol: a detection question, not an
+            # attachment one, so a raw count rather than a rate (see attachment_scores).
+            "attachment_unmatched_tagged": sum(s.attach_unmatched_tagged for s in self.samples),
             "samples": [
                 {
                     "name": s.name,
@@ -136,17 +160,44 @@ def score_sample(path: Path, truth: generate.TruthGraph, recogniser=None) -> Sam
     result.module_found = page.scale.module
     result.sheet_found = page.scale.sheet
 
+    # Score the object that lands on disk (NetworkX node-link), not a parallel in-memory shape.
+    import tempfile
+
+    from pidgraph.extract import export
+
+    with tempfile.TemporaryDirectory() as tmp:
+        nodelink = export.to_node_link(page.graph, Path(tmp) / "graph.nodelink.json")
+        graph = export.load_node_link(nodelink)
+
     truth_boxes = [(s.id, s.bbox) for s in truth.symbols]
     predicted_boxes = [
-        (n.stable_key, (n.bbox.x0, n.bbox.y0, n.bbox.x1, n.bbox.y1)) for n in page.graph.nodes
+        (key, (data["x0"], data["y0"], data["x1"], data["y1"]))
+        for key, data in graph.nodes(data=True)
     ]
     result.symbol_sweep = metrics.sweep(truth_boxes, predicted_boxes)
 
     mapping = metrics.match(truth_boxes, predicted_boxes, 0.3)
     result.edge_precision, result.edge_recall = metrics.edge_scores(
         [(e.source, e.target) for e in truth.edges],
-        [(e.source, e.target) for e in page.graph.edges],
+        [(u, v) for u, v in graph.edges()],
         mapping,
+    )
+
+    predicted_tags = {
+        key: tag
+        for key, data in graph.nodes(data=True)
+        if (tag := data.get("tag_canonical"))
+    }
+    result.attach_precision, result.attach_recall, result.attach_unmatched_tagged = (
+        metrics.attachment_scores(truth.symbols, mapping, predicted_tags)
+    )
+    line_edges = [
+        (u, v, data["line_number"])
+        for u, v, data in graph.edges(data=True)
+        if data.get("line_number")
+    ]
+    result.line_precision, result.line_recall = metrics.line_attachment_scores(
+        truth.labels, mapping, line_edges
     )
 
     if truth.labels:
@@ -184,31 +235,32 @@ def run_benchmark(
         recogniser.cache.save()
 
     report.notes.append(
-        f"Corpus seeds {seed0}..{seed0 + count - 1}. Development tuned against seeds 0..9; a "
-        "run from seed 500 is held-out data no change was fitted to."
+        f"This corpus is seeds {seed0}..{seed0 + count - 1}. We tuned development against seeds "
+        "0..9 only, so anything from seed 500 up is held-out — no change was fitted to it."
     )
     report.notes.append(
-        "Truth is authored before the drawing is rendered, so no part of the pipeline "
-        "contributed to it."
+        "The ground truth was authored before the drawing was rendered, which means no part of "
+        "the pipeline had any hand in producing the answers it is being scored against."
     )
     report.notes.append(
-        "Text figures measure the vector glyph matcher plus raster fallback. The generator "
-        "renders the matcher's own stroke alphabet (one definition, stated in code), so these "
-        "figures cover segmentation and matching under randomised size, weight, tracking, "
-        "shear and jitter -- not transfer to a foreign shape font, which only the real "
-        "drawing measures."
+        "Read the text figures narrowly. They cover the vector glyph matcher plus its raster "
+        "fallback, and the generator renders the matcher's own stroke alphabet — one definition, "
+        "stated in code at both ends. So what is measured here is segmentation and matching "
+        "under randomised size, weight, tracking, shear and jitter. It is NOT transfer to a "
+        "font the matcher has never seen; only the real drawing measures that."
     )
     report.notes.append(
-        "Module and sheet size are varied across samples, so any hardcoded absolute dimension "
-        "would fail on most of them."
+        "Module and sheet size vary from sample to sample, so any absolute dimension hardcoded "
+        "somewhere in the pipeline would fail on most of these drawings rather than passing "
+        "quietly."
     )
     report.notes.append(
-        "Synthetic drawings are cleaner and more regular than real ones. These are an upper "
-        "bound, not a prediction of field performance."
+        "Synthetic drawings are cleaner and more regular than real ones, so treat everything "
+        "here as an upper bound rather than as a prediction of how it will do in the field."
     )
     report.notes.append(
-        "Rates below n=5 are withheld; every reported rate carries its denominator and a Wilson "
-        "interval."
+        "Every rate above carries its denominator and a Wilson interval, and any rate with "
+        "fewer than 5 instances behind it is withheld rather than printed."
     )
     return report
 
@@ -225,7 +277,10 @@ def write(report: BenchmarkReport, directory: str | Path = "benchmarks") -> tupl
     lines = [
         "# Benchmark results",
         "",
-        "Scored against synthetic drawings whose ground truth was authored before rendering.",
+        "These numbers come from synthetic drawings. We wrote down the correct answer first and",
+        "rendered the drawing from it afterwards, so nothing here is scored against output the",
+        "pipeline produced itself. The notes at the bottom say what that does and does not buy",
+        "us — worth reading before quoting any of these figures.",
         "",
         "## Calibration",
         "",

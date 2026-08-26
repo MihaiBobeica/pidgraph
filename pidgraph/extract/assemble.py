@@ -6,9 +6,10 @@ one another, and emitting a junction there fabricates an edge. That failure is i
 -- a fabricated edge is structurally indistinguishable from a real one -- so the conservative rule
 is the only safe one.
 
-Every node and edge carries provenance and a confidence, and every edge records *how* it was
-established. A graph whose edges are mostly low-confidence bridges is a different artifact from one
-whose edges are port bindings, and the difference has to be visible rather than averaged away.
+The plant graph is a NetworkX ``MultiDiGraph``. Every node and edge carries provenance and a
+confidence, and every edge records *how* it was established. A graph whose edges are mostly
+low-confidence bridges is a different artifact from one whose edges are port bindings, and the
+difference has to be visible rather than averaged away.
 """
 
 from __future__ import annotations
@@ -16,14 +17,33 @@ from __future__ import annotations
 import hashlib
 import itertools
 from collections import defaultdict
-from dataclasses import asdict, dataclass, field
 from enum import StrEnum
+from typing import Any
 
 from pidgraph.extract.calibrate import Scale
 from pidgraph.extract.lines import LineStyle, Polyline
 from pidgraph.extract.primitives import BBox, Point
 from pidgraph.extract.symbols import Symbol
 from pidgraph.extract.text import TextRegion
+
+# Attribute names that are first-class on a node, not extra tag/attach fields.
+_NODE_CORE = frozenset(
+    {
+        "kind",
+        "dexpi_class",
+        "label",
+        "page",
+        "confidence",
+        "signature",
+        "x",
+        "y",
+        "x0",
+        "y0",
+        "x1",
+        "y1",
+    }
+)
+_EDGE_CORE = frozenset({"kind", "style", "evidence", "confidence", "line_ids"})
 
 
 class NodeKind(StrEnum):
@@ -44,108 +64,118 @@ class EdgeEvidence(StrEnum):
     """Two conductor endpoints coincide."""
 
 
-@dataclass(frozen=True)
-class Node:
-    stable_key: str
-    page_index: int
-    kind: NodeKind
-    bbox: BBox
-    signature: str
-    dexpi_class: str
-    confidence: float
-    label: str | None = None
-    attributes: dict[str, str] = field(default_factory=dict)
+def empty_graph() -> Any:
+    """A plant graph with the graph-level ledgers the rest of the pipeline reads."""
+    import networkx as nx
 
-    @property
-    def centre(self) -> Point:
-        return self.bbox.centre
+    graph = nx.MultiDiGraph()
+    graph.graph["warnings"] = []
+    graph.graph["attach"] = {}
+    return graph
 
 
-@dataclass(frozen=True)
-class Edge:
-    source: str
-    target: str
-    evidence: EdgeEvidence
-    style: LineStyle
-    confidence: float
-    line_ids: tuple[int, ...] = field(default_factory=tuple)
+def add_plant_node(
+    graph: Any,
+    key: str,
+    *,
+    page: int,
+    kind: NodeKind | str,
+    bbox: BBox,
+    signature: str,
+    dexpi_class: str,
+    confidence: float,
+    label: str = "",
+) -> None:
+    """Add one component. Identity is the node id; geometry is stored as flat attributes."""
+    centre = bbox.centre
+    graph.add_node(
+        key,
+        kind=str(kind),
+        dexpi_class=dexpi_class,
+        label=label,
+        page=int(page),
+        confidence=float(confidence),
+        signature=signature,
+        x=float(centre.x),
+        y=float(centre.y),
+        x0=float(bbox.x0),
+        y0=float(bbox.y0),
+        x1=float(bbox.x1),
+        y1=float(bbox.y1),
+    )
 
 
-@dataclass
-class Graph:
-    nodes: list[Node] = field(default_factory=list)
-    edges: list[Edge] = field(default_factory=list)
-    warnings: list[str] = field(default_factory=list)
+def add_plant_edge(
+    graph: Any,
+    source: str,
+    target: str,
+    *,
+    evidence: EdgeEvidence | str,
+    style: LineStyle | str,
+    confidence: float,
+    line_ids: tuple[int, ...] = (),
+) -> None:
+    graph.add_edge(
+        source,
+        target,
+        kind="process",
+        evidence=str(evidence),
+        style=str(style),
+        confidence=float(confidence),
+        line_ids=list(line_ids),
+    )
 
-    def node(self, key: str) -> Node | None:
-        return next((n for n in self.nodes if n.stable_key == key), None)
 
-    def degree(self, key: str) -> int:
-        return sum(1 for e in self.edges if key in (e.source, e.target))
+def node_bbox(data: dict) -> BBox:
+    return BBox(float(data["x0"]), float(data["y0"]), float(data["x1"]), float(data["y1"]))
 
-    def to_dict(self) -> dict:
-        return {
-            "nodes": [
-                {**asdict(n), "kind": str(n.kind), "bbox": list(asdict(n.bbox).values())}
-                for n in self.nodes
-            ],
-            "edges": [
-                {**asdict(e), "evidence": str(e.evidence), "style": str(e.style)}
-                for e in self.edges
-            ],
-            "warnings": list(self.warnings),
-        }
 
-    def to_networkx(self):
-        """Return the graph as a NetworkX ``MultiDiGraph``.
+def node_centre(data: dict) -> Point:
+    return Point(float(data["x"]), float(data["y"]))
 
-        Multi-edge and directed: two components can be joined by more than one conductor (a line
-        and its bypass), and process flow has a direction. Collapsing either would lose real
-        structure.
 
-        Attributes are flattened to primitives here rather than at export time, because the
-        interchange formats below cannot serialise nested values and the failure surfaces as an
-        unhelpful error deep inside the writer.
-        """
-        import networkx as nx
+def graph_summary(graph: Any) -> str:
+    kinds: dict[str, int] = defaultdict(int)
+    for _, data in graph.nodes(data=True):
+        kinds[str(data.get("kind", "unknown"))] += 1
+    labelled = sum(1 for _, data in graph.nodes(data=True) if data.get("label"))
+    isolated = sum(1 for n in graph if graph.degree(n) == 0)
+    return (
+        f"{graph.number_of_nodes()} nodes {dict(kinds)} | {graph.number_of_edges()} edges | "
+        f"{labelled} labelled | {isolated} isolated"
+    )
 
-        graph = nx.MultiDiGraph()
-        for node in self.nodes:
-            graph.add_node(
-                node.stable_key,
-                kind=str(node.kind),
-                dexpi_class=node.dexpi_class,
-                label=node.label or "",
-                page=node.page_index,
-                confidence=float(node.confidence),
-                x=float(node.centre.x),
-                y=float(node.centre.y),
-                x0=float(node.bbox.x0),
-                y0=float(node.bbox.y0),
-                x1=float(node.bbox.x1),
-                y1=float(node.bbox.y1),
-            )
-        for edge in self.edges:
-            graph.add_edge(
-                edge.source,
-                edge.target,
-                kind="process",
-                style=str(edge.style),
-                evidence=str(edge.evidence),
-                confidence=float(edge.confidence),
-            )
-        return graph
 
-    def summary(self) -> str:
-        kinds: dict[str, int] = defaultdict(int)
-        for node in self.nodes:
-            kinds[str(node.kind)] += 1
-        labelled = sum(1 for n in self.nodes if n.label)
-        isolated = sum(1 for n in self.nodes if self.degree(n.stable_key) == 0)
-        return (
-            f"{len(self.nodes)} nodes {dict(kinds)} | {len(self.edges)} edges | "
-            f"{labelled} labelled | {isolated} isolated"
-        )
+def node_store_dict(key: str, data: dict) -> dict:
+    """Shape the local/Supabase persist layer already consumes."""
+    extra = {name: str(value) for name, value in data.items() if name not in _NODE_CORE}
+    return {
+        "stable_key": key,
+        "page_index": data.get("page", 0),
+        "kind": data.get("kind"),
+        "dexpi_class": data.get("dexpi_class") or "unknown",
+        "label": data.get("label") or None,
+        "bbox": [data["x0"], data["y0"], data["x1"], data["y1"]],
+        "confidence": data.get("confidence", 1.0),
+        "signature": data.get("signature", ""),
+        "attributes": extra,
+        "provenance": {},
+    }
+
+
+def edge_store_dict(source: str, target: str, data: dict) -> dict:
+    extra = {name: value for name, value in data.items() if name not in _EDGE_CORE}
+    return {
+        "source": source,
+        "target": target,
+        "kind": data.get("kind", "process"),
+        "style": data.get("style"),
+        "evidence": data.get("evidence"),
+        "confidence": data.get("confidence", 1.0),
+        "line_ids": list(data.get("line_ids") or []),
+        "attributes": extra,
+        "provenance": {},
+    }
 
 
 def stable_key(page_index: int, centre: Point, kind: str, scale: Scale) -> str:
@@ -199,13 +229,8 @@ def _segment_meets_bbox(start: Point, end: Point, box: BBox) -> bool:
     return True
 
 
-def _nearest_region(regions: list[TextRegion], point: Point, within: float) -> TextRegion | None:
-    best, best_d = None, within
-    for region in regions:
-        d = region.centre.dist(point)
-        if d <= best_d:
-            best, best_d = region, d
-    return best
+def _has_undirected_edge(graph: Any, src: str, dst: str) -> bool:
+    return graph.has_edge(src, dst) or graph.has_edge(dst, src)
 
 
 def build(
@@ -216,13 +241,13 @@ def build(
     page_index: int,
     port_tol: float = 1.5,
     junction_tol: float = 0.8,
-) -> Graph:
-    """Assemble one page into a graph.
+) -> Any:
+    """Assemble one page into a NetworkX ``MultiDiGraph``.
 
     ``port_tol`` and ``junction_tol`` are in modules, so the tolerances scale with the drawing
     rather than being tuned to one plot.
     """
-    graph = Graph()
+    graph = empty_graph()
     port_radius = scale.u(port_tol)
     junction_radius = scale.u(junction_tol)
 
@@ -274,7 +299,7 @@ def build(
     ]
     dropped = len(symbols) - len(promoted)
     if dropped:
-        graph.warnings.append(
+        graph.graph["warnings"].append(
             f"{dropped} symbol candidates carried no evidence (no conductor, not dimensionally "
             "identified, below equipment scale) and were not promoted to nodes"
         )
@@ -287,18 +312,17 @@ def build(
             kind = NodeKind.UNKNOWN
         key = stable_key(page_index, sym.centre, str(kind), scale)
         key_by_symbol[sym.id] = key
-        if graph.node(key) is not None:
+        if graph.has_node(key):
             continue
-        graph.nodes.append(
-            Node(
-                stable_key=key,
-                page_index=page_index,
-                kind=kind,
-                bbox=sym.bbox,
-                signature=sym.signature,
-                dexpi_class=sym.symbol_class,
-                confidence=sym.confidence,
-            )
+        add_plant_node(
+            graph,
+            key,
+            page=page_index,
+            kind=kind,
+            bbox=sym.bbox,
+            signature=sym.signature,
+            dexpi_class=sym.symbol_class,
+            confidence=sym.confidence,
         )
 
     bound: dict[int, list[str]] = defaultdict(list)
@@ -315,15 +339,14 @@ def build(
         for left, right in itertools.pairwise(keys):
             if left == right:
                 continue
-            graph.edges.append(
-                Edge(
-                    source=left,
-                    target=right,
-                    evidence=EdgeEvidence.PORT_BINDING,
-                    style=line.style,
-                    confidence=0.85 if not line.bridged_gaps else 0.6,
-                    line_ids=(line.id,),
-                )
+            add_plant_edge(
+                graph,
+                left,
+                right,
+                evidence=EdgeEvidence.PORT_BINDING,
+                style=line.style,
+                confidence=0.85 if not line.bridged_gaps else 0.6,
+                line_ids=(line.id,),
             )
 
     # --- chain conductors through coincident endpoints -----------------------------------
@@ -370,87 +393,39 @@ def build(
             seen.add(current)
             component.append(current)
             stack.extend(adjacency[current] - seen)
-        attached = sorted({k for lid in component for k in bound.get(lid, [])})
-        if len(attached) < 2:
+        attached_keys = sorted({k for lid in component for k in bound.get(lid, [])})
+        if len(attached_keys) < 2:
             continue
         styles = {ln.style for ln in lines if ln.id in component}
         style = LineStyle.DASHED if styles == {LineStyle.DASHED} else LineStyle.SOLID
         # One edge per pair reachable through this conductor component.
-        for i, src in enumerate(attached):
-            for dst in attached[i + 1 :]:
-                if any({e.source, e.target} == {src, dst} for e in graph.edges):
+        for i, src in enumerate(attached_keys):
+            for dst in attached_keys[i + 1 :]:
+                if _has_undirected_edge(graph, src, dst):
                     continue
-                graph.edges.append(
-                    Edge(
-                        source=src,
-                        target=dst,
-                        evidence=EdgeEvidence.ENDPOINT_JUNCTION,
-                        style=style,
-                        confidence=0.55,
-                        line_ids=tuple(sorted(component)),
-                    )
+                add_plant_edge(
+                    graph,
+                    src,
+                    dst,
+                    evidence=EdgeEvidence.ENDPOINT_JUNCTION,
+                    style=style,
+                    confidence=0.55,
+                    line_ids=tuple(sorted(component)),
                 )
 
     # --- attach labels -------------------------------------------------------------------
-    # An instrument's tag sits inside its circle; other labels sit adjacent. A region labels at
-    # most one node: without that constraint, one tag string annotates both members of a parallel
-    # train and the graph silently gains a duplicate identity.
-    #
-    # Recognised text is parsed into tag attributes here, so a node carries its canonical tag,
-    # kind and conformance verdict rather than a raw string. Unread regions still associate --
-    # an unread label is an extraction gap worth showing, not evidence of absence.
-    claimed: set[int] = set()
-    for index, node in enumerate(graph.nodes):
-        radius = max(node.bbox.width, node.bbox.height) / 2 + scale.u(1.0)
-        best_i, best_d = None, radius
-        for r_index, region in enumerate(regions):
-            if r_index in claimed:
-                continue
-            d = region.centre.dist(node.centre)
-            # Prefer read regions over unread at equal footing by a small bias.
-            d -= scale.u(0.3) if region.text else 0.0
-            if d < best_d:
-                best_i, best_d = r_index, d
-        if best_i is None:
-            continue
-        claimed.add(best_i)
-        region = regions[best_i]
+    # Convention text binds to the elements it describes: instrument tags compose from the rows
+    # inside their bubbles, other tags bind by proximity, and line numbers annotate the edges of
+    # the conductor they name. The pass sets labels and attributes only -- it never alters
+    # topology. The mechanics, thresholds and ledger live in ``pidgraph/extract/attach.py``.
+    from pidgraph.extract.attach import attach_all
 
-        attributes: dict[str, str] = {"text_orientation": region.orientation}
-        label = region.text or f"region@{region.centre.x:.0f},{region.centre.y:.0f}"
-        confidence = node.confidence
-        if region.text:
-            from pidgraph.standards.tags import parse
+    graph.graph["attach"] = attach_all(graph, regions, lines, scale)
 
-            parsed = parse(region.text)
-            if parsed.ok and parsed.canonical:
-                attributes.update(
-                    tag_canonical=parsed.canonical,
-                    tag_kind=str(parsed.kind),
-                    conformance=str(parsed.conformance),
-                )
-                if parsed.loop_id:
-                    attributes["loop_id"] = parsed.loop_id
-                if parsed.is_safety_device:
-                    attributes["safety_device"] = "true"
-                # A node is only as trustworthy as its weakest input: geometry may be exact while
-                # the read is not, so confidence propagates as the minimum.
-                confidence = min(node.confidence, max(region.text_confidence, 0.1))
-        graph.nodes[index] = Node(
-            stable_key=node.stable_key,
-            page_index=node.page_index,
-            kind=node.kind,
-            bbox=node.bbox,
-            signature=node.signature,
-            dexpi_class=node.dexpi_class,
-            confidence=confidence,
-            label=label,
-            attributes=attributes,
-        )
-
-    isolated = sum(1 for n in graph.nodes if graph.degree(n.stable_key) == 0)
-    if graph.nodes and isolated / len(graph.nodes) > 0.5:
-        graph.warnings.append(
-            f"{isolated}/{len(graph.nodes)} nodes are isolated; connectivity is likely incomplete"
+    isolated = sum(1 for n in graph if graph.degree(n) == 0)
+    if graph.number_of_nodes() and isolated / graph.number_of_nodes() > 0.5:
+        graph.graph["warnings"].append(
+            f"{isolated}/{graph.number_of_nodes()} nodes are isolated; "
+            "connectivity is likely incomplete"
         )
     return graph

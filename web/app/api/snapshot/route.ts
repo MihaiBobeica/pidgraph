@@ -1,36 +1,43 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
 
-// Sheet dimensions are derived from node extents, never hardcoded: an absolute drawing
-// dimension in the interface is the same mistake the extraction pipeline forbids in itself.
-function derivePages(nodes: any[]): { index: number; width: number; height: number }[] {
-  const indices = [...new Set(nodes.map((n) => n.page))].sort((a, b) => a - b);
-  return indices.map((index) => {
-    const on = nodes.filter((n) => n.page === index && Array.isArray(n.bbox));
-    const w = Math.max(...on.map((n) => n.bbox[2] ?? 0), 100);
-    const h = Math.max(...on.map((n) => n.bbox[3] ?? 0), 100);
-    return { index, width: Math.ceil(w * 1.04), height: Math.ceil(h * 1.04) };
-  });
-}
+import { snapshotFromNodelink } from "@/lib/nodelink";
+import { outputsRoot } from "@/lib/files";
+import type { Finding } from "@/lib/graph";
 
-// Serves the graph. Prefers the database when configured; otherwise falls back to the committed
-// export, so the interface is viewable without provisioning anything.
 export const dynamic = "force-dynamic";
 
-export async function GET() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+async function readFindings(dir: string): Promise<Finding[]> {
+  try {
+    const jsonl = await fs.readFile(path.join(dir, "findings.jsonl"), "utf-8");
+    return jsonl
+      .split(/\r?\n/)
+      .filter(Boolean)
+      .map((line) => JSON.parse(line));
+  } catch {
+    return [];
+  }
+}
 
-  if (url && key) {
+async function readNodelink(file: string, findings: Finding[], source: string) {
+  const raw = JSON.parse(await fs.readFile(file, "utf-8"));
+  return snapshotFromNodelink(raw, findings, source);
+}
+
+export async function GET(request: Request) {
+  const url = new URL(request.url);
+  const hash = (url.searchParams.get("hash") || "").replace(/[^a-fA-F0-9]/g, "");
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!hash && supabaseUrl && key) {
     try {
       const { createClient } = await import("@supabase/supabase-js");
-      const client = createClient(url, key);
-      // A single aggregated document: the REST layer caps row sets at 1000, including function
-      // results, and a truncated graph would be silently wrong rather than visibly broken.
+      const client = createClient(supabaseUrl, key);
       const { data, error } = await client.rpc("graph_snapshot", {});
       if (!error && data && (data.nodes ?? []).length) {
-        // The RPC returns nodes and edges only; the page list the UI iterates is derived here.
         const nodes = (data.nodes ?? []).filter((n: any) => Array.isArray(n.bbox));
+        const { derivePages } = await import("@/lib/nodelink");
         return Response.json({
           nodes,
           edges: data.edges ?? [],
@@ -40,58 +47,19 @@ export async function GET() {
         });
       }
     } catch {
-      // Fall through to the committed export.
+      /* fall through to files */
     }
   }
 
-  // Dev runs with cwd at web/, the standalone build with cwd at the bundle root; both are tried
-  // rather than assuming one layout and returning "unavailable" in the other.
-  const candidates = [
-    path.join(process.cwd(), "..", "outputs"),
-    path.join(process.cwd(), "outputs"),
-  ];
+  const root = outputsRoot();
+  const findings = await readFindings(root);
+  const hashed = hash ? path.join(root, hash, "graph.nodelink.json") : "";
+  const latest = path.join(root, "graph.nodelink.json");
   try {
-    let raw: any = null;
-    let findings: any[] = [];
-    for (const dir of candidates) {
-      try {
-        raw = JSON.parse(await fs.readFile(path.join(dir, "graph.json"), "utf-8"));
-        try {
-          const jsonl = await fs.readFile(path.join(dir, "findings.jsonl"), "utf-8");
-          findings = jsonl
-            .split(/\r?\n/)
-            .filter(Boolean)
-            .map((line) => JSON.parse(line));
-        } catch {
-          /* a graph without findings still renders */
-        }
-        break;
-      } catch {
-        /* try the next location */
-      }
+    if (hashed) {
+      return Response.json(await readNodelink(hashed, findings, `outputs/${hash}`));
     }
-    if (!raw) throw new Error("no committed export found");
-    const nodes = raw.pages.flatMap((p: any) =>
-      p.graph.nodes.map((n: any) => ({
-        stable_key: n.stable_key,
-        kind: n.kind,
-        dexpi_class: n.dexpi_class,
-        // The export nests the parsed tag under attributes; a bare tag_name key never existed.
-        tag: n.attributes?.tag_canonical ?? null,
-        label: n.label,
-        bbox: n.bbox,
-        page: n.page_index,
-        confidence: n.confidence,
-      })),
-    );
-    const edges = raw.pages.flatMap((p: any) => p.graph.edges);
-    return Response.json({
-      nodes,
-      edges,
-      findings,
-      pages: derivePages(nodes),
-      source: "committed export",
-    });
+    return Response.json(await readNodelink(latest, findings, "outputs"));
   } catch {
     return Response.json({ nodes: [], edges: [], findings: [], pages: [], source: "unavailable" });
   }

@@ -155,8 +155,9 @@ def check_duplicate_tags(index: PlantIndex, occurrences: dict[str, int]) -> list
                     severity=Severity.MEDIUM,
                     title=f"{tag} appears {count} times",
                     detail=(
-                        "A tag should identify one item. This is either a drafting error or two "
-                        "objects were read as the same tag; the check cannot distinguish them."
+                        "A tag is supposed to identify one item. Either the drawing repeats it "
+                        "by mistake, or two different objects were read as the same tag — this "
+                        "check cannot distinguish between those two cases."
                     ),
                     confidence=0.5,
                     subject=tag,
@@ -176,9 +177,9 @@ def check_unresolved_symbols(index: PlantIndex) -> list[Finding]:
             severity=Severity.INFO,
             title=f"{index.unresolved_shapes} symbols carry no resolved class",
             detail=(
-                "Some symbols are genuinely ambiguous without the drawing's legend sheet -- the "
-                "standard itself gives one shape two meanings. These are reported rather than "
-                "guessed at."
+                "Some symbols really are ambiguous without the drawing's legend sheet — the "
+                "standard itself gives one shape two different meanings. Rather than guess, we "
+                "list them here so a reader with the legend can settle them."
             ),
             confidence=1.0,
             graph_incomplete=True,
@@ -210,9 +211,9 @@ def check_safety_devices(index: PlantIndex) -> list[Finding]:
                 severity=Severity.INFO,
                 title=f"{len(sis)} safety-instrumented items identified",
                 detail=(
-                    "Recognised via the modifier the current standard assigns to SIS. The "
-                    "project's base vocabulary predates that addition, so this depends on the "
-                    "overlaid delta."
+                    "Recognised by the modifier the current standard assigns to SIS. Worth "
+                    "knowing: our base vocabulary predates that addition, so this result comes "
+                    "from the overlaid delta rather than from the base table."
                 ),
                 confidence=0.8,
             )
@@ -254,7 +255,10 @@ def check_design_limits(
                     status=Status.NEEDS_REVIEW,
                     severity=Severity.LOW,
                     title=f"Could not resolve an equipment tag from {req.subject_raw!r}",
-                    detail="The requirement cannot be checked until its subject is identified.",
+                    detail=(
+                        "We cannot check this requirement until we know which piece of "
+                        "equipment it is talking about."
+                    ),
                     confidence=0.6,
                     sop_evidence=req.evidence,
                 )
@@ -276,9 +280,11 @@ def check_design_limits(
                         severity=severity,
                         title=f"{tag} carries SOP limits but no drawing data was matched",
                         detail=(
-                            "This may be an extraction gap rather than a document defect. "
-                            f"Estimated extraction recall {recall:.0%}; severity is capped "
-                            "accordingly and this is not reported as a conflict."
+                            "The procedure sets limits for this item, but we found nothing on "
+                            "the drawing to compare them against. That may well be our own "
+                            f"extraction gap rather than a problem with the document — we read "
+                            f"an estimated {recall:.0%} of it — so this is capped in severity "
+                            "and reported as unresolved, not as a conflict."
                         ),
                         confidence=min(0.5, max(recall, 0.1)),
                         subject=tag,
@@ -306,8 +312,9 @@ def check_design_limits(
                                 f"no {field_name} was read from the drawing"
                             ),
                             detail=(
-                                "The comparison cannot run without the drawing-side value. "
-                                "This is reported as unresolved, not as a conflict."
+                                "Without the drawing-side value there is nothing to compare "
+                                "the procedure against, so this is left unresolved rather than "
+                                "called a conflict."
                             ),
                             confidence=min(0.5, max(recall, 0.1)),
                             subject=tag,
@@ -326,10 +333,11 @@ def check_design_limits(
                             f"{tag}{' ' + req.subject_part if req.subject_part else ''}: {message}"
                         ),
                         detail=(
-                            "Operating outside a design limit is a deviation with safety "
-                            "consequences, so a genuine mismatch is critical."
+                            "These two documents state different limits for the same item. "
+                            "Running a plant outside its design limit has safety consequences, "
+                            "which is why a real mismatch is rated critical."
                             if not agree
-                            else "SOP and drawing agree."
+                            else "The procedure and the drawing state the same limit."
                         ),
                         confidence=0.95 if agree else 0.9,
                         subject=tag,
@@ -365,8 +373,9 @@ def check_facility_scope(sop: SopDocument, drawing_titles: list[str]) -> list[Fi
             severity=Severity.MEDIUM,
             title="SOP and drawings may describe different facilities",
             detail=(
-                f"No shared place name between the SOP title ({sop.title!r}) and the drawing "
-                "titles. Cross-referencing two unrelated documents produces meaningless findings."
+                f"The SOP title ({sop.title!r}) and the drawing titles share no place name. "
+                "Worth checking before reading anything else here: cross-referencing two "
+                "documents from different facilities produces findings that mean nothing."
             ),
             confidence=0.5,
             sop_evidence=sop.title,
@@ -395,7 +404,10 @@ def check_referenced_tags(sop: SopDocument, index: PlantIndex) -> list[Finding]:
                 status=Status.NEEDS_REVIEW,
                 severity=Severity.LOW,
                 title=f"SOP names {tag}, which was not found in the drawings",
-                detail="May be an extraction gap or a reference to another sheet.",
+                detail=(
+                    "Either we missed it during extraction, or the procedure is pointing at a "
+                    "sheet outside the set we were given."
+                ),
                 confidence=0.4,
                 subject=tag,
                 graph_incomplete=True,
@@ -428,18 +440,20 @@ def run(
 
     if index.recall_estimate < 0.5:
         report.notes.append(
-            f"Estimated extraction recall is {index.recall_estimate:.0%}. Absence-based findings "
+            f"We estimate we read about {index.recall_estimate:.0%} of the drawing. Keep that "
+            "number in mind for any finding above that rests on something being absent — those "
             "are capped in severity and marked as possibly incomplete."
         )
     report.notes.append(
-        "Verdicts are deterministic. No model participates in deciding whether something is a "
-        "finding."
+        "Every verdict here comes from a deterministic rule. No model decides whether something "
+        "is a finding, so this report reproduces exactly."
     )
     return report
 
 
 def isa_edition_note() -> str:
     return (
-        f"Safety semantics follow {isa.Edition.ISA_2009}; the base vocabulary is the reference "
-        f"guide's ({isa.Edition.ISA_1984} letter table) with the SIS modifier overlaid."
+        f"On editions: safety semantics follow {isa.Edition.ISA_2009}. The base vocabulary comes "
+        f"from the reference guide, whose letter table is really {isa.Edition.ISA_1984}, so the "
+        "SIS modifier is overlaid on top of it."
     )

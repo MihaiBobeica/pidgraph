@@ -1,5 +1,4 @@
-/* An engineering instrument, not a CRUD app: dark ground, monospaced identifiers, the drawing
-   itself as the hero surface. The interface budget is spent on direct manipulation, not words. */
+/* Dark instrument surface. The drawing is the hero; chrome stays quiet. */
 :root {
   --bg: #0b0f14;
   --panel: #111820;
@@ -7,6 +6,7 @@
   --ink: #dbe6f0;
   --muted: #7c8ea0;
   --accent: #38bdf8;
+  --fill: #16212c;
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; height: 100%; }
@@ -19,7 +19,105 @@ body {
 code, .mono, .tag { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
 a { color: var(--accent); }
 
+button[aria-label="Open Next.js Dev Tools"] { display: none !important; }
+
 .app { display: grid; grid-template-rows: auto 1fr; height: 100vh; }
+
+.workspace {
+  display: grid;
+  grid-template-columns: 240px 1fr 320px;
+  min-height: 0;
+}
+
+.pane {
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+  min-height: 0;
+  overflow: auto;
+  padding: 10px 12px;
+}
+.pane.right { border-right: 0; border-left: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px; }
+.pane h2, .chat h2 {
+  font-size: 10px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted);
+  margin: 0 0 8px;
+}
+.muted { color: var(--muted); font-size: 12px; }
+
+.library { padding: 12px 10px 16px 12px; }
+.lib-tree { font-size: 13px; }
+.lib-branch[data-depth="1"] { padding-left: 12px; }
+.lib-branch[data-depth="2"] { padding-left: 24px; }
+.lib-branch[data-depth="3"] { padding-left: 36px; }
+.lib-branch[data-depth="4"] { padding-left: 48px; }
+.lib-row { display: flex; align-items: center; gap: 6px; min-height: 28px; }
+.lib-name {
+  flex: 1;
+  font-size: 12px;
+  color: var(--muted);
+  padding: 4px 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.lib-file {
+  flex: 1;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  padding: 4px 8px;
+  border-radius: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.lib-file[data-on="true"] {
+  background: rgba(56, 189, 248, 0.12);
+  color: var(--accent);
+  border-color: transparent;
+}
+.lib-act {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  padding: 3px 8px;
+  color: var(--ink);
+  background: var(--fill);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  cursor: pointer;
+  white-space: nowrap;
+  line-height: 1.3;
+}
+.lib-act:hover { border-color: var(--accent); color: var(--accent); }
+.lib-act-remove:hover { border-color: #7f1d1d; color: #fca5a5; }
+.lib-add {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--muted);
+  background: transparent;
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.lib-add:hover { color: var(--accent); background: var(--fill); }
+
+.middle { position: relative; min-width: 0; min-height: 0; }
+.pdf-stage { position: absolute; inset: 0; overflow: auto; background: #070b0f; }
+.pdf-stage img { display: block; width: 100%; height: auto; }
+.docx-stage { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #070b0f; }
+
+.chat { display: flex; flex-direction: column; gap: 6px; min-height: 0; flex: 1; }
+.ask { display: flex; gap: 6px; }
+.ask input { flex: 1; background: #0d141b; border: 1px solid var(--line); color: var(--ink); border-radius: 6px; padding: 6px 8px; font-size: 12px; }
+.answer { white-space: pre-wrap; font-size: 11px; color: var(--ink); background: #0d141b; border: 1px solid var(--line); border-radius: 8px; padding: 8px; max-height: 180px; overflow: auto; }
 
 header {
   display: flex; align-items: center; gap: 10px;
@@ -27,7 +125,7 @@ header {
 }
 header h1 { font-size: 14px; margin: 0 6px 0 0; letter-spacing: .05em; text-transform: uppercase; }
 .chip {
-  font-size: 11px; color: var(--muted); background: #16212c; border: 1px solid var(--line);
+  font-size: 11px; color: var(--muted); background: var(--fill); border: 1px solid var(--line);
   border-radius: 999px; padding: 2px 9px; white-space: nowrap;
 }
 .chip b { color: var(--ink); font-weight: 600; }
@@ -49,12 +147,12 @@ header h1 { font-size: 14px; margin: 0 6px 0 0; letter-spacing: .05em; text-tran
   border-bottom: 1px solid rgba(255,255,255,.04); border-radius: 0; text-align: left;
   padding: 7px 10px; background: transparent;
 }
-.search .results button:hover { background: #16212c; }
+.search .results button:hover { background: var(--fill); }
 .search .results .k { color: var(--muted); font-size: 11px; }
 
 .controls { display: flex; gap: 6px; }
 button {
-  background: #16212c; color: var(--ink); border: 1px solid var(--line);
+  background: var(--fill); color: var(--ink); border: 1px solid var(--line);
   padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 12px;
 }
 button[data-on="true"] { border-color: var(--accent); color: var(--accent); }
@@ -64,16 +162,22 @@ button:hover { border-color: #2f4256; }
 .stage { position: absolute; inset: 0; background: #070b0f; }
 .stage svg {
   width: 100%; height: 100%; display: block;
-  /* Without this the browser claims touch drags for scrolling and fires pointercancel,
-     leaving the pan gesture inert on touch devices. */
   touch-action: none;
 }
 .stage svg.grabbing { cursor: grabbing; }
 .stage svg.grab { cursor: grab; }
 .node { cursor: pointer; }
 .node:hover { filter: brightness(1.7); }
+.node-label {
+  fill: #dbe6f0;
+  stroke: #070b0f;
+  stroke-width: 3px;
+  paint-order: stroke fill;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-weight: 600;
+  pointer-events: none;
+}
 
-/* Floating layers over the drawing. */
 .zoombar {
   position: absolute; left: 12px; bottom: 12px; display: flex; flex-direction: column; gap: 4px;
   z-index: 10;
@@ -95,7 +199,6 @@ button:hover { border-color: #2f4256; }
 }
 .hint.gone { opacity: 0; }
 
-/* Right-side floating cards: selection and findings. */
 .card {
   position: absolute; right: 12px; width: 280px; background: rgba(17,24,32,.95);
   border: 1px solid var(--line); border-radius: 10px; padding: 12px; z-index: 20;
@@ -114,15 +217,15 @@ button:hover { border-color: #2f4256; }
 .card .close:hover { color: var(--ink); }
 .sel-tag { font-size: 19px; margin: 0 0 6px; }
 .sel-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
-.confbar { height: 5px; border-radius: 3px; background: #16212c; overflow: hidden; margin: 4px 0 10px; }
+.confbar { height: 5px; border-radius: 3px; background: var(--fill); overflow: hidden; margin: 4px 0 10px; }
 .confbar i { display: block; height: 100%; }
 
-.flist { overflow-y: auto; display: flex; flex-direction: column; gap: 2px; }
+.flist { overflow-y: auto; display: flex; flex-direction: column; gap: 2px; min-height: 0; }
 .frow {
   display: flex; align-items: baseline; gap: 8px; width: 100%; text-align: left;
   background: transparent; border: 0; border-radius: 6px; padding: 5px 6px; font-size: 12px;
 }
-.frow:hover { background: #16212c; border-color: transparent; }
+.frow:hover { background: var(--fill); border-color: transparent; }
 .frow .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; align-self: center; }
 .frow .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .fdetail { color: var(--muted); font-size: 11px; padding: 2px 6px 8px 22px; }

@@ -1,5 +1,5 @@
-# Local stack. The pipeline runs here and writes to the same external database the hosted UI
-# reads, so there is exactly one datastore and it is the one you supply.
+# Local stack. Pipeline and UI both run here. Files under outputs/ are the default store;
+# set DATABASE_URL if you want the optional Supabase persist.
 services:
   pipeline:
     build: .

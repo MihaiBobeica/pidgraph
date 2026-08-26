@@ -1,13 +1,8 @@
 """Graph interchange.
 
-The graph is emitted in the formats a downstream consumer actually expects, rather than only in a
-project-specific shape. GraphML is the common interchange for annotated engineering graphs and is
-what published P&ID datasets use, so it is the format that makes this output comparable to other
-work.
-
-Both writers flatten attributes to primitives first. GraphML has no representation for a nested
-value, and the failure otherwise surfaces as an obscure error from inside the writer rather than as
-anything a caller can act on.
+The plant graph is a NetworkX ``MultiDiGraph``. Node-link JSON is the on-disk form: NetworkX
+reads it back with ``node_link_graph``, and it holds the attributes the rest of the pipeline
+already uses. There is no project-specific graph schema and no GraphML writer.
 """
 
 from __future__ import annotations
@@ -15,35 +10,6 @@ from __future__ import annotations
 import json
 from pathlib import Path
 from typing import Any
-
-
-def _flatten(value: Any) -> str | int | float | bool:
-    """Reduce an attribute to something the interchange formats can hold."""
-    if isinstance(value, (str, int, float, bool)):
-        return value
-    if value is None:
-        return ""
-    if isinstance(value, (list, tuple)):
-        return ",".join(str(v) for v in value)
-    return str(value)
-
-
-def to_graphml(graph: Any, path: str | Path) -> Path:
-    """Write a NetworkX graph as GraphML."""
-    import networkx as nx
-
-    clean = graph.copy()
-    for _, data in clean.nodes(data=True):
-        for key in list(data):
-            data[key] = _flatten(data[key])
-    for _, _, data in clean.edges(data=True):
-        for key in list(data):
-            data[key] = _flatten(data[key])
-
-    out = Path(path)
-    out.parent.mkdir(parents=True, exist_ok=True)
-    nx.write_graphml(clean, out)
-    return out
 
 
 def to_node_link(graph: Any, path: str | Path) -> Path:
@@ -55,6 +21,14 @@ def to_node_link(graph: Any, path: str | Path) -> Path:
     data = nx.node_link_data(graph, edges="edges")
     out.write_text(json.dumps(data, indent=2, sort_keys=True, default=str), encoding="utf-8")
     return out
+
+
+def load_node_link(path: str | Path) -> Any:
+    """Read a plant graph written by :func:`to_node_link`."""
+    import networkx as nx
+
+    data = json.loads(Path(path).read_text(encoding="utf-8"))
+    return nx.node_link_graph(data, edges="edges", directed=True, multigraph=True)
 
 
 def combined(pages: list[Any]) -> Any:

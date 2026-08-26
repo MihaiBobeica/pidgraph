@@ -121,6 +121,31 @@ def structural_regions(page: Any, page_index: int) -> list[TextRegion]:
     return out
 
 
+def _split_across(
+    group: list[Primitive], orientation: str, eps: float
+) -> list[list[Primitive]]:
+    """Re-band a group along its across-axis using only its own marks.
+
+    The same interval single-link rule the page-level banding uses, but confined to the group:
+    page-level bands chain through a running maximum, so marks elsewhere in the stripe can
+    bridge rows that, taken alone, separate cleanly."""
+    def interval(m: Primitive) -> tuple[float, float]:
+        box = m.bbox
+        return (box.y0, box.y1) if orientation == "horizontal" else (box.x0, box.x1)
+
+    parts: list[list[Primitive]] = []
+    hi: float | None = None
+    for mark in sorted(group, key=lambda m: interval(m)[0]):
+        lo, mark_hi = interval(mark)
+        if hi is None or lo > hi + eps:
+            parts.append([])
+            hi = mark_hi
+        else:
+            hi = max(hi, mark_hi)
+        parts[-1].append(mark)
+    return parts
+
+
 def _dominant_axis(marks: list[Primitive]) -> Orientation:
     """Which way this group of marks reads, from the spread of their centres."""
     if len(marks) < 2:
@@ -254,6 +279,38 @@ def cluster_regions(
             minor = bbox.height if orientation == "horizontal" else bbox.width
         if minor < scale.u(0.4):
             continue
+        # A candidate whose across-axis extent spans several letter heights is not a string in
+        # that orientation -- it is a *stack* of rows: an instrument bubble's letters-over-number
+        # tag caught whole by the vertical pass, or two stacked rows bridged into one band by
+        # unrelated marks elsewhere in the page stripe (banding tracks a running maximum, so a
+        # tall interval anywhere chains rows the bubble itself keeps separate). Reading a stack
+        # as one string interleaves the rows into garbage, and because the stack explains more
+        # marks than either row it wins the competition exactly where the rows matter most. A
+        # genuine string's across extent stays near one letter height, which the tallest member
+        # mark bounds, with headroom for shear and jitter. A detected stack is *split* into its
+        # across-axis sub-rows -- re-banded over its own marks only, where no foreign bridge
+        # exists -- and the parts re-enter the competition; a stack its own marks genuinely
+        # bridge cannot split and is dropped.
+        if len(group) > 1:
+            across = bbox.height if orientation == "horizontal" else bbox.width
+            deepest = max(
+                (m.bbox.height if orientation == "horizontal" else m.bbox.width) for m in group
+            )
+            if across > deepest * 1.6:
+                parts = _split_across(group, orientation, scale.u(band_gap))
+                if len(parts) > 1:
+                    for part in parts:
+                        heapq.heappush(
+                            queue,
+                            (
+                                -len(part),
+                                0 if orientation == "horizontal" else 1,
+                                next(tiebreak),
+                                part,
+                                orientation,
+                            ),
+                        )
+                continue
         claimed.update(id(m) for m in group)
         regions.append(
             TextRegion(

@@ -24,7 +24,7 @@ from pathlib import Path, PurePosixPath
 PID_DIR_CANDIDATES: tuple[str, ...] = ("p&id", "pid", "P&ID", "PID")
 SOP_DIR_CANDIDATES: tuple[str, ...] = ("sop", "SOP")
 
-PID_SUFFIXES: tuple[str, ...] = (".pdf", ".png", ".jpg", ".jpeg", ".tif", ".tiff", ".xml", ".svg")
+PID_SUFFIXES: tuple[str, ...] = (".pdf",)
 SOP_SUFFIXES: tuple[str, ...] = (".docx", ".doc", ".pdf", ".txt", ".md")
 
 

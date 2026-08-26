@@ -2,9 +2,14 @@
 # producers emit, so it must name them literally.
 """SOP parsing.
 
-Reads an Office Open XML document with the standard library only. A dedicated document library
-would be one more dependency for a job that is a zip file containing XML, and the same code path
-serves the fault-injection harness, which needs to rewrite the document rather than only read it.
+``.docx`` is Office Open XML: a zip of XML, read with the standard library. A dedicated document
+library would be one more dependency for a job that is a zip file containing XML, and the same
+code path serves the fault-injection harness, which needs to rewrite the document rather than
+only read it.
+
+``.pdf`` is read with PyMuPDF — already required for drawing pages. Tables are lifted when the
+page has a detectable grid; otherwise the page text is kept as paragraphs so a prose procedure
+still round-trips.
 
 Encoding is handled explicitly. These documents carry degree signs and typographic ellipses, and
 reading them without naming UTF-8 produces mojibake that makes a temperature column unrecognisable
@@ -197,8 +202,26 @@ def _text_of(element) -> str:
 
 
 def load(path: str | Path) -> SopDocument:
-    """Read an Office Open XML document into paragraphs, tables and requirements."""
+    """Read a procedure into paragraphs, tables and requirements.
+
+    Dispatch is by suffix. The drawing pipeline is PDF-only; the procedure is not — operators
+    keep these as Word files or as a printed PDF of the same table.
+    """
     p = Path(path)
+    suffix = p.suffix.lower()
+    if suffix == ".docx":
+        return _load_docx(p)
+    if suffix == ".pdf":
+        return _load_pdf(p)
+    if suffix in {".txt", ".md"}:
+        return _load_text(p)
+    if suffix == ".doc":
+        raise ValueError("legacy .doc is not supported; save the procedure as .docx or PDF")
+    raise ValueError(f"unsupported SOP format: {suffix or '(none)'}")
+
+
+def _load_docx(p: Path) -> SopDocument:
+    """Read an Office Open XML document into paragraphs, tables and requirements."""
     doc = SopDocument(path=str(p))
 
     with zipfile.ZipFile(p) as archive:
@@ -237,6 +260,70 @@ def load(path: str | Path) -> SopDocument:
     return doc
 
 
+def _load_pdf(p: Path) -> SopDocument:
+    """Read a PDF procedure: tables when a grid is present, otherwise page text."""
+    import pymupdf
+
+    doc = SopDocument(path=str(p))
+    with pymupdf.open(str(p)) as pdf:
+        meta = pdf.metadata or {}
+        doc.title = (meta.get("title") or "").strip()
+        doc.author = (meta.get("author") or "").strip()
+        for page in pdf:
+            for grid in _pdf_table_grids(page):
+                if len(grid) < 2:
+                    continue
+                doc.requirements.extend(
+                    _requirements_from_grid(
+                        grid[0], grid[1:], len(doc.requirements), doc.notes
+                    )
+                )
+            text = unicodedata.normalize("NFKC", page.get_text("text") or "")
+            for line in text.splitlines():
+                line = line.strip()
+                if line:
+                    doc.paragraphs.append(line)
+    if not doc.requirements:
+        doc.notes.append("no checkable requirements found; the document may be prose-only")
+    return doc
+
+
+def _load_text(p: Path) -> SopDocument:
+    """Plain-text procedure: paragraphs only, no table grid to lift requirements from."""
+    doc = SopDocument(path=str(p), title=p.stem)
+    text = unicodedata.normalize("NFKC", p.read_text(encoding="utf-8", errors="replace"))
+    for line in text.splitlines():
+        line = line.strip()
+        if line:
+            doc.paragraphs.append(line)
+    doc.notes.append("no checkable requirements found; the document may be prose-only")
+    return doc
+
+
+def _pdf_table_grids(page) -> list[list[list[str]]]:
+    """Extract table grids from a PDF page. Missing or unreadable tables are skipped."""
+    try:
+        finder = page.find_tables()
+    except Exception:
+        return []
+    tables = getattr(finder, "tables", None)
+    if tables is None:
+        try:
+            tables = list(finder)
+        except TypeError:
+            return []
+    out: list[list[list[str]]] = []
+    for table in tables or []:
+        try:
+            raw = table.extract()
+        except Exception:
+            continue
+        if not raw:
+            continue
+        out.append([["" if cell is None else str(cell) for cell in row] for row in raw])
+    return out
+
+
 def _grid_cells(row) -> list[str]:
     """Cell texts positioned by grid column, honouring column spans.
 
@@ -262,16 +349,27 @@ def _grid_cells(row) -> list[str]:
 def _requirements_from_table(
     table, start_ordinal: int, notes: list[str] | None = None
 ) -> list[Requirement]:
-    """Lift a limits table into requirements.
-
-    The header row establishes which unit each column carries, which is what allows ``/`` to be
-    read as a range separator safely.
-    """
+    """Lift a Word limits table into requirements."""
     rows = table.findall(f"{W}tr")
     if len(rows) < 2:
         return []
-
     headers = _grid_cells(rows[0])
+    data = [_grid_cells(row) for row in rows[1:]]
+    return _requirements_from_grid(headers, data, start_ordinal, notes)
+
+
+def _requirements_from_grid(
+    headers: list[str],
+    data_rows: list[list[str]],
+    start_ordinal: int,
+    notes: list[str] | None = None,
+) -> list[Requirement]:
+    """Lift a limits table into requirements.
+
+    The header row establishes which unit each column carries, which is what allows ``/`` to be
+    read as a range separator safely. Word XML and PDF tables both arrive here as a header plus
+    rows of cell strings, so a spanned Word cell and a merged PDF cell share one mapping.
+    """
     columns: dict[int, tuple[str, str]] = {}
     for index, header in enumerate(headers):
         mapped = unit_from_header(header)
@@ -282,8 +380,7 @@ def _requirements_from_table(
 
     out: list[Requirement] = []
     ordinal = start_ordinal
-    for row in rows[1:]:
-        cells = _grid_cells(row)
+    for cells in data_rows:
         if not cells:
             continue
         subject = unicodedata.normalize("NFKC", cells[0]).strip()

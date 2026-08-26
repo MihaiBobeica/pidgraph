@@ -1,28 +1,20 @@
 """Symbol recognition.
 
-Two mechanisms, used for different things.
-
 **Instrument circles are found dimensionally.** The standard dimensions the device/function circle
 in modules, so once calibration has recovered the module the circle is identified by measurement
 rather than by matching -- which makes it the highest-confidence object on the sheet.
 
-**Everything else is clustered by normalised shape.** Each candidate is reduced to a signature that
-is invariant to position, scale and rotation, so the codebook that maps signatures to classes works
-for any drawing template rather than the one it was built on. The codebook is built by clustering a
-drawing's own symbols and labelling the exemplars, so a new template produces new clusters rather
-than silent misclassification.
-
-An explicit ``unknown`` class is mandatory. Forcing an unrecognised shape into the nearest known
-class is how template overfit becomes invisible.
+**Everything else stays ``unknown``.** Candidates still carry a position-, scale- and
+rotation-invariant signature so instances of the same shape can be compared, but they are not
+forced into a class. Forcing an unrecognised shape into the nearest known class is how template
+overfit becomes invisible.
 """
 
 from __future__ import annotations
 
-import json
 import math
 from collections import defaultdict
 from dataclasses import dataclass, field
-from pathlib import Path
 
 from pidgraph.extract.calibrate import Scale
 from pidgraph.extract.primitives import BBox, Kind, Point, Primitive
@@ -136,9 +128,8 @@ def cluster_shapes(
 ) -> list[Symbol]:
     """Group symbol-scale geometry by normalised shape.
 
-    Unlabelled: every instance comes out as ``unknown`` with its signature attached. Labels are
-    applied by :func:`apply_codebook`, which keeps recognition separate from the vocabulary and
-    means a new drawing template yields new signatures rather than confident wrong answers.
+    Every instance comes out as ``unknown`` with its signature attached. A new drawing template
+    therefore yields new signatures rather than confident wrong answers.
     """
     out: list[Symbol] = []
     next_id = start_id
@@ -261,73 +252,6 @@ def group_composites(
         )
         next_id += 1
     return out
-
-
-def signature_histogram(symbols: list[Symbol]) -> dict[str, int]:
-    """How many instances share each signature. The input to codebook labelling."""
-    counts: dict[str, int] = defaultdict(int)
-    for sym in symbols:
-        counts[sym.signature] += 1
-    return dict(sorted(counts.items(), key=lambda kv: -kv[1]))
-
-
-@dataclass
-class Codebook:
-    """Signature to class vocabulary, built once per template and committed."""
-
-    entries: dict[str, str] = field(default_factory=dict)
-    source: str = ""
-
-    @classmethod
-    def load(cls, path: str | Path) -> Codebook:
-        p = Path(path)
-        if not p.exists():
-            return cls(entries={}, source=str(p))
-        data = json.loads(p.read_text(encoding="utf-8"))
-        return cls(entries=dict(data.get("entries", {})), source=str(p))
-
-    def save(self, path: str | Path) -> None:
-        p = Path(path)
-        p.parent.mkdir(parents=True, exist_ok=True)
-        # Sorted so the committed artifact is stable across runs.
-        payload = {"entries": dict(sorted(self.entries.items()))}
-        p.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
-
-    def label(self, signature: str) -> str | None:
-        return self.entries.get(signature)
-
-
-def apply_codebook(symbols: list[Symbol], codebook: Codebook) -> list[Symbol]:
-    """Attach classes from the codebook, leaving unmatched instances explicitly unknown."""
-    out: list[Symbol] = []
-    for sym in symbols:
-        if sym.symbol_class != UNKNOWN:
-            out.append(sym)
-            continue
-        label = codebook.label(sym.signature)
-        out.append(
-            sym
-            if label is None
-            else Symbol(
-                id=sym.id,
-                page_index=sym.page_index,
-                bbox=sym.bbox,
-                signature=sym.signature,
-                symbol_class=label,
-                confidence=0.8,
-                diameter_modules=sym.diameter_modules,
-                member_indices=sym.member_indices,
-            )
-        )
-    return out
-
-
-def coverage(symbols: list[Symbol]) -> float:
-    """Fraction of instances carrying a class. Reported rather than optimised away."""
-    if not symbols:
-        return 1.0
-    known = sum(1 for s in symbols if s.symbol_class != UNKNOWN)
-    return known / len(symbols)
 
 
 def dedupe(symbols: list[Symbol], scale: Scale, tol: float = 0.5) -> list[Symbol]:

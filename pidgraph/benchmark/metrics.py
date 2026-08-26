@@ -217,3 +217,84 @@ def text_scores(
         score(correct, len(reads), "text precision"),
         score(correct, len(truth_labels), "text recall"),
     )
+
+
+def attachment_scores(
+    truth_symbols: list,  # TruthSymbol: .id, .tag
+    node_mapping: dict[str, str],
+    predicted_tags: dict[str, str],
+) -> tuple[Score, Score, int]:
+    """Tag-attachment precision and recall, conditioned on the node matching.
+
+    Both rates compare canonical tag strings over matched symbol pairs only, the same
+    conditioning as :func:`edge_scores`, so attachment is not silently reporting a detection
+    failure instead. Recall: of the matched truth symbols, how many predicted counterparts carry
+    the right canonical tag. Precision: of the matched predicted nodes carrying *any* tag, how
+    many carry the right one. Tag-bearing predicted nodes matched to no truth symbol conflate
+    detection precision with attachment, so they are returned as a raw count rather than folded
+    into either rate.
+    """
+    from pidgraph.standards.tags import parse
+
+    hits = 0
+    precision_total = 0
+    recall_total = 0
+    for truth in truth_symbols:
+        pred_key = node_mapping.get(truth.id)
+        if pred_key is None:
+            continue
+        recall_total += 1
+        expected = parse(truth.tag).canonical
+        got = predicted_tags.get(pred_key)
+        if got is not None:
+            precision_total += 1
+        if expected is not None and got == expected:
+            hits += 1
+
+    matched_pred = set(node_mapping.values())
+    unmatched_tagged = sum(1 for key in predicted_tags if key not in matched_pred)
+    return (
+        score(hits, precision_total, "attachment precision"),
+        score(hits, recall_total, "attachment recall"),
+        unmatched_tagged,
+    )
+
+
+def line_attachment_scores(
+    truth_labels: list,  # TruthLabel: .text, .edge
+    node_mapping: dict[str, str],
+    predicted_line_edges: list[tuple[str, str, str]],
+) -> tuple[Score, Score]:
+    """Line-number attachment precision and recall, conditioned on the node matching.
+
+    A truth line label names the run between two symbols; a hit is a predicted edge between the
+    same matched pair carrying the same canonical line number. Only labels whose edge has both
+    endpoints matched enter recall, and only annotated predicted edges between matched nodes
+    enter precision. Claims are deduplicated per (pair, line number): one conductor's annotation
+    reaching a pair through parallel edges is one claim, not several.
+    """
+    from pidgraph.standards.tags import parse
+
+    truth_claims: set[tuple[frozenset[str], str]] = set()
+    for label in truth_labels:
+        edge = getattr(label, "edge", None)
+        if edge is None:
+            continue
+        source, target = edge
+        if source not in node_mapping or target not in node_mapping:
+            continue
+        canonical = parse(label.text).canonical
+        if canonical:
+            truth_claims.add((frozenset((node_mapping[source], node_mapping[target])), canonical))
+
+    matched_pred = set(node_mapping.values())
+    predicted_claims = {
+        (frozenset((source, target)), line)
+        for source, target, line in predicted_line_edges
+        if source in matched_pred and target in matched_pred and source != target
+    }
+    hits = len(truth_claims & predicted_claims)
+    return (
+        score(hits, len(predicted_claims), "line attachment precision"),
+        score(hits, len(truth_claims), "line attachment recall"),
+    )

@@ -1,13 +1,12 @@
 """Text recognition, behind a cache.
 
-The design goal is that a *reader of this repository needs no API key and no network*, while the
-recognition quality is still that of a capable model. That is achieved by putting the model at the
-**codebook** level rather than the instance level: recognition results are keyed by the content
-hash of the crop and committed to the repository, so a run either hits the cache -- deterministic,
-offline, free -- or records a miss and continues with the text unrecognised.
+The design goal is that a *reader of this repository needs no API key and no network*. Recognition
+results are keyed by the content hash of the crop and committed to the repository, so a run either
+hits the cache -- deterministic, offline, free -- or records a miss and continues with the text
+unrecognised.
 
-Backends are tried in order and each declares whether it is available, so an absent key or an
-uninstalled binary degrades the *result* rather than crashing the run.
+Tesseract fills cache misses when the binary is present. An uninstalled binary degrades the
+*result* rather than crashing the run.
 
 Nothing here decides a finding. Recognition produces text and a confidence; the cross-reference
 engine decides, deterministically, what that text means.
@@ -16,7 +15,6 @@ engine decides, deterministically, what that text means.
 from __future__ import annotations
 
 import json
-import os
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -287,70 +285,9 @@ class TesseractBackend:
         return out
 
 
-class VisionModelBackend:
-    """A vision model, used once per unique crop to build the committed cache."""
-
-    name = "vision-model"
-
-    def __init__(self, model: str = "gpt-4o-mini") -> None:
-        self.model = model
-
-    def available(self) -> bool:
-        if not os.environ.get("OPENAI_API_KEY"):
-            return False
-        try:
-            import openai  # noqa: F401
-        except ImportError:
-            return False
-        return True
-
-    def recognise_batch(self, images: list[bytes], count: int) -> list[str]:
-        """Recognise one montage containing ``count`` numbered cells."""
-        import base64
-
-        from openai import OpenAI
-
-        client = OpenAI()
-        encoded = base64.b64encode(images[0]).decode("ascii")
-        prompt = (
-            f"This image contains {count} numbered cells, each holding one label cut from an "
-            "engineering piping and instrumentation drawing. Transcribe the text in each cell "
-            'exactly as printed. Labels are things like PI-715A, MV-745-01, 6"-PL-2000-D, '
-            "or short words. Use upper case. If a cell is unreadable or empty, output nothing "
-            "after its number.\n"
-            "Reply with one line per cell, formatted exactly as: <number>: <text>"
-        )
-        response = client.chat.completions.create(
-            model=self.model,
-            temperature=0,
-            messages=[
-                {
-                    "role": "user",
-                    "content": [
-                        {"type": "text", "text": prompt},
-                        {
-                            "type": "image_url",
-                            "image_url": {"url": f"data:image/png;base64,{encoded}"},
-                        },
-                    ],
-                }
-            ],
-        )
-        body = response.choices[0].message.content or ""
-        results = [""] * count
-        for line in body.splitlines():
-            match = re.match(r"\s*(\d+)\s*[:.)]\s*(.*)", line)
-            if not match:
-                continue
-            index = int(match.group(1)) - 1
-            if 0 <= index < count:
-                results[index] = clean(match.group(2))
-        return results
-
-
 def default_backends() -> list[Backend]:
-    """Ordered by preference. The first available one is used to fill cache misses."""
-    return [TesseractBackend(), VisionModelBackend()]
+    """The local OCR engine, when the binary is present."""
+    return [TesseractBackend()]
 
 
 @dataclass
@@ -398,8 +335,6 @@ class Recogniser:
         recognised are simply absent -- an unrecognised label must not become an empty string that
         downstream code mistakes for a successful read.
         """
-        from pidgraph.recognise.crops import montage
-
         results: dict[str, Recognition] = {}
         pending: list = []
         for crop in crops:
@@ -418,7 +353,7 @@ class Recogniser:
         if pending and backend is None:
             self.errors.append(
                 f"{len(pending)} crops had no cache entry and no recogniser is available "
-                "(no reachable model backend, no local OCR binary). Their text is unrecognised."
+                "(no local OCR binary). Their text is unrecognised."
             )
         if backend is None or not pending:
             return results
@@ -426,11 +361,7 @@ class Recogniser:
         for start in range(0, len(pending), self.batch_size):
             batch = pending[start : start + self.batch_size]
             try:
-                if backend.name == "vision-model":
-                    sheet = montage(batch)
-                    texts = backend.recognise_batch([sheet], len(batch))
-                else:
-                    texts = backend.recognise_batch([c.png for c in batch], len(batch))
+                texts = backend.recognise_batch([c.png for c in batch], len(batch))
             except Exception as exc:
                 # Degrade the result, not the run -- but say so. An unreported backend failure is
                 # indistinguishable downstream from a drawing that simply had no text.

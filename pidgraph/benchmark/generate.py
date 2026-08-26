@@ -73,6 +73,9 @@ class TruthLabel:
     tracking: float = 1.35
     """Letter advance used at authoring time; the renderer must use the same value, or the
     recorded bbox describes a string that was never drawn."""
+    edge: tuple[str, str] | None = None
+    """For a line label: the edge whose run it names. Attachment truth, recorded at authoring
+    time for the same reason ``symbol_id`` is -- ownership cannot be reconstructed afterwards."""
 
 
 @dataclass
@@ -112,6 +115,7 @@ class TruthGraph:
                     "bbox": list(lab.bbox),
                     "symbol_id": lab.symbol_id,
                     "vertical": lab.vertical,
+                    "edge": list(lab.edge) if lab.edge else None,
                 }
                 for lab in self.labels
             ],
@@ -270,8 +274,17 @@ def draw(graph: TruthGraph, path: str | Path) -> Path:
         a, b = graph.symbol(edge.source), graph.symbol(edge.target)
         if a is None or b is None:
             continue
-        start = pymupdf.Point(a.x, a.y)
-        end = pymupdf.Point(b.x, b.y)
+        # Lines terminate at symbol boundaries, as drafting draws them. Drawing to the centre
+        # paints strokes across the symbol interior -- through the very tag rows an instrument
+        # bubble carries -- which no real exporter produces and which poisons text recovery
+        # with bridge marks between the rows.
+        span_x, span_y = b.x - a.x, b.y - a.y
+        span = math.hypot(span_x, span_y)
+        if span <= a.radius + b.radius:
+            continue
+        ux, uy = span_x / span, span_y / span
+        start = pymupdf.Point(a.x + ux * a.radius, a.y + uy * a.radius)
+        end = pymupdf.Point(b.x - ux * b.radius, b.y - uy * b.radius)
         if edge.style == "dashed":
             # Simulated with short strokes, as real exporters do -- the declared dash attribute
             # cannot be relied upon, and the pipeline must cope with that.
@@ -351,8 +364,9 @@ def _author_labels(graph: TruthGraph, rng: random.Random) -> None:
     Text height is drawn near one module -- the standard's own proportion, since the module *is*
     derived from lettering height -- and randomised within it. Placement varies by symbol kind
     the way drafting convention places it: valve tags above, equipment tags below, instrument
-    tags beside the bubble. A minority of line labels are vertical, exercising the rotated-crop
-    recognition path.
+    tags beside the bubble or -- the ISA form the real drawing uses -- as two stacked rows
+    *inside* it, function letters over the loop number. A minority of line labels are vertical,
+    exercising the rotated-crop recognition path.
     """
     from pidgraph.benchmark import strokefont
 
@@ -362,6 +376,30 @@ def _author_labels(graph: TruthGraph, rng: random.Random) -> None:
         tracking = rng.uniform(1.25, 1.45)
         width = strokefont.text_width(symbol.tag, height, tracking=tracking)
         jitter = module * rng.uniform(-0.3, 0.3)
+        if symbol.kind == "instrument" and "-" in symbol.tag and rng.random() < 0.5:
+            # In-bubble stacked rows. Both rows carry the symbol id: the tag is one identity
+            # even though it is drawn as two strings, and recovering that identity (row
+            # composition) is exactly what the attachment metric must be able to punish.
+            # The row gap follows the drawn convention -- letters upper half, number lower
+            # half, separated by most of a letter height. Anything tighter sits at the
+            # clusterer's band-separation noise floor and merges the rows into one garbage
+            # region, which is a rendering artifact real bubbles do not exhibit.
+            letters, number = symbol.tag.split("-", 1)
+            gap = module * 0.9
+            top_h = module * rng.uniform(0.95, 1.1)
+            bottom_h = module * rng.uniform(0.95, 1.1)
+            for text, row_h, y0 in (
+                (letters, top_h, symbol.y - gap / 2 - top_h),
+                (number, bottom_h, symbol.y + gap / 2),
+            ):
+                row_w = strokefont.text_width(text, row_h, tracking=tracking)
+                x0 = symbol.x - row_w / 2
+                graph.labels.append(
+                    TruthLabel(
+                        text, (x0, y0, x0 + row_w, y0 + row_h), symbol.id, tracking=tracking
+                    )
+                )
+            continue
         if symbol.kind == "valve":
             # Left of the symbol centre: an instrument signal riser leaves the valve straight up,
             # and a tag centred on it is systematically struck through.
@@ -401,7 +439,9 @@ def _author_labels(graph: TruthGraph, rng: random.Random) -> None:
                 mid_x + width / 2,
                 mid_y - module * 0.9,
             )
-        graph.labels.append(TruthLabel(text, bbox, None, vertical=vertical))
+        graph.labels.append(
+            TruthLabel(text, bbox, None, vertical=vertical, edge=(edge.source, edge.target))
+        )
 
 
 def corpus(

@@ -1,31 +1,67 @@
 {
   "aggregate": {
+    "attachment_precision": {
+      "ci_high": 0.9788196546541591,
+      "ci_low": 0.9491441826467505,
+      "hits": 558,
+      "label": "attachment precision",
+      "reportable": true,
+      "total": 577,
+      "value": 0.9670710571923743
+    },
+    "attachment_recall": {
+      "ci_high": 0.9185965221113006,
+      "ci_low": 0.8707405881095605,
+      "hits": 558,
+      "label": "attachment recall",
+      "reportable": true,
+      "total": 622,
+      "value": 0.8971061093247589
+    },
     "edge_precision": {
-      "ci_high": 0.44170246190311274,
-      "ci_low": 0.3872338177362626,
-      "hits": 519,
+      "ci_high": 0.9989405563073754,
+      "ci_low": 0.9860326616192905,
+      "hits": 516,
       "label": "edge precision",
       "reportable": true,
-      "total": 1253,
-      "value": 0.4142059058260176
+      "total": 518,
+      "value": 0.9961389961389961
     },
     "edge_recall": {
-      "ci_high": 1.0,
-      "ci_low": 0.9926524591769287,
-      "hits": 519,
+      "ci_high": 0.9980322890951846,
+      "ci_low": 0.9831444191086002,
+      "hits": 516,
       "label": "edge recall",
       "reportable": true,
       "total": 519,
+      "value": 0.9942196531791907
+    },
+    "line_precision": {
+      "ci_high": 1.0,
+      "ci_low": 0.9607365374237544,
+      "hits": 94,
+      "label": "line attachment precision",
+      "reportable": true,
+      "total": 94,
       "value": 1.0
     },
+    "line_recall": {
+      "ci_high": 0.9469306036909859,
+      "ci_low": 0.8319895903714167,
+      "hits": 94,
+      "label": "line attachment recall",
+      "reportable": true,
+      "total": 104,
+      "value": 0.9038461538461539
+    },
     "symbol_precision": {
-      "ci_high": 0.9991206161590552,
-      "ci_low": 0.988389609350054,
+      "ci_high": 0.9997166050797842,
+      "ci_low": 0.9909642942096056,
       "hits": 622,
       "label": "symbol precision@0.3",
       "reportable": true,
-      "total": 624,
-      "value": 0.9967948717948718
+      "total": 623,
+      "value": 0.9983948635634029
     },
     "symbol_recall": {
       "ci_high": 0.9975124576551052,
@@ -37,24 +73,25 @@
       "value": 0.9936102236421726
     },
     "text_precision": {
-      "ci_high": 0.9952630241438929,
-      "ci_low": 0.979985907105358,
-      "hits": 710,
+      "ci_high": 0.9660118731944353,
+      "ci_low": 0.9369565717650808,
+      "hits": 781,
       "label": "text precision",
       "reportable": true,
-      "total": 717,
-      "value": 0.9902370990237099
+      "total": 819,
+      "value": 0.9536019536019537
     },
     "text_recall": {
-      "ci_high": 0.9952630241438929,
-      "ci_low": 0.979985907105358,
-      "hits": 710,
+      "ci_high": 0.9451584599285768,
+      "ci_low": 0.9104523561297925,
+      "hits": 781,
       "label": "text recall",
       "reportable": true,
-      "total": 717,
-      "value": 0.9902370990237099
+      "total": 840,
+      "value": 0.9297619047619048
     }
   },
+  "attachment_unmatched_tagged": 1,
   "calibration": {
     "max_module_error": 0.1501418269362234,
     "median_module_error": 0.07502397077254595,
@@ -63,12 +100,12 @@
     "sheet_correct": 30
   },
   "notes": [
-    "Corpus seeds 500..529. Development tuned against seeds 0..9; a run from seed 500 is held-out data no change was fitted to.",
-    "Truth is authored before the drawing is rendered, so no part of the pipeline contributed to it.",
-    "Text figures measure the vector glyph matcher plus raster fallback. The generator renders the matcher's own stroke alphabet (one definition, stated in code), so these figures cover segmentation and matching under randomised size, weight, tracking, shear and jitter -- not transfer to a foreign shape font, which only the real drawing measures.",
-    "Module and sheet size are varied across samples, so any hardcoded absolute dimension would fail on most of them.",
-    "Synthetic drawings are cleaner and more regular than real ones. These are an upper bound, not a prediction of field performance.",
-    "Rates below n=5 are withheld; every reported rate carries its denominator and a Wilson interval."
+    "This corpus is seeds 500..529. We tuned development against seeds 0..9 only, so anything from seed 500 up is held-out \u2014 no change was fitted to it.",
+    "The ground truth was authored before the drawing was rendered, which means no part of the pipeline had any hand in producing the answers it is being scored against.",
+    "Read the text figures narrowly. They cover the vector glyph matcher plus its raster fallback, and the generator renders the matcher's own stroke alphabet \u2014 one definition, stated in code at both ends. So what is measured here is segmentation and matching under randomised size, weight, tracking, shear and jitter. It is NOT transfer to a font the matcher has never seen; only the real drawing measures that.",
+    "Module and sheet size vary from sample to sample, so any absolute dimension hardcoded somewhere in the pipeline would fail on most of these drawings rather than passing quietly.",
+    "Synthetic drawings are cleaner and more regular than real ones, so treat everything here as an upper bound rather than as a prediction of how it will do in the field.",
+    "Every rate above carries its denominator and a Wilson interval, and any rate with fewer than 5 instances behind it is withheld rather than printed."
   ],
   "samples": [
     {

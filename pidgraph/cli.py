@@ -9,6 +9,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from collections import Counter
 from pathlib import Path
@@ -41,16 +42,25 @@ def cmd_doctor(args: argparse.Namespace) -> int:
 
     print(f"python           {sys.version.split()[0]}")
     ok = True
-    for name in ("pymupdf", "numpy", "scipy", "shapely", "networkx"):
+    for name in ("pymupdf", "numpy", "networkx", "PIL"):
+        label = "pillow" if name == "PIL" else name
         try:
             __import__(name)
-            print(f"{name:<16} ok")
+            print(f"{label:<16} ok")
         except ImportError:
-            print(f"{name:<16} MISSING")
-            ok = name in ("scipy", "shapely", "networkx") and ok
+            print(f"{label:<16} MISSING")
+            ok = False
 
     print(f"{'tesseract':<16} {find_tesseract() or 'not found (text recognition unavailable)'}")
     print(f"{'1password cli':<16} {find_cli() or 'not found (op:// references cannot resolve)'}")
+    host = os.environ.get("OLLAMA_HOST", "http://127.0.0.1:11434").rstrip("/")
+    try:
+        import urllib.request
+
+        urllib.request.urlopen(f"{host}/api/tags", timeout=1)
+        print(f"{'ollama':<16} ok")
+    except Exception:
+        print(f"{'ollama':<16} not running (optional Q&A unavailable)")
 
     print()
     # Configuration status only -- no value is ever printed, resolved or otherwise.
@@ -92,25 +102,28 @@ def cmd_extract(args: argparse.Namespace) -> int:
     print(f"{path}  ({result.elapsed_s:.1f}s)\n")
     for page in result.pages:
         print(page.summary())
-        for warning in page.graph.warnings:
+        for warning in page.graph.graph.get("warnings", []):
             print(f"    ! {warning}")
-    written = _write_graphs(result)
+    written = _write_graphs(result, path)
     print("\nwrote " + ", ".join(str(p) for p in written))
     return 0
 
 
-def _write_graphs(result) -> list[Path]:
-    """Emit the graph in the project shape and in interchange formats.
+def _write_graphs(result, pid_path: Path | None = None) -> list[Path]:
+    """Emit the plant graph as NetworkX node-link JSON.
 
-    GraphML and node-link JSON are what a downstream consumer can actually load -- NetworkX reads
-    both directly -- so the output is usable outside this codebase rather than only within it.
+    Latest run also lands at ``outputs/graph.nodelink.json`` so a consumer that does not know
+    the content hash still has a stable path. Per-document copies live under ``outputs/<sha256>/``.
     """
     from pidgraph.extract import export
+    from pidgraph.paths import sha256
 
-    paths = [report_mod.write_json(result.to_dict(), OUTPUTS / "graph.json")]
-    plant = export.combined([p.graph.to_networkx() for p in result.pages])
-    paths.append(export.to_graphml(plant, OUTPUTS / "graph.graphml"))
-    paths.append(export.to_node_link(plant, OUTPUTS / "graph.nodelink.json"))
+    plant = export.combined([p.graph for p in result.pages])
+    latest = OUTPUTS / "graph.nodelink.json"
+    paths = [export.to_node_link(plant, latest)]
+    if pid_path is not None:
+        hashed = OUTPUTS / sha256(pid_path) / "graph.nodelink.json"
+        paths.append(export.to_node_link(plant, hashed))
     return paths
 
 
@@ -127,8 +140,8 @@ def _index_from(
     tags = {}
     occurrences: Counter[str] = Counter()
     for page in result.pages:
-        for node in page.graph.nodes:
-            canonical = node.attributes.get("tag_canonical")
+        for _key, data in page.graph.nodes(data=True):
+            canonical = data.get("tag_canonical")
             if not canonical:
                 continue
             parsed = parse_tag(canonical)
@@ -143,12 +156,17 @@ def _index_from(
                 tags.setdefault(parsed.canonical, parsed)
 
     text_regions = sum(p.counts.get("text_regions", 0) for p in result.pages)
-    unresolved = sum(1 for p in result.pages for n in p.graph.nodes if n.dexpi_class == "unknown")
+    unresolved = sum(
+        1
+        for p in result.pages
+        for _, data in p.graph.nodes(data=True)
+        if data.get("dexpi_class") == "unknown"
+    )
     index = ck.PlantIndex(
         tags=tags,
         node_count=result.graph_nodes,
         isolated_count=sum(
-            1 for p in result.pages for n in p.graph.nodes if p.graph.degree(n.stable_key) == 0
+            1 for p in result.pages for n in p.graph if p.graph.degree(n) == 0
         ),
         unresolved_shapes=unresolved,
         text_regions=text_regions,
@@ -168,10 +186,11 @@ def cmd_check(args: argparse.Namespace) -> int:
     report = ck.run(sop, index, limits, drawing_titles=[], tag_occurrences=occurrences)
     report.notes.insert(
         0,
-        "Nameplate design-limit blocks are not read from the drawings: local OCR on this "
-        "stroke font reads about a quarter of regions, and attributing a lone pressure value "
-        "to the wrong vessel is worse than reporting the comparison unresolved. Tags on the "
-        "drawing ARE read and drive the drawing-side checks.",
+        "We deliberately do not read the nameplate design-limit blocks off the drawings. Local "
+        "OCR manages about a quarter of the regions on this stroke font, and a page usually "
+        "holds more than one piece of equipment — so pinning a stray pressure value to the "
+        "wrong vessel is a worse outcome than saying the comparison is unresolved. Tags on the "
+        "drawing ARE read, and they drive the drawing-side checks.",
     )
     report.notes.append(ck.isa_edition_note())
 
@@ -193,7 +212,7 @@ def cmd_check(args: argparse.Namespace) -> int:
     )
     report_mod.write_markdown(text, OUTPUTS / "report.md")
     report_mod.write_jsonl(report, OUTPUTS / "findings.jsonl")
-    _write_graphs(result)
+    _write_graphs(result, pid_path)
     stored = _persist(result, report, pid_path, sop)
 
     print(f"verified={len(report.verified)}  findings={len(report.issues)}  {report.by_severity()}")
@@ -201,7 +220,7 @@ def cmd_check(args: argparse.Namespace) -> int:
         print(f"  [{finding.severity}] {finding.title}")
     print(
         f"\nwrote {OUTPUTS / 'report.md'}, {OUTPUTS / 'findings.jsonl'}, "
-        f"{OUTPUTS / 'graph.json'}, {OUTPUTS / 'graph.graphml'}"
+        f"{OUTPUTS / 'graph.nodelink.json'}"
     )
     print(f"persisted to {stored}")
     return 0
@@ -214,6 +233,7 @@ def _persist(result, report, pid_path: Path, sop) -> str:
     produce a graph, and someone without database credentials should still get one. Naming the
     store in the output is what stops a silent fallback from reading like a successful write.
     """
+    from pidgraph.extract.assemble import edge_store_dict, node_store_dict
     from pidgraph.paths import find_sop, sha256, storage_key
     from pidgraph.store.base import LocalJsonStore, RunRecord
     from pidgraph.store.supabase_store import choose_store
@@ -224,7 +244,16 @@ def _persist(result, report, pid_path: Path, sop) -> str:
     except InputNotFound:
         sop_sha = sop_key = sop_name = ""
 
-    pages = [p.graph.to_dict() for p in result.pages]
+    nodes = [
+        node_store_dict(key, data)
+        for page in result.pages
+        for key, data in page.graph.nodes(data=True)
+    ]
+    edges = [
+        edge_store_dict(source, target, data)
+        for page in result.pages
+        for source, target, data in page.graph.edges(data=True)
+    ]
     record = RunRecord(
         document_sha256=sha256(pid_path),
         document_kind="pid",
@@ -239,9 +268,15 @@ def _persist(result, report, pid_path: Path, sop) -> str:
             str(p.page_index): {"module": p.scale.module, "sheet": p.scale.sheet}
             for p in result.pages
         },
-        stats={"nodes": result.graph_nodes, "edges": result.graph_edges},
-        nodes=[n for page in pages for n in page["nodes"]],
-        edges=[e for page in pages for e in page["edges"]],
+        stats={
+            "nodes": result.graph_nodes,
+            "edges": result.graph_edges,
+            # The binding ledger travels with the run: how many tags bound, and each one that
+            # did not, with its reason -- a reviewer should never have to re-run to learn this.
+            "attach": {str(p.page_index): p.graph.graph.get("attach", {}) for p in result.pages},
+        },
+        nodes=nodes,
+        edges=edges,
         findings=[f.to_dict() for f in report.findings],
         requirements=[
             {
@@ -269,6 +304,29 @@ def _persist(result, report, pid_path: Path, sop) -> str:
         print(f"  ! {store.name} write failed ({type(exc).__name__}: {exc}); falling back to files")
         fallback = LocalJsonStore()
         return f"{fallback.name} (run {fallback.write_run(record)})"
+
+
+def cmd_benchmark(args: argparse.Namespace) -> int:
+    """Score the pipeline against synthetic drawings whose truth was authored before rendering."""
+    from pidgraph.benchmark import run as bench
+
+    report = bench.run_benchmark(args.count, args.dir, seed0=args.seed0)
+    calibration = report.calibration_accuracy()
+    print(
+        f"samples={calibration['samples']}  "
+        f"module recovered={calibration['module_recovered']}/{calibration['samples']}  "
+        f"median module error={calibration['median_module_error']:.2%}"
+    )
+    for value in report.aggregate().values():
+        print(f"  {value}")
+    unmatched = sum(s.attach_unmatched_tagged for s in report.samples)
+    print(f"  tagged nodes matched to no truth symbol: {unmatched} (raw count, not a rate)")
+    for sample in report.samples:
+        if sample.error:
+            print(f"  ! {sample.name}: {sample.error}")
+    json_path, md_path = bench.write(report, args.out)
+    print(f"\nwrote {json_path}, {md_path}")
+    return 0
 
 
 def cmd_migrate(args: argparse.Namespace) -> int:
@@ -382,6 +440,20 @@ def build_parser() -> argparse.ArgumentParser:
                 help="make changes; without this the command only inspects and reports",
             )
         p.set_defaults(handler=handler)
+
+    bench = sub.add_parser("benchmark", help=cmd_benchmark.__doc__)
+    bench.add_argument("--count", type=int, default=12, help="number of synthetic drawings")
+    bench.add_argument(
+        "--seed0",
+        type=int,
+        default=0,
+        help="first seed; development tunes on 0..9, seeds from 500 are held out",
+    )
+    bench.add_argument(
+        "--dir", default="outputs/synthetic", help="where generated drawings and their cache go"
+    )
+    bench.add_argument("--out", default="benchmarks", help="where results.json/.md are written")
+    bench.set_defaults(handler=cmd_benchmark)
     return parser
 
 
