@@ -6,9 +6,9 @@ Two kinds of test live here, deliberately separated.
 real contract and they would survive a change of test document.
 
 ``TestSuppliedCorpus`` asserts the measured character of the drawings in ``data/``. These describe
-one test case, match the sample-sheet characterisation in ``docs/assumptions.md``, and exist so that a silent
-change in behaviour is caught early. They are marked ``corpus`` and skip cleanly when the sample
-is absent -- nothing in the shipped pipeline may depend on their values.
+one test case, match the sample-sheet characterisation in ``docs/assumptions.md``, and exist so
+that a silent change in behaviour is caught early. They are marked ``corpus`` and skip cleanly
+when the sample is absent -- nothing in the shipped pipeline may depend on their values.
 """
 
 from __future__ import annotations
