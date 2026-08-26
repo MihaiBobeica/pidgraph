@@ -1,10 +1,10 @@
 # Benchmark results
 
-These numbers come from synthetic drawings, not from the sample sheets in `data/`. We wrote down the correct graph first — every symbol, every edge, every tag — and rendered the drawing from it afterwards, so nothing here is scored against output the pipeline produced itself. That is the only way topology is known exactly. ISA and ISO size symbols as ratios to a module; the generator varies that module, the sheet size, and the density from sample to sample, which is why a hardcoded point size would fail on most of these drawings rather than passing quietly.
+These numbers come from synthetic drawings, not from the sample sheets in `data/`. The correct graph is authored first — every symbol, every edge, every tag — and the drawing is rendered from it afterwards, so nothing here is scored against output the pipeline produced itself. That is the only way topology is known exactly. ISA and ISO size symbols as ratios to a module; the generator varies that module, the sheet size, and the density from sample to sample, which is why a hardcoded point size would fail on most of these drawings rather than passing quietly.
 
 The corpus is seeds 500 through 529. Development was tuned against seeds 0 through 9 only, so anything from seed 500 up is held out. Rates are exact-string matches in drawing coordinates, each with a Wilson interval. One wrong character in a tag is a miss: `PT-101` is not `PI-101`, and character error rate would hide that. Any rate with fewer than five instances behind it is withheld rather than printed.
 
-The generator uses this repository’s stroke alphabet (`recognise/glyphs.py`; `benchmark/strokefont.py` imports it). What is measured is segmentation and matching under randomised size, weight, tracking, shear, and jitter — the same hairline SHX-style strokes the real sheets use. It is not transfer to a font the matcher has never seen. Only the real drawing measures that. Synthetic drawings are cleaner than real ones, so treat everything here as an upper bound.
+The generator uses this repository’s stroke alphabet (`recognise/glyphs.py`; `benchmark/strokefont.py` imports it). What is measured is segmentation and matching under randomised size, weight, tracking, shear, and jitter — the same hairline SHX-style strokes the real sheets use. It is not transfer to a font the matcher has never seen. Only the real drawing measures that. Synthetic drawings are cleaner than real ones, so the table is an upper bound.
 
 ## Calibration
 
@@ -35,4 +35,4 @@ Symbols here are the instrument bubbles, valves, and other shapes the assembler 
 | line precision | line attachment precision: 100.0% [96.1%-100.0%] n=94 |
 | line recall | line attachment recall: 90.4% [83.2%-94.7%] n=104 |
 
-Predicted unique edges sit on the authored connectivity (518 predicted against 519 truth pairs). The attachment recall gap is the conservative rule showing up as numbers: a tag that cannot bind one-to-one is left unbound rather than assigned to the nearest neighbour and silently duplicating a parallel train.
+Predicted unique edges sit on the authored connectivity (518 predicted against 519 truth pairs). The attachment recall gap is the conservative rule as a number: a tag that cannot bind one-to-one is left unbound rather than assigned to the nearest neighbour and silently duplicating a parallel train.

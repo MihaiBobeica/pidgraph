@@ -186,7 +186,7 @@ def cmd_check(args: argparse.Namespace) -> int:
     report = ck.run(sop, index, limits, drawing_titles=[], tag_occurrences=occurrences)
     report.notes.insert(
         0,
-        "We deliberately do not read the nameplate design-limit blocks off the drawings. Local "
+        "Nameplate design-limit blocks are not read from the drawings. Local "
         "OCR manages about a quarter of the regions on this stroke font, and a page usually "
         "holds more than one piece of equipment — so pinning a stray pressure value to the "
         "wrong vessel is a worse outcome than saying the comparison is unresolved. Tags on the "

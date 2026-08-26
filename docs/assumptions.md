@@ -2,15 +2,15 @@
 
 This file is the citations and measurements the pipeline stands on. When an assumption changes, update it in the same commit as the code. A stale register is worse than none.
 
-A piping and instrumentation diagram is a scaled diagram in a published language. The rows below are how we pinned that language down instead of measuring one plot and calling the result a rule.
+A piping and instrumentation diagram is a scaled diagram in a published language. The rows below pin that language down by citation and measurement rather than by treating one plot as a rule.
 
-Three editions of ANSI/ISA-5.1 are in play at once. The Kimray *How to Read an Oil and Gas P&ID* guide is the vocabulary for these oil-and-gas abbreviations — `MV` for a manual valve, equipment class letters, the lower-case differential `PdI` — but its letter table is the 1984 table, not the 2009 edition its cover claims. It still has `M` for Momentary, gives `P` as *Pressure, Vacuum*, and has no Safety Instrumented System entry. The current edition is 2024; annexes A and B moved to technical reports that are explicitly nonmandatory. We take Kimray as the base table, overlay `Z` (SIS) from 2009, and we do not report annex guidance as a violation. The guide is not shipped; see [`reference/`](reference/README.md). Where the guide is silent we fall back to the standards below. Where the guide and a drawing disagree, the drawing is reported as non-conformant.
+Three editions of ANSI/ISA-5.1 are in play at once. The Kimray *How to Read an Oil and Gas P&ID* guide is the vocabulary for these oil-and-gas abbreviations — `MV` for a manual valve, equipment class letters, the lower-case differential `PdI` — but its letter table is the 1984 table, not the 2009 edition its cover claims. It still has `M` for Momentary, gives `P` as *Pressure, Vacuum*, and has no Safety Instrumented System entry. The current edition is 2024; annexes A and B moved to technical reports that are explicitly nonmandatory. Kimray is the base table; `Z` (SIS) is overlaid from 2009; annex guidance is not reported as a violation. The guide is not shipped; see [`reference/`](reference/README.md). Where the guide is silent, the standards below apply. Where the guide and a drawing disagree, the drawing is reported as non-conformant.
 
-The module is the other half of the language. ISA-5.1 clause 6 sizes symbols in measurement units and fixes only a minimum (1/16 inch or 1.50 mm). Clause 4.1.6 says the ratios in the tables must survive scaling. Table 6.1 puts the instrument bubble at 7 (optionally 8) units; Table 6.3 puts a signal line at 0.2 and a process line at 0.4. ISO 81714-1 calls the same quantity M and ties line width to M/10. ISO 10628-1 assigns widths by object class against M = 2.5 mm. On the sample sheets those ratios decode as a module of 2.4 points — a fact about one plot, which is why it must not appear in the code. Text height is not an estimator: there is no published bubble-to-text ratio (PIP dimensions text, ISA dimensions the bubble, neither relative to the other), and on a stroke font the marks are a mixture.
+The module is the other half of the language. ISA-5.1 clause 6 sizes symbols in measurement units and fixes only a minimum (1/16 inch or 1.50 mm). Clause 4.1.6 requires the ratios in the tables to survive scaling. Table 6.1 puts the instrument bubble at 7 (optionally 8) units; Table 6.3 puts a signal line at 0.2 and a process line at 0.4. ISO 81714-1 calls the same quantity M and ties line width to M/10. ISO 10628-1 assigns widths by object class against M = 2.5 mm. On the sample sheets those ratios decode as a module of 2.4 points — a fact about one plot, which is why it must not appear in the code. Text height is not an estimator: there is no published bubble-to-text ratio (PIP dimensions text, ISA dimensions the bubble, neither relative to the other), and on a stroke font the marks are a mixture.
 
-Two letter-table traps are load-bearing. `S` means Safety only for a closed set of self-actuated emergency-protective devices (`FSV`, `PSV`, `TSV`, `PSE`, `TSE`); everywhere else it means Switch. Coding the obvious rule would have emitted `LSV` as a safety device. `Z`, not `S`, is the Safety Instrumented System modifier — and without the 2009 overlay the parser would have had no concept of SIS tagging at all. Industry writes the differential backwards (`DPI`); the standard wants `PDI`; Kimray writes `PdI`. We normalise and say so.
+Two letter-table traps are load-bearing. `S` means Safety only for a closed set of self-actuated emergency-protective devices (`FSV`, `PSV`, `TSV`, `PSE`, `TSE`); everywhere else it means Switch. Coding the obvious rule would have emitted `LSV` as a safety device. `Z`, not `S`, is the Safety Instrumented System modifier — and without the 2009 overlay the parser would have had no concept of SIS tagging at all. Industry writes the differential backwards (`DPI`); the standard wants `PDI`; Kimray writes `PdI`. Those forms are normalised and reported.
 
-Classes, when we know them, are DEXPI 1.4 names (Proteus Schema 4.2.0). DEXPI 2.0 replaces Proteus, so serialisation stays behind an adapter. Several DEXPI beliefs we started with were wrong: a `PipingNetworkSegment` does not own its nodes, `SensingLocation` has four subtypes not two, and instrumentation class URIs live under `sandbox.dexpi.org`, not POSC Caesar. Those refutations are in the table below because a POSC-only validator would reject every instrument in a valid file.
+Classes, where known, are DEXPI 1.4 names (Proteus Schema 4.2.0). DEXPI 2.0 replaces Proteus, so serialisation stays behind an adapter. Several early DEXPI beliefs were wrong: a `PipingNetworkSegment` does not own its nodes, `SensingLocation` has four subtypes not two, and instrumentation class URIs live under `sandbox.dexpi.org`, not POSC Caesar. Those refutations are in the table below because a POSC-only validator would reject every instrument in a valid file.
 
 Read **Refuted or corrected** before proposing a change. Several of those rows would have shipped as defects. The `INPUT-*` rows are measurements on the files in `data/`. If a new drawing disagrees with one, that is expected: change the drawing, not the pipeline.
 
@@ -24,7 +24,7 @@ Read **Refuted or corrected** before proposing a change. Several of those rows w
 | `ENG-*` | Engineering discoveries from profiling. |
 | `OCR-*` / `UI-*` | Vector-recognition and interface decisions. |
 | `DESIGN-*` | Choices, not facts. |
-| `RISK-*` | Confirmed findings we accepted rather than fixed. |
+| `RISK-*` | Confirmed findings accepted rather than fixed. |
 
 Confidence is written out: **verified**, **likely**, **uncertain**, or **refuted** (with the corrected value given).
 
@@ -32,7 +32,7 @@ Confidence is written out: **verified**, **likely**, **uncertain**, or **refuted
 
 ## INPUT — measured directly from the supplied files
 
-Every row here is verified, because we measured it rather than inferring it. Everything describes one test case: the drawings and procedure that shipped with the repository. None of it may appear as a constant in the code. If a new drawing disagrees with a row below, that is expected. Change the drawing, not the pipeline.
+Every row here is verified by direct measurement rather than inference. Everything describes one test case: the drawings and procedure that shipped with the repository. None of it may appear as a constant in the code. If a new drawing disagrees with a row below, that is expected. Change the drawing, not the pipeline.
 
 | ID | Assumption | Source |
 |---|---|---|
@@ -76,7 +76,7 @@ ISA dimensions below are in measurement units: a relative size, not millimetres,
 | STD-19 | ISO 3098 lettering sizes are 1.8 / 2.5 / 3.5 / 5 / 7 / 10 / 14 / 20 mm, derived from ISO 216. Stroke-to-height is d = h/10 (type B) or h/14 (type A). ISO 3098-0:1997 is withdrawn; 3098-1:2015 supersedes it with the values unchanged. | ISO 3098-0 5.3, Tables 1-2 | verified |
 | STD-20 | ISO 14617-1:2005 6.4 sets the module M = 2.5 mm, shows small symbols at 200 percent, and uses an auxiliary grid of 0.25 M. Clause 8.2 says a resized symbol keeps its original line width. The 2025 edition restructures those clauses away, so this is verified for 2005 and uncertain for the current edition. | ISO 14617-1:2005 | verified for 2005 / uncertain for current |
 | STD-21 | ISO 5457 zone fields are 50 mm measured from the centring marks, with the remainder added to the corner fields. Zone mapping has to use the drawing space, not the trimmed sheet. | ISO 5457:1999 Cl. 4.4, Table 1 | verified |
-| STD-22 | ASME Y14.1 sheet series: A 8.5 by 11, B 11 by 17, C 17 by 22, D 22 by 34, E 34 by 44 inches. We only reached secondary sources; the standard is paywalled. | secondary sources | likely |
+| STD-22 | ASME Y14.1 sheet series: A 8.5 by 11, B 11 by 17, C 17 by 22, D 22 by 34, E 34 by 44 inches. Only secondary sources were reachable; the standard is paywalled. | secondary sources | likely |
 | STD-23 | PIP PIC001 4.2.1.2 requires a drawing size of 22 by 34 inches. Only an unauthorised copy of a superseded revision was reachable. | unauthorised copy of a superseded revision | likely |
 | STD-24 | There is no published bubble-diameter-to-text-height ratio. ISA dimensions the bubble but not relative to text; PIP dimensions text but not the bubble. The consequence in code is STD-25. | searched; found nothing | uncertain |
 
@@ -89,7 +89,7 @@ ISA dimensions below are in measurement units: a relative size, not millimetres,
 | DEXPI-01 | A `PipingNode` is composed by a `PipingNodeOwner` (a piping component, a nozzle), not by `PipingNetworkSegment`. The segment only references it via `SourceNode` / `TargetNode`. | DEXPI 1.4 reference | refuted |
 | DEXPI-02 | `SensingLocation` has four subtypes: `Mount`, `Nozzle`, `PipingComponent`, `PipingNetworkSegment`. | DEXPI 1.4 reference | refuted |
 | DEXPI-03 | `ComponentClassURI` uses two namespaces: `data.posccaesar.org/rdl/RDS...` for equipment and piping, and `sandbox.dexpi.org/rdl/...` for instrumentation. DEXPI 1.4 does not normatively reference ISO 15926. Its References appendix lists only CSS Color 4, CSS Values 4, Proteus Schema, and SVG 2. | DEXPI 1.4 spec + References | refuted |
-| DEXPI-04 | DEXPI P&ID Specification 1.4 is the current model we implement against: free, browsable, serialised as Proteus Schema 4.2.0. DEXPI 2.0 introduces “DEXPI XML” and replaces Proteus, so keep serialisation behind an adapter. | dexpi.org | verified |
+| DEXPI-04 | DEXPI P&ID Specification 1.4 is the model implemented against: free, browsable, serialised as Proteus Schema 4.2.0. DEXPI 2.0 introduces “DEXPI XML” and replaces Proteus, so serialisation stays behind an adapter. | dexpi.org | verified |
 | DEXPI-05 | `<Connection>` node indices are zero-based. Index 0 is the `PipingNodeOwner` itself (real nodes start at 1), and all four attributes are optional. | DEXPI 1.4 Proteus implementation | verified |
 | DEXPI-06 | There is no class named `SignalLine`. The class is `SignalConveyingFunction`, with subclasses `SignalLineFunction` and `MeasuringLineFunction`. | DEXPI 1.4 reference | verified |
 | DEXPI-07 | `TaggedPlantItem` defines exactly four fields: `TagName`, `TagNamePrefix`, `TagNameSequenceNumber`, `TagNameSuffix`. | DEXPI 1.4 reference | verified |
@@ -105,11 +105,11 @@ ISA dimensions below are in measurement units: a relative size, not millimetres,
 | PLAT-03 | PostgREST’s 1000-row cap applies to functions, not just tables and views. A traversal RPC truncates silently. | PostgREST / Supabase `max_rows` | verified |
 | PLAT-05 | Supabase direct Postgres is IPv6-only. The Supavisor pooler is the IPv4 path. The IPv4 add-on is not dual-stack: it swaps AAAA for A. | Supabase connection docs | verified |
 | PLAT-06 | `LISTEN` / `NOTIFY` through the pooler is undocumented. PgBouncer marks `LISTEN` “Never” under transaction pooling, and Supavisor has open issues. | no vendor doc found | uncertain |
-| PLAT-07 | PostgREST cannot execute recursive CTEs directly. You wrap them in a function and issue `NOTIFY pgrst, 'reload schema'`. The reload command is verified; the prohibition is structural rather than quotable. | structural | likely |
+| PLAT-07 | PostgREST cannot execute recursive CTEs directly. They are wrapped in a function and issued with `NOTIFY pgrst, 'reload schema'`. The reload command is verified; the prohibition is structural rather than quotable. | structural | likely |
 | PLAT-09 | Debian trixie’s package renames are systemic: `libglib2.0-0` is now `libglib2.0-0t64`, and `libgl1-mesa-glx` is gone. `python:3.13-slim` currently aliases trixie. | packages.debian.org | verified |
 | PLAT-11 | Supabase free projects pause after roughly seven days of inactivity. | Supabase docs | verified |
 | PLAT-12 | The Supabase CLI cannot be installed via a global npm install. | Supabase docs | verified |
-| PLAT-13 | `supabase start` applies `supabase/migrations/` during boot. A failing migration aborts the boot with an opaque `LegacyDbSetupError` that names no statement. Our own `migrate --apply` is the recovery path, because it names the failing statement. | observed on the local stack | verified |
+| PLAT-13 | `supabase start` applies `supabase/migrations/` during boot. A failing migration aborts the boot with an opaque `LegacyDbSetupError` that names no statement. `migrate --apply` is the recovery path, because it names the failing statement. | observed on the local stack | verified |
 | PLAT-14 | The local stack’s anon and service keys are the same well-known demo JWTs on every machine. They are configuration rather than secrets, and can live in an untracked `.env.local`. | Supabase CLI behaviour | verified |
 
 ---
@@ -119,7 +119,7 @@ ISA dimensions below are in measurement units: a relative size, not millimetres,
 | ID | Assumption | Source | Confidence |
 |---|---|---|---|
 | DATA-01 | PID2Graph is Zenodo DOI `10.5281/zenodo.14803338`, a single roughly 9.3 GB zip, CC BY-SA 4.0 (share-alike may attach to derived artefacts), GraphML ground truth. The OPEN100 subset is 12 annotated real piping and instrumentation diagrams. | Zenodo record | verified |
-| DATA-02 | For benchmark protocol and baselines, cite arXiv:2411.13929 v3 / IEEE DSAA 2025. The figures we quote are the OPEN100 Stitched rows of Table III. | paper | verified |
+| DATA-02 | For benchmark protocol and baselines, cite arXiv:2411.13929 v3 / IEEE DSAA 2025. The figures quoted are the OPEN100 Stitched rows of Table III. | paper | verified |
 | DATA-03 | DEXPI TrainingTestCases (gitlab.com/dexpi/TrainingTestCases) is CC BY 4.0. | GitLab repo | verified |
 
 ---
@@ -128,32 +128,32 @@ ISA dimensions below are in measurement units: a relative size, not millimetres,
 
 Read this section first. Each row was believed, then shown to be wrong. Several would have shipped as defects.
 
-| ID | What we believed | What is actually true |
+| ID | Prior belief | What is actually true |
 |---|---|---|
-| STD-01 | “`S` in position 2 means Safety when the remaining letters are `V` or `E`.” | The gate is on the first letter (`F` / `P` / `T`) and on the device being a self-actuated emergency-protective element. The set is exactly `{FSV, PSV, TSV, PSE, TSE}`. Coding the old rule would have emitted `LSV`, `ASE` and `ZSV` as safety devices. Separately, `Z` — not `S` — is the Safety Instrumented System modifier, and our plan had no `Z` rule at all. |
+| STD-01 | “`S` in position 2 means Safety when the remaining letters are `V` or `E`.” | The gate is on the first letter (`F` / `P` / `T`) and on the device being a self-actuated emergency-protective element. The set is exactly `{FSV, PSV, TSV, PSE, TSE}`. Coding the old rule would have emitted `LSV`, `ASE` and `ZSV` as safety devices. Separately, `Z` — not `S` — is the Safety Instrumented System modifier, and the original design had no `Z` rule at all. |
 | STD-02 | Kimray’s letter table follows ISA-5.1-2009, as its cover states. | It is the 1984 table. Adopting it wholesale leaves the parser with no concept of Safety Instrumented System tagging. |
 | DEXPI-01 | `PipingNetworkSegment` owns its `PipingNode`s. | Nodes are composed by a `PipingNodeOwner`, and the segment only references them. A segment-owns-node schema will not round-trip. |
 | DEXPI-02 | `SensingLocation` covers segments and nozzles. | It has four subtypes. Restricting it to two silently drops valid measurements. |
 | DEXPI-03 | `ComponentClassURI` points at POSC Caesar, which anchors DEXPI to ISO 15926. | Two namespaces are in use, and instrumentation uses `sandbox.dexpi.org`. A POSC-only validation rule would reject every instrument in a perfectly valid file. DEXPI 1.4 does not normatively cite ISO 15926 at all. |
-| PLAT-02 | “Supabase tables default to Row Level Security off, so remember to enable it.” | Wrong for Dashboard tables. More dangerously, enabling Row Level Security is not enough. The default GRANTs persist, so you also need REVOKE. |
+| PLAT-02 | “Supabase tables default to Row Level Security off, so remember to enable it.” | Wrong for Dashboard tables. More dangerously, enabling Row Level Security is not enough. The default GRANTs persist, so REVOKE is also required. |
 | ENG-01 | Cache only successful OCR reads. | Refuted by profiling. Unreadable crops are about half of a stroke-font drawing, and leaving failures uncached meant re-running the engine on the same pixels every invocation: 267 subprocess calls and roughly 40 seconds per warm run, forever. Failures are now cached as empty entries, because “this crop is unreadable to this engine” is itself an answer. Warm runs went from 59 seconds to 15 seconds. |
 | ENG-02 | Tolerating duplicate objects makes a migration re-runnable. | Refuted twice in the same file. A statement preceded by its explanatory comment starts with `--`, and a first-line comment test silently discarded it, so most of a well-commented migration was skipped while the runner reported success. Rolling back the transaction on a duplicate policy threw away every statement already executed, including the seed inserts. The correct form: keep comment-prefixed statements, and use a savepoint per statement. |
-| STD-27 | Grammar-constrained character substitution can repair optical-recognition errors. | Refuted for this project. The idea only works when the grammar is tight enough to reject nonsense, and ours cannot be: line-number field schemas are company convention with variable arity, so the parser has to stay permissive. Measured on the real cache, substitution “repaired” 7 reads and produced `4-14`→`A-14`, `S08`→`508`, `2-D5S`→`Z-05S`: each one grammatically valid, each one meaningless. Substitution is disabled by default. Despacing (`MV-71 5-01`→`MV-715-01`) is unambiguous, so we kept it. |
+| STD-27 | Grammar-constrained character substitution can repair optical-recognition errors. | Refuted for this project. The idea only works when the grammar is tight enough to reject nonsense, and the ISA tag grammar cannot be: line-number field schemas are company convention with variable arity, so the parser has to stay permissive. Measured on the real cache, substitution “repaired” 7 reads and produced `4-14`→`A-14`, `S08`→`508`, `2-D5S`→`Z-05S`: each one grammatically valid, each one meaningless. Substitution is disabled by default. Despacing (`MV-71 5-01`→`MV-715-01`) is unambiguous and remains. |
 | STD-26 | A per-glyph shape codebook can replace OCR on a stroke-font drawing. | Refuted twice, independently. Measured on the supplied sheets with rotation-sensitive normalisation: 7802 glyph marks produce 1744 distinct signatures, 1243 of them singletons. The top 40 signatures cover only 61 percent of marks and the top 200 only 75 percent. A codebook is only worth building against a small closed vocabulary, and this tail is real rather than a normalisation defect. Text recognition has to render crops and use a real recogniser. |
-| STD-25 | Text cap height is a module estimator at a ratio of 2 measurement units (ISA). | Dropped during implementation. Measured on the sample, the stroke and symbol estimators agreed exactly — module 2.4000 from both — while the text estimator was 60 percent adrift. In a stroke font the individual marks include partial glyphs and several text sizes, so what you are observing is a mixture, not a cap height. Per STD-24 there is no published ratio to anchor it against anyway. Text height is now measured, reported, and used only as a sanity gate. Render resolution comes from the narrow stroke instead, which is one well-defined observable. |
+| STD-25 | Text cap height is a module estimator at a ratio of 2 measurement units (ISA). | Dropped during implementation. Measured on the sample, the stroke and symbol estimators agreed exactly — module 2.4000 from both — while the text estimator was 60 percent adrift. In a stroke font the individual marks include partial glyphs and several text sizes, so the observable is a mixture, not a cap height. Per STD-24 there is no published ratio to anchor it against anyway. Text height is now measured, reported, and used only as a sanity gate. Render resolution comes from the narrow stroke instead, which is one well-defined observable. |
 
 ---
 
-## Uncertain — what we do instead
+## Uncertain — residual practice
 
-| ID | The uncertainty | What we do about it |
+| ID | The uncertainty | Treatment |
 |---|---|---|
 | STD-20 | ISO 14617-1 8.2 (“line width is maintained on resize”) is verified only against the 2005 edition, and the 2025 edition restructured those clauses away. | Cite the 2005 edition explicitly, by year. The design does not hang on it alone: stroke width is already only a secondary scale estimator behind a sanity gate, and as a class signal it is corroborated independently by ISO 10628-1 5.3.1. |
 | STD-24 | No published bubble-to-text-height ratio exists. | Calibrate the acceptance window empirically per corpus and report it as a measured parameter. Never cite it as if it were standard. |
-| STD-22, STD-23 | ASME Y14.1 and PIP PIC001 are paywalled. We could only reach secondary or unauthorised copies. | Do not quote clause numbers in the deliverable. Sheet size is detected from geometry rather than assumed, so nothing actually depends on these. |
+| STD-22, STD-23 | ASME Y14.1 and PIP PIC001 are paywalled. Only secondary or unauthorised copies were reachable. | Do not quote clause numbers in the deliverable. Sheet size is detected from geometry rather than assumed, so nothing actually depends on these. |
 | PLAT-06 | `LISTEN` / `NOTIFY` behaviour through the pooler is undocumented. | Do not use it. Use Supabase Realtime or polling for progress signalling. |
-| PLAT-07 | We found no quotable prohibition on recursive CTEs via PostgREST. | Wrap traversals in functions anyway. The row cap (PLAT-03) requires it regardless. |
-| — | Our standards quotes come from a French-language rendering of ISA-5.1-2009 and from university-hosted extracts, because ISA and ANSI return 403 to automated fetch. | If the conformance claim ever needs to be defensible, buy ANSI/ISA-5.1-2024 plus TR5.1.02/03 and re-verify the letter table, notes 14 and 30, and Table 5.4.4 against the English text. ISA-TR5.1.04-2026 “Content for PFDs and P&IDs” is on-topic and nobody here has read it. |
+| PLAT-07 | No quotable prohibition on recursive CTEs via PostgREST was found. | Wrap traversals in functions anyway. The row cap (PLAT-03) requires it regardless. |
+| — | Standards quotes come from a French-language rendering of ISA-5.1-2009 and from university-hosted extracts, because ISA and ANSI return 403 to automated fetch. | If the conformance claim ever needs to be defensible, buy ANSI/ISA-5.1-2024 plus TR5.1.02/03 and re-verify the letter table, notes 14 and 30, and Table 5.4.4 against the English text. ISA-TR5.1.04-2026 “Content for PFDs and P&IDs” is on-topic and has not been consulted. |
 
 ---
 
@@ -170,8 +170,8 @@ None of these can be verified against an external source. They are judgement cal
 | DESIGN-05 | No absolute dimensions anywhere. Recover the module instead. | Absolute point sizes are plot artifacts (INPUT-07 demonstrates it) while ratios are normative (STD-05). |
 | DESIGN-06 | Under-claim: confidence propagates as the minimum, and absence-based and connectivity-dependent findings are capped. | Accusing a correct document of being wrong is the worst output this system can produce. |
 | DESIGN-07 | Report rejected approaches together with their numbers. | A negative result with data is stronger evidence of rigour than silence is. |
-| DESIGN-08 | Take Kimray as the base vocabulary and overlay the ISA-2009 additions (notably `Z` for Safety Instrumented System) as a labelled delta. | Keeps the guide as our source of truth for the oil-and-gas abbreviations it uniquely provides, while safety semantics come from the current standard (see STD-02). |
-| DESIGN-09 | Real drawings are for validation and threshold calibration, not fine-tuning. | With a handful of drawings you cannot both fine-tune and validate, and fine-tuning destroys the only independent measurement you have. |
+| DESIGN-08 | Take Kimray as the base vocabulary and overlay the ISA-2009 additions (notably `Z` for Safety Instrumented System) as a labelled delta. | Keeps the guide as the source of truth for the oil-and-gas abbreviations it uniquely provides, while safety semantics come from the current standard (see STD-02). |
+| DESIGN-09 | Real drawings are for validation and threshold calibration, not fine-tuning. | With a handful of drawings, fine-tuning and validation cannot both be done, and fine-tuning destroys the only independent measurement available. |
 | DESIGN-10 | Nameplate design-limit blocks are not read from the drawings while OCR reads only about a quarter of regions. | Attributing a lone pressure value to the wrong vessel is worse than reporting the comparison as unresolved. Pages carry more than one equipment item, so proximity is not attribution. The report says so rather than hiding it. |
 | DESIGN-11 | A text region labels at most one node, and a labelled node’s confidence is the minimum of geometry and read. | One tag string annotating both members of a parallel train creates a silent duplicate identity. A node is only as trustworthy as its weakest input. |
 | DESIGN-12 | The snapshot API derives sheet dimensions from node extents when serving from the database. | The RPC returns nodes and edges only, while the UI iterates the page list, and an absent array means a blank screen. Extent-derived dimensions are approximate and used only for the viewport. |
@@ -180,7 +180,7 @@ None of these can be verified against an external source. They are judgement cal
 
 ## Accepted risks
 
-These are confirmed findings we chose not to fix. A historical port-binding change moved edge precision from 45.7 percent to 46.2 percent and the real graph from 584 nodes to 425. That is past tense. Current scores are in [`../benchmarks/results.md`](../benchmarks/results.md).
+These are confirmed findings left unfixed. A historical port-binding change moved edge precision from 45.7 percent to 46.2 percent and the real graph from 584 nodes to 425. That is past tense. Current scores are in [`../benchmarks/results.md`](../benchmarks/results.md).
 
 | ID | The finding | Why it stands |
 |---|---|---|

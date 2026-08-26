@@ -235,7 +235,7 @@ def run_benchmark(
         recogniser.cache.save()
 
     report.notes.append(
-        f"This corpus is seeds {seed0}..{seed0 + count - 1}. We tuned development against seeds "
+        f"This corpus is seeds {seed0}..{seed0 + count - 1}. Development was tuned against seeds "
         "0..9 only, so anything from seed 500 up is held-out — no change was fitted to it."
     )
     report.notes.append(
@@ -255,8 +255,8 @@ def run_benchmark(
         "quietly."
     )
     report.notes.append(
-        "Synthetic drawings are cleaner and more regular than real ones, so treat everything "
-        "here as an upper bound rather than as a prediction of how it will do in the field."
+        "Synthetic drawings are cleaner and more regular than real ones, so everything "
+        "here is an upper bound rather than a prediction of field performance."
     )
     report.notes.append(
         "Every rate above carries its denominator and a Wilson interval, and any rate with "
@@ -277,10 +277,10 @@ def write(report: BenchmarkReport, directory: str | Path = "benchmarks") -> tupl
     lines = [
         "# Benchmark results",
         "",
-        "These numbers come from synthetic drawings. We wrote down the correct answer first and",
-        "rendered the drawing from it afterwards, so nothing here is scored against output the",
-        "pipeline produced itself. The notes at the bottom say what that does and does not buy",
-        "us — worth reading before quoting any of these figures.",
+        "These numbers come from synthetic drawings. The correct answer is authored first and",
+        "the drawing is rendered from it afterwards, so nothing here is scored against output the",
+        "pipeline produced itself. The notes at the bottom say what that does and does not",
+        "establish — worth reading before quoting any of these figures.",
         "",
         "## Calibration",
         "",

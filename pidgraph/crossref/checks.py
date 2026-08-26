@@ -178,8 +178,8 @@ def check_unresolved_symbols(index: PlantIndex) -> list[Finding]:
             title=f"{index.unresolved_shapes} symbols carry no resolved class",
             detail=(
                 "Some symbols really are ambiguous without the drawing's legend sheet — the "
-                "standard itself gives one shape two different meanings. Rather than guess, we "
-                "list them here so a reader with the legend can settle them."
+                "standard itself gives one shape two different meanings. They are listed "
+                "rather than guessed, so a reader with the legend can settle them."
             ),
             confidence=1.0,
             graph_incomplete=True,
@@ -211,8 +211,8 @@ def check_safety_devices(index: PlantIndex) -> list[Finding]:
                 severity=Severity.INFO,
                 title=f"{len(sis)} safety-instrumented items identified",
                 detail=(
-                    "Recognised by the modifier the current standard assigns to SIS. Worth "
-                    "knowing: our base vocabulary predates that addition, so this result comes "
+                    "Recognised by the modifier the current standard assigns to SIS. The base "
+                    "vocabulary predates that addition, so this result comes "
                     "from the overlaid delta rather than from the base table."
                 ),
                 confidence=0.8,
@@ -256,8 +256,8 @@ def check_design_limits(
                     severity=Severity.LOW,
                     title=f"Could not resolve an equipment tag from {req.subject_raw!r}",
                     detail=(
-                        "We cannot check this requirement until we know which piece of "
-                        "equipment it is talking about."
+                        "This requirement cannot be checked until the equipment it names "
+                        "is identified."
                     ),
                     confidence=0.6,
                     sop_evidence=req.evidence,
@@ -280,11 +280,12 @@ def check_design_limits(
                         severity=severity,
                         title=f"{tag} carries SOP limits but no drawing data was matched",
                         detail=(
-                            "The procedure sets limits for this item, but we found nothing on "
-                            "the drawing to compare them against. That may well be our own "
-                            f"extraction gap rather than a problem with the document — we read "
-                            f"an estimated {recall:.0%} of it — so this is capped in severity "
-                            "and reported as unresolved, not as a conflict."
+                            "The procedure sets limits for this item, but nothing on "
+                            "the drawing was matched for comparison. That may be an "
+                            "extraction gap rather than a problem with the document — "
+                            f"an estimated {recall:.0%} of it was read — so this is "
+                            "capped in severity and reported as unresolved, not as a "
+                            "conflict."
                         ),
                         confidence=min(0.5, max(recall, 0.1)),
                         subject=tag,
@@ -405,8 +406,8 @@ def check_referenced_tags(sop: SopDocument, index: PlantIndex) -> list[Finding]:
                 severity=Severity.LOW,
                 title=f"SOP names {tag}, which was not found in the drawings",
                 detail=(
-                    "Either we missed it during extraction, or the procedure is pointing at a "
-                    "sheet outside the set we were given."
+                    "Either extraction missed it, or the procedure is pointing at a "
+                    "sheet outside the set that was given."
                 ),
                 confidence=0.4,
                 subject=tag,
@@ -440,8 +441,8 @@ def run(
 
     if index.recall_estimate < 0.5:
         report.notes.append(
-            f"We estimate we read about {index.recall_estimate:.0%} of the drawing. Keep that "
-            "number in mind for any finding above that rests on something being absent — those "
+            f"An estimated {index.recall_estimate:.0%} of the drawing was read. That "
+            "number matters for any finding above that rests on something being absent — those "
             "are capped in severity and marked as possibly incomplete."
         )
     report.notes.append(
