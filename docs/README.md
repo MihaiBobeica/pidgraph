@@ -1,8 +1,13 @@
 # Documentation
 
-| Document | Contents |
+| File | Owns |
 |---|---|
-| [`assumptions.md`](assumptions.md) | Every assumption with its source and a confidence verdict (verified / likely / uncertain / refuted), plus the refuted-and-corrected list, the uncertain-with-fallback list, and the design choices that are decisions rather than facts. **Living document** — updated in the same commit as any change. |
-| [`architecture.md`](architecture.md) | Component architecture, failure model and defences, calibration, the standards core, recognition strategies, storage, cross-reference, UI, deployment, evaluation design, and cross-cutting rules. |
-| [`tradeoffs.md`](tradeoffs.md) | Every significant tension, the options weighed **including those rejected**, where it landed, and what that costs. |
-| [`reference/`](reference/) | The Kimray *How to Read an Oil & Gas P&ID Reference Guide* — the project's stated source of truth for P&ID convention. |
+| [`../README.md`](../README.md) | Install, CLI, outputs, load snippet, score table |
+| [`architecture.md`](architecture.md) | Data flow, pipeline order, graph / SOP / UI contracts |
+| [`assumptions.md`](assumptions.md) | Citations and measured constants — do not copy into code |
+| [`tradeoffs.md`](tradeoffs.md) | Rejected options |
+| [`related-sop.md`](related-sop.md) | Unimplemented drawing↔SOP pairing |
+| [`reference/README.md`](reference/README.md) | Kimray guide is not in the repo |
+| [`../benchmarks/results.md`](../benchmarks/results.md) | Score protocol and caveats |
+
+Sample files under `data/` are a test case, not a source of thresholds.
